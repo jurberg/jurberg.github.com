@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[The UrBlog]]></title>
-  <link href="http://jurberg.github.com/atom.xml" rel="self"/>
+  <title><![CDATA[Category: blogging | The UrBlog]]></title>
+  <link href="http://jurberg.github.com/blog/categories/blogging/atom.xml" rel="self"/>
   <link href="http://jurberg.github.com/"/>
   <updated>2013-01-14T21:28:31-06:00</updated>
   <id>http://jurberg.github.com/</id>
