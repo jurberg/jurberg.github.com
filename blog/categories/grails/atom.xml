@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Grails | The UrBlog]]></title>
   <link href="http://jurberg.github.com/blog/categories/grails/atom.xml" rel="self"/>
   <link href="http://jurberg.github.com/"/>
-  <updated>2013-01-24T20:58:39-06:00</updated>
+  <updated>2013-01-24T21:37:41-06:00</updated>
   <id>http://jurberg.github.com/</id>
   <author>
     <name><![CDATA[John Urberg]]></name>
@@ -21,6 +21,91 @@
     <content type="html"><![CDATA[<p>With the recent <a href="https://www.aspectsecurity.com/uploads/downloads/2012/12/Remote-Code-with-Expression-Language-Injection.pdf">Spring vulnerability</a>, we thought it would be a good idea to disable EL in our Grails application.  To do this, we need to add a context-param to the beginning of the generated web.xml file.  Rather than using install-templates, I used the eventWebXmlEnd event to insert it.  XMLSlurper would have been nice, but it does not have a simple way to insert a node at the beginning.  So instead I used the XmlParser and came up with the following.</p>
 
 <script src="https://gist.github.com/4617534.js"></script>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Grails script to generate JAXB classes]]></title>
+    <link href="http://jurberg.github.com/blog/2012/11/27/grails-script-to-generate-JAXB-classes/"/>
+    <updated>2012-11-27T19:00:00-06:00</updated>
+    <id>http://jurberg.github.com/blog/2012/11/27/grails-script-to-generate-JAXB-classes</id>
+    <content type="html"><![CDATA[<p>I think Groovy's <a href="http://groovy.codehaus.org/api/groovy/xml/MarkupBuilder.html">MarkupBuilder</a> is great and I use it often.  Sometimes though, I need to generate a complex XML document that conforms to an XSD.  MarkupBuilder often leads to markup and business logic being mixed together much like HTML and Java code gets mixed in complex JSP pages. In cases like this, I like to use JAXB instead.  I can generate classes from the XSD, load up an object model and let JAXB generate the markup.</p>
+
+
+<p>It's fairly easy to create a script to handle generating the JAXB classes for you.  JAXB comes with a handy Ant task that takes your XSD and generates classes. The trick is passing the build classpath to the task.  There is a "grailsSettings" variable available in scripts that contains <a href="https://github.com/grails/grails-core/blob/master/grails-bootstrap/src/main/groovy/grails/util/BuildSettings.groovy">BuildSettings</a>.  We can get the list of build dependencies files from this class to generate the classpath.  Here is a simple example that takes the Microsoft <a href="http://msdn.microsoft.com/en-us/library/ms256485.aspx">books.xsd</a> in the etc/schema directory and generates the code to the src/java directory:</p>
+
+
+<script src="https://gist.github.com/4158702.js"> </script>
+
+
+<p>UPDATE: Sometimes having the JAXB jars on your path can cause problems with your application.  In those cases, you call the generation class directly:</p>
+
+
+<script src="https://gist.github.com/4186366.js"> </script>
+
+
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Converting XML to Flat Files with Groovy]]></title>
+    <link href="http://jurberg.github.com/blog/2012/11/11/convert-xml-to-flat-files-with-groovy/"/>
+    <updated>2012-11-11T19:00:00-06:00</updated>
+    <id>http://jurberg.github.com/blog/2012/11/11/convert-xml-to-flat-files-with-groovy</id>
+    <content type="html"><![CDATA[<p>When integrating systems, you often need to convert data from one format to another.  For example, you may receive data from a web service in XML and need to convert it to a flat file for a legacy system.  It's usually not as simple as just moving data from a tag to a column either.  There's often calculations and formatting required.  Most often the code has the work of parsing, converting and formatting all mixed together.  With a dynamic language like Groovy which has closures, we can abstract much of that work.  For our example, we'll take a subset of the <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/ms762271(v=vs.85).aspx">Microsoft sample books.xml file</a>:</p>
+
+
+<script src="https://gist.github.com/4056093.js"> </script>
+
+
+<p>We would like to provided a mapping for each column that allows us to pull data out of the XML file and define the width of the column.  We'll keep it simple to start with by assuming a fixed width flat file with all columns left justified.  Following is a simple mapping using an array of maps:</p>
+
+
+<script src="https://gist.github.com/4056280.js"> </script>
+
+
+<p>Each closure should get a GPathResult to a "row" in the XML file.  The closure should return the text that should go in the column.  We'll need to supply the tag that identifies the tag in the XML file to pass to the closure.  Following is an example test using our books data:</p>
+
+
+<script src="https://gist.github.com/4056102.js"> </script>
+
+
+<p>The implementation is fairly simple.  We process each "tag" in the XML.  For each mapping, we set the delegate for the closure to a map with the tag name and the GPathResults for that tag.  The closure can then be executed to get the text for the column:</p>
+
+
+<script src="https://gist.github.com/4056079.js"> </script>
+
+
+<p>The above piece of code abstracts the processing into 8 lines of code.  It is a testament to the power of a dynamic language that provides closures.</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[An easier way to exclude methods from Grails JMX plugin services]]></title>
+    <link href="http://jurberg.github.com/blog/2012/10/29/exclude-methods-grails-jmx-plugin/"/>
+    <updated>2012-10-29T19:00:00-05:00</updated>
+    <id>http://jurberg.github.com/blog/2012/10/29/exclude-methods-grails-jmx-plugin</id>
+    <content type="html"><![CDATA[<p>The <a href="http://grails.org/plugin/jmx">Grails JMX plugin</a> is a great way to quickly make a service available through JMX.  Things get trickier when you want to only expose a few methods on the service.  The plugin provides the option to list methods to exclude, but you need to list all of them including the ones Grails added to the service.  Fortunately, we can use the metaclass to help us out.  We can add a list of the few methods we want exposed and then use to that to generate the list of exclude method as follows:</p>
+
+<script src="https://gist.github.com/3977988.js"> </script>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Grails clean-test-app script]]></title>
+    <link href="http://jurberg.github.com/blog/2012/10/17/grails-clean-test-app-script/"/>
+    <updated>2012-10-17T19:00:00-05:00</updated>
+    <id>http://jurberg.github.com/blog/2012/10/17/grails-clean-test-app-script</id>
+    <content type="html"><![CDATA[<p>I've been developing Grails apps in Spring Tool Suite. STS will compile your Groovy code as you save it just as Eclipse does for Java code.  This is great during coding, but can cause issues when it's time to check in.  If you deleted a class and then run <span style="font-family:Monospace;">test-app</span>, that class may not be cleared from your target/classes and tests may pass that shouldn't.  Before checking in, I now need to run <span style="font-family:Monospace;">clean</span>, then <span style="font-family:Monospace;">refresh-dependencies</span>, then <span style="font-family:Monospace;">test-app</span>.  To save some time, I created the following script that will do it all at once.  Now I can just run <span style="font-family:Monospace;">clean-test-app</span>.</p>
+
+<br/>
+
+
+<script src="https://gist.github.com/3909243.js?file=CleanTestApp.groovy"></script>
 
 ]]></content>
   </entry>

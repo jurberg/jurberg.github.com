@@ -5,13 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Blog Archive - The UrBlog</title>
+  <title>Grails script to generate JAXB classes - The UrBlog</title>
   <meta name="author" content="John Urberg">
 
   
-  <meta name="description" content="Blog Archive 2013 Add a context-param to Grails
-Jan 23 2013 posted in Grails Welcome to the UrBlog Reborn
-Jan 14 2013 posted in blogging 2012 Grails &hellip;">
+  <meta name="description" content="I think Groovy&#8217;s MarkupBuilder is great and I use it often. Sometimes though, I need to generate a complex XML document that conforms to an XSD &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -20,7 +18,7 @@ Jan 14 2013 posted in blogging 2012 Grails &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://jurberg.github.com/blog/archives/">
+  <link rel="canonical" href="http://jurberg.github.com/blog/2012/11/27/grails-script-to-generate-JAXB-classes/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -65,154 +63,110 @@ Jan 14 2013 posted in blogging 2012 Grails &hellip;">
   <div id="main">
     <div id="content">
       <div>
-<article role="article">
+<article class="hentry" role="article">
   
   <header>
-    <h1 class="entry-title">Blog Archive</h1>
+    
+      <h1 class="entry-title">Grails Script to Generate JAXB Classes</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-11-27T19:00:00-06:00" pubdate data-updated="true">Nov 27<span>th</span>, 2012</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
     
   </header>
-  
-  <div id="blog-archives">
 
 
-
-  
-  <h2>2013</h2>
-
-<article>
-  
-<h1><a href="/blog/2013/01/23/add-a-context-param-to-grails/">Add a context-param to Grails</a></h1>
-<time datetime="2013-01-23T22:06:00-06:00" pubdate><span class='month'>Jan</span> <span class='day'>23</span> <span class='year'>2013</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/grails/'>Grails</a></span>
-</footer>
+<div class="entry-content"><p>I think Groovy&#8217;s <a href="http://groovy.codehaus.org/api/groovy/xml/MarkupBuilder.html">MarkupBuilder</a> is great and I use it often.  Sometimes though, I need to generate a complex XML document that conforms to an XSD.  MarkupBuilder often leads to markup and business logic being mixed together much like HTML and Java code gets mixed in complex JSP pages. In cases like this, I like to use JAXB instead.  I can generate classes from the XSD, load up an object model and let JAXB generate the markup.</p>
 
 
-</article>
+<p>It&#8217;s fairly easy to create a script to handle generating the JAXB classes for you.  JAXB comes with a handy Ant task that takes your XSD and generates classes. The trick is passing the build classpath to the task.  There is a &#8220;grailsSettings&#8221; variable available in scripts that contains <a href="https://github.com/grails/grails-core/blob/master/grails-bootstrap/src/main/groovy/grails/util/BuildSettings.groovy">BuildSettings</a>.  We can get the list of build dependencies files from this class to generate the classpath.  Here is a simple example that takes the Microsoft <a href="http://msdn.microsoft.com/en-us/library/ms256485.aspx">books.xsd</a> in the etc/schema directory and generates the code to the src/java directory:</p>
 
 
-
-<article>
-  
-<h1><a href="/blog/2013/01/14/welcome-to-the-urblog-reborn/">Welcome to the UrBlog Reborn</a></h1>
-<time datetime="2013-01-14T21:21:00-06:00" pubdate><span class='month'>Jan</span> <span class='day'>14</span> <span class='year'>2013</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/blogging/'>blogging</a></span>
-</footer>
+<script src="https://gist.github.com/4158702.js"> </script>
 
 
-</article>
+<p>UPDATE: Sometimes having the JAXB jars on your path can cause problems with your application.  In those cases, you call the generation class directly:</p>
 
 
-
-  
-  <h2>2012</h2>
-
-<article>
-  
-<h1><a href="/blog/2012/11/27/grails-script-to-generate-JAXB-classes/">Grails script to generate JAXB classes</a></h1>
-<time datetime="2012-11-27T19:00:00-06:00" pubdate><span class='month'>Nov</span> <span class='day'>27</span> <span class='year'>2012</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/grails/'>Grails</a></span>
-</footer>
+<script src="https://gist.github.com/4186366.js"> </script>
 
 
-</article>
-
-
-
-<article>
-  
-<h1><a href="/blog/2012/11/11/convert-xml-to-flat-files-with-groovy/">Converting XML to Flat Files with Groovy</a></h1>
-<time datetime="2012-11-11T19:00:00-06:00" pubdate><span class='month'>Nov</span> <span class='day'>11</span> <span class='year'>2012</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/grails/'>Grails</a></span>
-</footer>
-
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/blog/2012/10/29/exclude-methods-grails-jmx-plugin/">An easier way to exclude methods from Grails JMX plugin services</a></h1>
-<time datetime="2012-10-29T19:00:00-05:00" pubdate><span class='month'>Oct</span> <span class='day'>29</span> <span class='year'>2012</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/grails/'>Grails</a></span>
-</footer>
-
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/blog/2012/10/17/grails-clean-test-app-script/">Grails clean-test-app script</a></h1>
-<time datetime="2012-10-17T19:00:00-05:00" pubdate><span class='month'>Oct</span> <span class='day'>17</span> <span class='year'>2012</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/grails/'>Grails</a></span>
-</footer>
-
-
-</article>
-
-
-
-  
-  <h2>2011</h2>
-
-<article>
-  
-<h1><a href="/blog/2011/08/11/introduction-to-node/">An introduction to Node.js</a></h1>
-<time datetime="2011-08-11T19:00:00-05:00" pubdate><span class='month'>Aug</span> <span class='day'>11</span> <span class='year'>2011</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/javascript/'>JavaScript</a></span>
-</footer>
-
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/blog/2011/08/09/scaling-with-single-threading/">Scaling with Single Threading</a></h1>
-<time datetime="2011-08-09T19:00:00-05:00" pubdate><span class='month'>Aug</span> <span class='day'>09</span> <span class='year'>2011</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/javascript/'>JavaScript</a>, <a class='category' href='/blog/categories/lmax/'>LMAX</a>, <a class='category' href='/blog/categories/swing/'>Swing</a></span>
-</footer>
-
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/blog/2011/06/16/implementing-rest-authentication/">Implementing REST Authentication</a></h1>
-<time datetime="2011-06-16T19:00:00-05:00" pubdate><span class='month'>Jun</span> <span class='day'>16</span> <span class='year'>2011</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/java/'>Java</a></span>
-</footer>
-
-
-</article>
 
 </div>
 
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">John Urberg</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-11-27T19:00:00-06:00" pubdate data-updated="true">Nov 27<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/grails/'>Grails</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://jurberg.github.com/blog/2012/11/27/grails-script-to-generate-JAXB-classes/" data-via="jurberg" data-counturl="http://jurberg.github.com/blog/2012/11/27/grails-script-to-generate-JAXB-classes/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/11/11/convert-xml-to-flat-files-with-groovy/" title="Previous Post: Converting XML to Flat Files with Groovy">&laquo; Converting XML to Flat Files with Groovy</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2013/01/14/welcome-to-the-urblog-reborn/" title="Next Post: Welcome to the UrBlog Reborn">Welcome to the UrBlog Reborn &raquo;</a>
+      
+    </p>
+  </footer>
 </article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
 
 </div>
 
@@ -313,7 +267,10 @@ Jan 14 2013 posted in blogging 2012 Grails &hellip;">
       var disqus_shortname = 'urblog';
       
         
-        var disqus_script = 'count.js';
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://jurberg.github.com/blog/2012/11/27/grails-script-to-generate-JAXB-classes/';
+        var disqus_url = 'http://jurberg.github.com/blog/2012/11/27/grails-script-to-generate-JAXB-classes/';
+        var disqus_script = 'embed.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

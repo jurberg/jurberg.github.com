@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Java | The UrBlog]]></title>
+  <link href="http://jurberg.github.com/blog/categories/java/atom.xml" rel="self"/>
+  <link href="http://jurberg.github.com/"/>
+  <updated>2013-01-24T21:37:41-06:00</updated>
+  <id>http://jurberg.github.com/</id>
+  <author>
+    <name><![CDATA[John Urberg]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Implementing REST Authentication]]></title>
+    <link href="http://jurberg.github.com/blog/2011/06/16/implementing-rest-authentication/"/>
+    <updated>2011-06-16T19:00:00-05:00</updated>
+    <id>http://jurberg.github.com/blog/2011/06/16/implementing-rest-authentication</id>
+    <content type="html"><![CDATA[<p>While there is not much written about REST authentication, there does seem to be a common theme among the few articles written about it that REST services should be authenticated by signing the query parameters using a private key and making the calls over HTTPS.  This posting will provide an example of the signing of query parameters using a simple Spring server. We'll provide a small twist by putting the authentication information in headers.</p>
+
+<p><a href="http://www.objectpartners.com/2011/06/16/implementing-rest-authentication/">more...</a></p>
+]]></content>
+  </entry>
+  
+</feed>

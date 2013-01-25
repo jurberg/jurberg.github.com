@@ -144,6 +144,325 @@
 
     </article>
   
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/11/27/grails-script-to-generate-JAXB-classes/">Grails Script to Generate JAXB Classes</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-11-27T19:00:00-06:00" pubdate data-updated="true">Nov 27<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012/11/27/grails-script-to-generate-JAXB-classes/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I think Groovy&#8217;s <a href="http://groovy.codehaus.org/api/groovy/xml/MarkupBuilder.html">MarkupBuilder</a> is great and I use it often.  Sometimes though, I need to generate a complex XML document that conforms to an XSD.  MarkupBuilder often leads to markup and business logic being mixed together much like HTML and Java code gets mixed in complex JSP pages. In cases like this, I like to use JAXB instead.  I can generate classes from the XSD, load up an object model and let JAXB generate the markup.</p>
+
+
+<p>It&#8217;s fairly easy to create a script to handle generating the JAXB classes for you.  JAXB comes with a handy Ant task that takes your XSD and generates classes. The trick is passing the build classpath to the task.  There is a &#8220;grailsSettings&#8221; variable available in scripts that contains <a href="https://github.com/grails/grails-core/blob/master/grails-bootstrap/src/main/groovy/grails/util/BuildSettings.groovy">BuildSettings</a>.  We can get the list of build dependencies files from this class to generate the classpath.  Here is a simple example that takes the Microsoft <a href="http://msdn.microsoft.com/en-us/library/ms256485.aspx">books.xsd</a> in the etc/schema directory and generates the code to the src/java directory:</p>
+
+
+<script src="https://gist.github.com/4158702.js"> </script>
+
+
+<p>UPDATE: Sometimes having the JAXB jars on your path can cause problems with your application.  In those cases, you call the generation class directly:</p>
+
+
+<script src="https://gist.github.com/4186366.js"> </script>
+
+
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/11/11/convert-xml-to-flat-files-with-groovy/">Converting XML to Flat Files With Groovy</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-11-11T19:00:00-06:00" pubdate data-updated="true">Nov 11<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012/11/11/convert-xml-to-flat-files-with-groovy/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>When integrating systems, you often need to convert data from one format to another.  For example, you may receive data from a web service in XML and need to convert it to a flat file for a legacy system.  It&#8217;s usually not as simple as just moving data from a tag to a column either.  There&#8217;s often calculations and formatting required.  Most often the code has the work of parsing, converting and formatting all mixed together.  With a dynamic language like Groovy which has closures, we can abstract much of that work.  For our example, we&#8217;ll take a subset of the <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/ms762271(v=vs.85).aspx">Microsoft sample books.xml file</a>:</p>
+
+
+<script src="https://gist.github.com/4056093.js"> </script>
+
+
+<p>We would like to provided a mapping for each column that allows us to pull data out of the XML file and define the width of the column.  We&#8217;ll keep it simple to start with by assuming a fixed width flat file with all columns left justified.  Following is a simple mapping using an array of maps:</p>
+
+
+<script src="https://gist.github.com/4056280.js"> </script>
+
+
+<p>Each closure should get a GPathResult to a &#8220;row&#8221; in the XML file.  The closure should return the text that should go in the column.  We&#8217;ll need to supply the tag that identifies the tag in the XML file to pass to the closure.  Following is an example test using our books data:</p>
+
+
+<script src="https://gist.github.com/4056102.js"> </script>
+
+
+<p>The implementation is fairly simple.  We process each &#8220;tag&#8221; in the XML.  For each mapping, we set the delegate for the closure to a map with the tag name and the GPathResults for that tag.  The closure can then be executed to get the text for the column:</p>
+
+
+<script src="https://gist.github.com/4056079.js"> </script>
+
+
+<p>The above piece of code abstracts the processing into 8 lines of code.  It is a testament to the power of a dynamic language that provides closures.</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/10/29/exclude-methods-grails-jmx-plugin/">An Easier Way to Exclude Methods From Grails JMX Plugin Services</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-10-29T19:00:00-05:00" pubdate data-updated="true">Oct 29<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012/10/29/exclude-methods-grails-jmx-plugin/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>The <a href="http://grails.org/plugin/jmx">Grails JMX plugin</a> is a great way to quickly make a service available through JMX.  Things get trickier when you want to only expose a few methods on the service.  The plugin provides the option to list methods to exclude, but you need to list all of them including the ones Grails added to the service.  Fortunately, we can use the metaclass to help us out.  We can add a list of the few methods we want exposed and then use to that to generate the list of exclude method as follows:</p>
+
+<script src="https://gist.github.com/3977988.js"> </script>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/10/17/grails-clean-test-app-script/">Grails Clean-test-app Script</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-10-17T19:00:00-05:00" pubdate data-updated="true">Oct 17<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012/10/17/grails-clean-test-app-script/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&#8217;ve been developing Grails apps in Spring Tool Suite. STS will compile your Groovy code as you save it just as Eclipse does for Java code.  This is great during coding, but can cause issues when it&#8217;s time to check in.  If you deleted a class and then run <span style="font-family:Monospace;">test-app</span>, that class may not be cleared from your target/classes and tests may pass that shouldn&#8217;t.  Before checking in, I now need to run <span style="font-family:Monospace;">clean</span>, then <span style="font-family:Monospace;">refresh-dependencies</span>, then <span style="font-family:Monospace;">test-app</span>.  To save some time, I created the following script that will do it all at once.  Now I can just run <span style="font-family:Monospace;">clean-test-app</span>.</p>
+
+<br/>
+
+
+<script src="https://gist.github.com/3909243.js?file=CleanTestApp.groovy"></script>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/08/11/introduction-to-node/">An Introduction to Node.js</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-08-11T19:00:00-05:00" pubdate data-updated="true">Aug 11<span>th</span>, 2011</time>
+        
+         | <a href="/blog/2011/08/11/introduction-to-node/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Node.js is an evented I/O server built on Google&#8217;s V8 JavaScript engine. Node provides a simple way to build highly scalable server applications. This article will provide an introduction to Node along with installation details and a first server. <a href="http://www.objectpartners.com/2011/08/23/an-introduction-to-node-js/">more&#8230;</a></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/08/09/scaling-with-single-threading/">Scaling With Single Threading</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-08-09T19:00:00-05:00" pubdate data-updated="true">Aug 9<span>th</span>, 2011</time>
+        
+         | <a href="/blog/2011/08/09/scaling-with-single-threading/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>The free lunch is over. To speed up applications we are told we must write multithreaded programs and avoid mutable state. Functional programming can help with it&#8217;s immutable state. There&#8217;s also Erlang with the Actor model or Clojure with it&#8217;s software transactional memory. One other option to consider is single threading your code. Following are a few examples where single threading was used to scale applications.</p>
+
+<p><a href="http://www.objectpartners.com/2011/08/09/scaling-with-single-threading/">more&#8230;</a></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/06/16/implementing-rest-authentication/">Implementing REST Authentication</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-06-16T19:00:00-05:00" pubdate data-updated="true">Jun 16<span>th</span>, 2011</time>
+        
+         | <a href="/blog/2011/06/16/implementing-rest-authentication/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>While there is not much written about REST authentication, there does seem to be a common theme among the few articles written about it that REST services should be authenticated by signing the query parameters using a private key and making the calls over HTTPS.  This posting will provide an example of the signing of query parameters using a simple Spring server. We&#8217;ll provide a small twist by putting the authentication information in headers.</p>
+
+<p><a href="http://www.objectpartners.com/2011/06/16/implementing-rest-authentication/">more&#8230;</a></p>
+</div>
+  
+  
+
+
+    </article>
+  
   <div class="pagination">
     
     <a href="/blog/archives">Blog Archives</a>
@@ -162,6 +481,18 @@
     
       <li class="post">
         <a href="/blog/2013/01/14/welcome-to-the-urblog-reborn/">Welcome to the UrBlog Reborn</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/11/27/grails-script-to-generate-JAXB-classes/">Grails script to generate JAXB classes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/11/11/convert-xml-to-flat-files-with-groovy/">Converting XML to Flat Files with Groovy</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/29/exclude-methods-grails-jmx-plugin/">An easier way to exclude methods from Grails JMX plugin services</a>
       </li>
     
   </ul>
