@@ -5,13 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Blog Archive - The UrBlog</title>
+  <title>Add a context-param to Grails - The UrBlog</title>
   <meta name="author" content="John Urberg">
 
   
-  <meta name="description" content="Blog Archive 2013 Add a context-param to Grails
-Jan 23 2013 posted in Grails Welcome to the UrBlog Reborn
-Jan 14 2013 posted in blogging Recent &hellip;">
+  <meta name="description" content="With the recent Spring vulnerability, we thought it would be a good idea to disable EL in our Grails application. To do this, we need to add a &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -20,7 +18,7 @@ Jan 14 2013 posted in blogging Recent &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://jurberg.github.com/blog/archives/">
+  <link rel="canonical" href="http://jurberg.github.com/blog/2013/01/23/add-a-context-param-to-grails/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -65,49 +63,87 @@ Jan 14 2013 posted in blogging Recent &hellip;">
   <div id="main">
     <div id="content">
       <div>
-<article role="article">
+<article class="hentry" role="article">
   
   <header>
-    <h1 class="entry-title">Blog Archive</h1>
+    
+      <h1 class="entry-title">Add a Context-param to Grails</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-01-23T22:06:00-06:00" pubdate data-updated="true">Jan 23<span>rd</span>, 2013</time>
+        
+      </p>
     
   </header>
-  
-  <div id="blog-archives">
 
 
+<div class="entry-content"><p>With the recent <a href="https://www.aspectsecurity.com/uploads/downloads/2012/12/Remote-Code-with-Expression-Language-Injection.pdf">Spring vulnerability</a>, we thought it would be a good idea to disable EL in our Grails application.  To do this, we need to add a context-param to the beginning of the generated web.xml file.  Rather than using install-templates, I used the eventWebXmlEnd event to insert it.  XMLSlurper would have been nice, but it does not have a simple way to insert a node.  So instead I used the XmlParser and came up with the following.</p>
 
-  
-  <h2>2013</h2>
-
-<article>
-  
-<h1><a href="/blog/2013/01/23/add-a-context-param-to-grails/">Add a context-param to Grails</a></h1>
-<time datetime="2013-01-23T22:06:00-06:00" pubdate><span class='month'>Jan</span> <span class='day'>23</span> <span class='year'>2013</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/grails/'>Grails</a></span>
-</footer>
-
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/blog/2013/01/14/welcome-to-the-urblog-reborn/">Welcome to the UrBlog Reborn</a></h1>
-<time datetime="2013-01-14T21:21:00-06:00" pubdate><span class='month'>Jan</span> <span class='day'>14</span> <span class='year'>2013</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/blogging/'>blogging</a></span>
-</footer>
-
-
-</article>
+<script src="https://gist.github.com/4617534.js"></script>
 
 </div>
 
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">John Urberg</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-01-23T22:06:00-06:00" pubdate data-updated="true">Jan 23<span>rd</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/grails/'>Grails</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://jurberg.github.com/blog/2013/01/23/add-a-context-param-to-grails/" data-via="jurberg" data-counturl="http://jurberg.github.com/blog/2013/01/23/add-a-context-param-to-grails/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/01/14/welcome-to-the-urblog-reborn/" title="Previous Post: Welcome to the UrBlog Reborn">&laquo; Welcome to the UrBlog Reborn</a>
+      
+      
+    </p>
+  </footer>
 </article>
 
 </div>

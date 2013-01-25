@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[The UrBlog]]></title>
-  <link href="http://jurberg.github.com/atom.xml" rel="self"/>
+  <title><![CDATA[Category: Grails | The UrBlog]]></title>
+  <link href="http://jurberg.github.com/blog/categories/grails/atom.xml" rel="self"/>
   <link href="http://jurberg.github.com/"/>
   <updated>2013-01-24T20:06:11-06:00</updated>
   <id>http://jurberg.github.com/</id>
@@ -22,15 +22,6 @@
 
 <script src="https://gist.github.com/4617534.js"></script>
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Welcome to the UrBlog Reborn]]></title>
-    <link href="http://jurberg.github.com/blog/2013/01/14/welcome-to-the-urblog-reborn/"/>
-    <updated>2013-01-14T21:21:00-06:00</updated>
-    <id>http://jurberg.github.com/blog/2013/01/14/welcome-to-the-urblog-reborn</id>
-    <content type="html"><![CDATA[<p>Welcome to my new blog hosted on Github!  I plan on posting my new content here and eventually moving my old posts over.</p>
 ]]></content>
   </entry>
   

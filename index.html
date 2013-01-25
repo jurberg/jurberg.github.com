@@ -9,8 +9,7 @@
   <meta name="author" content="John Urberg">
 
   
-  <meta name="description" content="Welcome to my new blog hosted on Github! I plan on posting my new content here and eventually moving my old posts over.
-">
+  <meta name="description" content="With the recent Spring vulnerability, we thought it would be a good idea to disable EL in our Grails application. To do this, we need to add a &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -71,6 +70,45 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2013/01/23/add-a-context-param-to-grails/">Add a Context-param to Grails</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-01-23T22:06:00-06:00" pubdate data-updated="true">Jan 23<span>rd</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>With the recent <a href="https://www.aspectsecurity.com/uploads/downloads/2012/12/Remote-Code-with-Expression-Language-Injection.pdf">Spring vulnerability</a>, we thought it would be a good idea to disable EL in our Grails application.  To do this, we need to add a context-param to the beginning of the generated web.xml file.  Rather than using install-templates, I used the eventWebXmlEnd event to insert it.  XMLSlurper would have been nice, but it does not have a simple way to insert a node.  So instead I used the XmlParser and came up with the following.</p>
+
+<script src="https://gist.github.com/4617534.js"></script>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2013/01/14/welcome-to-the-urblog-reborn/">Welcome to the UrBlog Reborn</a></h1>
     
     
@@ -113,6 +151,10 @@
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/01/23/add-a-context-param-to-grails/">Add a context-param to Grails</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/01/14/welcome-to-the-urblog-reborn/">Welcome to the UrBlog Reborn</a>
