@@ -1,6 +1,18 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
+        <loc>http://jurberg.github.com/blog/2009/10/09/transmiting-java-cpp/</loc>
+        <lastmod>2013-01-26T13:53:18-06:00</lastmod>
+    </url>
+    <url>
+        <loc>http://jurberg.github.com/blog/2010/12/17/spring-host-name-verifier/</loc>
+        <lastmod>2013-01-26T13:23:16-06:00</lastmod>
+    </url>
+    <url>
+        <loc>http://jurberg.github.com/blog/2011/02/17/hosting-maven-repo-file-share/</loc>
+        <lastmod>2013-01-26T13:23:28-06:00</lastmod>
+    </url>
+    <url>
         <loc>http://jurberg.github.com/blog/2011/06/16/implementing-rest-authentication/</loc>
         <lastmod>2013-01-26T13:12:23-06:00</lastmod>
     </url>
@@ -11,6 +23,14 @@
     <url>
         <loc>http://jurberg.github.com/blog/2011/08/11/introduction-to-node/</loc>
         <lastmod>2013-01-26T13:12:23-06:00</lastmod>
+    </url>
+    <url>
+        <loc>http://jurberg.github.com/blog/2011/11/05/custom-scheduling-spring/</loc>
+        <lastmod>2013-01-26T13:58:01-06:00</lastmod>
+    </url>
+    <url>
+        <loc>http://jurberg.github.com/blog/2011/11/11/spring-as-a-factory-method/</loc>
+        <lastmod>2013-01-26T13:56:05-06:00</lastmod>
     </url>
     <url>
         <loc>http://jurberg.github.com/blog/2012/10/17/grails-clean-test-app-script/</loc>
@@ -42,11 +62,11 @@
     </url>
     <url>
         <loc>http://jurberg.github.com/blog/archives/</loc>
-        <lastmod>2013-01-24T21:34:29-06:00</lastmod>
+        <lastmod>2013-01-26T13:58:01-06:00</lastmod>
     </url>
     <url>
         <loc>http://jurberg.github.com/</loc>
-        <lastmod>2013-01-26T12:59:30-06:00</lastmod>
+        <lastmod>2013-01-26T13:58:01-06:00</lastmod>
     </url>
     <url>
         <loc>http://jurberg.github.com/robots.txt</loc>

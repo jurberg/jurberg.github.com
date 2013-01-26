@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Implementing REST Authentication - The UrBlog</title>
+  <title>Hosting a Maven internal repository on a file share - The UrBlog</title>
   <meta name="author" content="John Urberg">
 
   
-  <meta name="description" content="While there is not much written about REST authentication, there does seem to be a common theme among the few articles written about it that REST &hellip;">
+  <meta name="description" content="I spent some time today setting up an internal repository for my Maven build. I wanted to host just the artifacts that are used by my projects and &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://jurberg.github.com/blog/2011/06/16/implementing-rest-authentication/">
+  <link rel="canonical" href="http://jurberg.github.com/blog/2011/02/17/hosting-maven-repo-file-share/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -67,7 +67,7 @@
   
   <header>
     
-      <h1 class="entry-title">Implementing REST Authentication</h1>
+      <h1 class="entry-title">Hosting a Maven Internal Repository on a File Share</h1>
     
     
       <p class="meta">
@@ -83,7 +83,7 @@
   
 
 
-<time datetime="2011-06-16T19:00:00-05:00" pubdate data-updated="true">Jun 16<span>th</span>, 2011</time>
+<time datetime="2011-02-17T19:00:00-06:00" pubdate data-updated="true">Feb 17<span>th</span>, 2011</time>
         
          | <a href="#disqus_thread">Comments</a>
         
@@ -92,9 +92,33 @@
   </header>
 
 
-<div class="entry-content"><p>While there is not much written about REST authentication, there does seem to be a common theme among the few articles written about it that REST services should be authenticated by signing the query parameters using a private key and making the calls over HTTPS.  This posting will provide an example of the signing of query parameters using a simple Spring server. We&#8217;ll provide a small twist by putting the authentication information in headers.</p>
+<div class="entry-content"><p>I spent some time today setting up an internal repository for my Maven build.  I wanted to host just the artifacts that are used by my projects and not allow the project build to go outside of that repository.  I first setup my repositories like this:</p>
 
-<p><a href="http://www.objectpartners.com/2011/06/16/implementing-rest-authentication/">more&#8230;</a></p>
+
+<pre>
+&lt;<span style="color:#0000ff">repositories</span>a&gt;
+  &lt;<span style="color:#0000ff">repository</span>&gt;
+    &lt;<span style="color:#0000ff">id</span>&gt;central&lt;/<span style="color:#0000ff">id</span>&gt;
+    &lt;<span style="color:#0000ff">name</span>&gt;My Company's Internal Repository&lt;/<span style="color:#0000ff">name</span>&gt;
+    &lt;<span style="color:#0000ff">url</span>&gt;file:///server/Maven/repo/&lt;/<span style="color:#0000ff">url</span>&gt;
+  &lt;/<span style="color:#0000ff">repository</span>&gt;
+&lt;/<span style="color:#0000ff">repositories</span>&gt;
+</pre>
+
+
+<p>The idea behind this setup is that I overrode the &#8220;central&#8221; repository and pointed it to my internal repository.  This way Maven would not try to go out to repo1.maven.org if it did not find something.</p>
+
+
+<p>And it did not work.  After much research and trying many things, it turns out my URL needs to look like this:</p>
+
+
+<pre>
+&lt;<span style="color:#0000ff">url</span>&gt;file://\\server\Maven\repo\&lt;/<span style="color:#0000ff">url</span>&gt;
+</pre>
+
+
+<p>Hope this helps someone in the future trying to setup a repository on a share.</p>
+
 </div>
 
 
@@ -127,7 +151,7 @@
   
 
 
-<time datetime="2011-06-16T19:00:00-05:00" pubdate data-updated="true">Jun 16<span>th</span>, 2011</time>
+<time datetime="2011-02-17T19:00:00-06:00" pubdate data-updated="true">Feb 17<span>th</span>, 2011</time>
       
 
 <span class="categories">
@@ -141,7 +165,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://jurberg.github.com/blog/2011/06/16/implementing-rest-authentication/" data-via="jurberg" data-counturl="http://jurberg.github.com/blog/2011/06/16/implementing-rest-authentication/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://jurberg.github.com/blog/2011/02/17/hosting-maven-repo-file-share/" data-via="jurberg" data-counturl="http://jurberg.github.com/blog/2011/02/17/hosting-maven-repo-file-share/" >Tweet</a>
   
   
   
@@ -150,10 +174,10 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2011/02/17/hosting-maven-repo-file-share/" title="Previous Post: Hosting a Maven internal repository on a file share">&laquo; Hosting a Maven internal repository on a file share</a>
+        <a class="basic-alignment left" href="/blog/2010/12/17/spring-host-name-verifier/" title="Previous Post: Using a HostnameVerifier with Spring Web Services">&laquo; Using a HostnameVerifier with Spring Web Services</a>
       
       
-        <a class="basic-alignment right" href="/blog/2011/08/09/scaling-with-single-threading/" title="Next Post: Scaling with Single Threading">Scaling with Single Threading &raquo;</a>
+        <a class="basic-alignment right" href="/blog/2011/06/16/implementing-rest-authentication/" title="Next Post: Implementing REST Authentication">Implementing REST Authentication &raquo;</a>
       
     </p>
   </footer>
@@ -277,8 +301,8 @@
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://jurberg.github.com/blog/2011/06/16/implementing-rest-authentication/';
-        var disqus_url = 'http://jurberg.github.com/blog/2011/06/16/implementing-rest-authentication/';
+        var disqus_identifier = 'http://jurberg.github.com/blog/2011/02/17/hosting-maven-repo-file-share/';
+        var disqus_url = 'http://jurberg.github.com/blog/2011/02/17/hosting-maven-repo-file-share/';
         var disqus_script = 'embed.js';
       
     (function () {

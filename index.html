@@ -350,6 +350,338 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2011/11/11/spring-as-a-factory-method/">Using Spring as a Factory Method</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-11-11T19:00:00-06:00" pubdate data-updated="true">Nov 11<span>th</span>, 2011</time>
+        
+         | <a href="/blog/2011/11/11/spring-as-a-factory-method/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>One common strategy in object-oriented program is to use the <a href="http://en.wikipedia.org/wiki/Dependency_inversion_principle">dependency inversion principle</a> to decouple high level code from the low level details. To demonstrate this, let&#8217;s use the movie example from <a href="http://www.amazon.com/Refactoring-Improving-Design-Existing-Code/dp/0201485672">Martin Fowler&#8217;s Refactoring book</a>.</p>
+
+<br/><br/>
+
+
+<p>After some initial refactoring, we have a Movie class that can calculate it&#8217;s charge based on days rented:</p>
+
+<pre><span style="color:#000000;">// </span><span style="color:#b22222;">From book: 'Refactoring' by Martin Fowler
+</span><span style="color:#a020f0;">public</span> <span style="color:#a020f0;">class</span> <span style="color:#228b22;">Movie</span> {
+
+   <span style="color:#a020f0;">public</span> <span style="color:#a020f0;">static</span> <span style="color:#a020f0;">final</span> <span style="color:#a020f0;">int</span> <span style="color:#228b22;">CHILDRENS</span> = 2;
+   <span style="color:#a020f0;">public</span> <span style="color:#a020f0;">static</span> <span style="color:#a020f0;">final</span> <span style="color:#a020f0;">int</span> <span style="color:#228b22;">NEW_RELEASE</span> = 1;
+   <span style="color:#a020f0;">public</span> <span style="color:#a020f0;">static</span> <span style="color:#a020f0;">final</span> <span style="color:#a020f0;">int</span> <span style="color:#228b22;">REGULAR</span> = 0;
+
+   <span style="color:#a020f0;">double</span> charge(<span style="color:#a020f0;">int</span> daysRented) {
+      <span style="color:#a020f0;">double</span> result = 0;
+      <span style="color:#a020f0;">switch</span> (getPriceCode()) {
+    <span style="color:#a020f0;">case</span> <span style="color:#228b22;">Movie</span>.<span style="color:#228b22;">REGULAR</span>:
+       result += 2;
+       <span style="color:#a020f0;">if</span> (daysRented &gt; 2)
+          result += (daysRented - 2) * 1.5;
+       <span style="color:#a020f0;">break</span>;
+    <span style="color:#a020f0;">case</span> <span style="color:#228b22;">Movie</span>.<span style="color:#228b22;">NEW_RELEASE</span>:
+       result += daysRented * 3;
+       <span style="color:#a020f0;">break</span>;
+    <span style="color:#a020f0;">case</span> <span style="color:#228b22;">Movie</span>.<span style="color:#228b22;">CHILDRENS</span>:
+       result += 1.5;
+       <span style="color:#a020f0;">if</span> (daysRented &gt; 3)
+          result += (daysRented - 3) * 1.5;
+       <span style="color:#a020f0;">break</span>;
+    }
+    <span style="color:#a020f0;">return</span> result;
+   }
+
+}</pre>
+
+
+<p>Next we replace the switch statement with polymorphism using the state pattern:</p>
+
+
+<pre><span style="color:#000000;">// </span><span style="color:#b22222;">From book: 'Refactoring' by Martin Fowler
+</span><span style="color:#a020f0;">public</span> <span style="color:#a020f0;">class</span> <span style="color:#228b22;">Movie</span> {
+
+   <span style="color:#a020f0;">public</span> <span style="color:#a020f0;">static</span> <span style="color:#a020f0;">final</span> <span style="color:#a020f0;">int</span> <span style="color:#228b22;">CHILDRENS</span> = 2;
+   <span style="color:#a020f0;">public</span> <span style="color:#a020f0;">static</span> <span style="color:#a020f0;">final</span> <span style="color:#a020f0;">int</span> <span style="color:#228b22;">NEW_RELEASE</span> = 1;
+   <span style="color:#a020f0;">public</span> <span style="color:#a020f0;">static</span> <span style="color:#a020f0;">final</span> <span style="color:#a020f0;">int</span> <span style="color:#228b22;">REGULAR</span> = 0;
+
+   <span style="color:#a020f0;">public</span> <span style="color:#a020f0;">static</span> <span style="color:#228b22;">Price</span> newPrice(<span style="color:#a020f0;">int</span> priceCode) {
+      <span style="color:#a020f0;">switch</span> (priceCode) {
+         <span style="color:#a020f0;">case</span> <span style="color:#228b22;">REGULAR</span>:
+        <span style="color:#a020f0;">return</span> <span style="color:#a020f0;">new</span> <span style="color:#228b22;">RegularPrice</span>();
+     <span style="color:#a020f0;">case</span> <span style="color:#228b22;">NEW_RELEASE</span>:
+        <span style="color:#a020f0;">return</span> <span style="color:#a020f0;">new</span> <span style="color:#228b22;">NewReleasePrice</span>();
+     <span style="color:#a020f0;">case</span> <span style="color:#228b22;">CHILDRENS</span>:
+        <span style="color:#a020f0;">return</span> <span style="color:#a020f0;">new</span> <span style="color:#228b22;">ChildrensPrice</span>();
+     <span style="color:#a020f0;">default</span>:
+        <span style="color:#a020f0;">throw</span> <span style="color:#a020f0;">new</span> <span style="color:#228b22;">IllegalArgumentException</span>();
+    }
+   }
+
+   <span style="color:#a020f0;">double</span> charge(<span style="color:#a020f0;">int</span> daysRented) {
+      <span style="color:#a020f0;">return</span> newPrice(getPriceCode()).charge(daysRented);
+   }
+
+}
+
+<span style="color:#a020f0;">public</span> <span style="color:#a020f0;">interface</span> <span style="color:#228b22;">Price</span> {
+   <span style="color:#a020f0;">double</span> charge(<span style="color:#a020f0;">int</span> daysRented);
+}
+
+<span style="color:#a020f0;">public</span> <span style="color:#a020f0;">class</span> <span style="color:#228b22;">RegularPrice</span> <span style="color:#a020f0;">implements</span> <span style="color:#228b22;">Price</span> {
+   <span style="color:#a020f0;">public</span> <span style="color:#a020f0;">double</span> charge(<span style="color:#a020f0;">int</span> daysRented) {
+      <span style="color:#a020f0;">double</span> result = 2;
+      <span style="color:#a020f0;">if</span> (daysRented &gt; 2)
+         result += (daysRented - 2) * 1.5;
+      <span style="color:#a020f0;">return</span> result;
+   }
+}
+
+<span style="color:#a020f0;">public</span> <span style="color:#a020f0;">class</span> <span style="color:#228b22;">NewReleasePrice</span> <span style="color:#a020f0;">implements</span> <span style="color:#228b22;">Price</span> {
+   <span style="color:#a020f0;">public</span> <span style="color:#a020f0;">double</span> charge(<span style="color:#a020f0;">int</span> daysRented) {
+      <span style="color:#a020f0;">return</span> daysRented * 3;
+   }
+}
+
+<span style="color:#a020f0;">public</span> <span style="color:#a020f0;">class</span> <span style="color:#228b22;">ChildrensPrice</span> <span style="color:#a020f0;">implements</span> <span style="color:#228b22;">Price</span> {
+   <span style="color:#a020f0;">public</span> <span style="color:#a020f0;">double</span> charge(<span style="color:#a020f0;">int</span> daysRented) {
+      <span style="color:#a020f0;">double</span> result = 1.5;
+      <span style="color:#a020f0;">if</span> (daysRented &gt; 3)
+         result += (daysRented - 3) * 1.5;
+      <span style="color:#a020f0;">return</span> result;
+   }
+}</pre>
+
+
+<p>This requires us to create some sort of factory method to decide which Price to create based on the Movie type (such as newPrice in the example).  Usually this occurs in a static method with a switch statement on type.  In a large program where Price is used multiple times, this is an advantage because we only have to change the one switch statement.  But what if we could get rid of that switch statement also?
+<br/><br/>
+If you are using Spring, you can take advantage of the replace-method tag.  You can pass it a class implementing MethodReplacer to replace a method in the class.  That method could be an abstract factory method.  Let&#8217;s modify our Movie class so that newPrice is an abstract method:</p>
+
+
+<pre><span style="color:#000000;">// </span><span style="color:#b22222;">From book: 'Refactoring' by Martin Fowler
+</span><span style="color:#a020f0;">public</span> <span style="color:#a020f0;">abstract</span> <span style="color:#a020f0;">class</span> <span style="color:#228b22;">Movie</span> {
+
+   <span style="color:#a020f0;">public</span> <span style="color:#a020f0;">static</span> <span style="color:#a020f0;">final</span> <span style="color:#a020f0;">int</span> <span style="color:#228b22;">CHILDRENS</span> = 2;
+   <span style="color:#a020f0;">public</span> <span style="color:#a020f0;">static</span> <span style="color:#a020f0;">final</span> <span style="color:#a020f0;">int</span> <span style="color:#228b22;">NEW_RELEASE</span> = 1;
+   <span style="color:#a020f0;">public</span> <span style="color:#a020f0;">static</span> <span style="color:#a020f0;">final</span> <span style="color:#a020f0;">int</span> <span style="color:#228b22;">REGULAR</span> = 0;
+
+   <span style="color:#a020f0;">public</span> <span style="color:#a020f0;">abstract</span> <span style="color:#228b22;">Price</span> newPrice(<span style="color:#a020f0;">int</span> priceCode);
+
+   <span style="color:#a020f0;">double</span> charge(<span style="color:#a020f0;">int</span> daysRented) {
+      <span style="color:#a020f0;">return</span> newPrice(getPriceCode()).charge(daysRented);
+   }
+
+}</pre>
+
+
+<p>Now we create a handy method replacer utility class that joins a prefix with the first argument to create a bean name and looks up the bean in the context:</p>
+
+
+<pre><span style="color:#a020f0;">public</span> <span style="color:#a020f0;">class</span> <span style="color:#228b22;">BeanFactoryMethodReplacer</span> <span style="color:#a020f0;">implements</span> <span style="color:#228b22;">MethodReplacer</span>, <span style="color:#228b22;">ApplicationContextAware</span> {
+
+   <span style="color:#a020f0;">private</span> <span style="color:#228b22;">ApplicationContext</span> context;
+
+   <span style="color:#a020f0;">private</span> <span style="color:#228b22;">String</span> prefix;
+
+   <span style="color:#a020f0;">public</span> <span style="color:#a020f0;">void</span> setApplicationContext(<span style="color:#228b22;">ApplicationContext</span> context) throws <span style="color:#228b22;">BeansException</span> {
+      <span style="color:#a020f0;">this</span>.context = context;
+   }
+
+   <span style="color:#a020f0;">public</span> <span style="color:#a020f0;">void</span> setPrefix(<span style="color:#228b22;">String</span> prefix) {
+      <span style="color:#a020f0;">this</span>.prefix = prefix;
+   }
+
+   <span style="color:#a020f0;">public</span> <span style="color:#228b22;">Object</span> reimplement(<span style="color:#228b22;">Object</span> obj, <span style="color:#228b22;">Method</span> method, <span style="color:#228b22;">Object</span>[] args) throws <span style="color:#228b22;">Throwable</span> {
+      <span style="color:#228b22;">String</span> bean = (prefix != null) ? prefix : <span style="color:#bc8f8f;">""</span>;
+      bean += args[0];
+      <span style="color:#a020f0;">return</span> context.getBean(bean);
+   }
+
+}</pre>
+
+
+<p>Finally, we register the method replacer, the movie with the newPrice method replaced and beans for each Price.  We use &#8220;price&#8221; as a prefix.  The name of each price bean should be &#8220;price&#8221; + the number code for it&#8217;s type:</p>
+
+
+<pre>&lt;<span style="color:#0000ff;">bean</span> <span style="color:#b8860b;">id</span>=<span style="color:#bc8f8f;">"movie"</span> <span style="color:#b8860b;">class</span>=<span style="color:#bc8f8f;">"Movie"</span>&gt;
+   &lt;<span style="color:#0000ff;">replaced-method</span> <span style="color:#b8860b;">name</span>=<span style="color:#bc8f8f;">"newPrice"</span> <span style="color:#b8860b;">replacer</span>=<span style="color:#bc8f8f;">"factoryMethodReplacer"</span>&gt;
+      &lt;<span style="color:#0000ff;">arg-type</span>&gt;int&lt;/<span style="color:#0000ff;">arg-type</span>&gt;
+   &lt;/<span style="color:#0000ff;">replaced-method</span>&gt;
+&lt;/<span style="color:#0000ff;">bean</span>&gt;
+
+&lt;<span style="color:#0000ff;">bean</span> <span style="color:#b8860b;">id</span>=<span style="color:#bc8f8f;">"factoryMethodReplacer"</span> <span style="color:#b8860b;">class</span>=<span style="color:#bc8f8f;">"BeanFactoryMethodReplacer"</span>&gt;
+   &lt;<span style="color:#0000ff;">property</span> <span style="color:#b8860b;">name</span>=<span style="color:#bc8f8f;">"prefix"</span> <span style="color:#b8860b;">value</span>=<span style="color:#bc8f8f;">"price"</span>/&gt;
+&lt;/<span style="color:#0000ff;">bean</span>&gt;
+
+&lt;<span style="color:#0000ff;">bean</span> <span style="color:#b8860b;">id</span>=<span style="color:#bc8f8f;">"price0"</span> <span style="color:#b8860b;">class</span>=<span style="color:#bc8f8f;">"RegularPrice"</span>/&gt;
+
+&lt;<span style="color:#0000ff;">bean</span> <span style="color:#b8860b;">id</span>=<span style="color:#bc8f8f;">"price1"</span> <span style="color:#b8860b;">class</span>=<span style="color:#bc8f8f;">"NewReleasePrice"</span>/&gt;
+
+&lt;<span style="color:#0000ff;">bean</span> <span style="color:#b8860b;">id</span>=<span style="color:#bc8f8f;">"price2"</span> <span style="color:#b8860b;">class</span>=<span style="color:#bc8f8f;">"ChildrensPrice"</span>/&gt;</pre>
+
+
+<p>
+Spring has now become our factory method.  As new price codes are added, we can just register the Price class as a bean without having to manually change a factory method.</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/11/05/custom-scheduling-spring/">Custom Scheduling in Spring</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-11-05T19:00:00-05:00" pubdate data-updated="true">Nov 5<span>th</span>, 2011</time>
+        
+         | <a href="/blog/2011/11/05/custom-scheduling-spring/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Spring 3.0 has <a href="http://blog.springsource.com/2010/01/05/task-scheduling-simplifications-in-spring-3-0/">simplified task scheduling</a>.  As part if this, they have deprecated the MethodInvokingTimerTaskFactoryBean and ScheduledTimerTask.  Instead you create a scheduler that implements the TaskScheduler interface and uses a Trigger to specify when a task is scheduled to run.  The XML and annotations allow you to specify fixedDelay,  fixedRate or cron string.  These are fixed at run time.  This works great for triggers that are fixed at run time, but does not allow you any way to modify these at run time.  The TaskScheduler interface provides methods to schedule a task with a trigger, so this gives us an opportunity to pass in a custom trigger that can have it&#8217;s trigger interval changed at run time.  There are a number of ways to configure this.  Here is a simple way I came up with that uses a single bean to schedule the task and change the fixedDelay at run time.  This extends the example provided on the Spring blog noted earlier.</p>
+
+<br/><br/>
+
+
+<p>First we need a class that takes the scheduler, task and starting delay.  For simplicity, it will also implement the Timer interface.</p>
+
+<pre><span style="color:#a020f0;">public</span> <span style="color:#a020f0;">class</span> <span style="color:#228b22;">DynamicSchedule</span> <span style="color:#a020f0;">implements</span> <span style="color:#228b22;">Trigger</span> {
+
+<span style="color:#a020f0;">   private</span> <span style="color:#228b22;">TaskScheduler</span> scheduler;
+   <span style="color:#a020f0;">private</span> <span style="color:#228b22;">Runnable</span> task;
+   <span style="color:#a020f0;">private</span> <span style="color:#228b22;">ScheduledFuture</span>&lt;?&gt; future;
+   <span style="color:#a020f0;">private</span> <span style="color:#a020f0;">int</span> delay;
+
+   <span style="color:#a020f0;">public</span> <span style="color:#228b22;">DynamicSchedule</span>(<span style="color:#228b22;">TaskScheduler</span> scheduler, <span style="color:#228b22;">Runnable</span> task, <span style="color:#a020f0;">int</span> delay) {
+      <span style="color:#a020f0;">this</span>.scheduler = scheduler;
+      <span style="color:#a020f0;">this</span>.task = task;
+      reset(delay);
+   }
+
+   <span style="color:#a020f0;">public</span> <span style="color:#a020f0;">void</span> reset(<span style="color:#a020f0;">int</span> delay) {
+      <span style="color:#a020f0;">if</span> (future != null) {
+         <span style="color:#228b22;">System</span>.out.println(<span style="color:#bc8f8f;">"Cancelling task..."</span>);
+         future.cancel(<span style="color:#b8860b;">true</span>);
+      }
+      <span style="color:#a020f0;">this</span>.delay = delay;
+      <span style="color:#228b22;">System</span>.out.println(<span style="color:#bc8f8f;">"Starting task..."</span>);
+      future = scheduler.schedule(task, <span style="color:#a020f0;">this</span>);
+   }
+
+<span style="color:#b8860b;">   @Override</span>
+   <span style="color:#a020f0;">public</span> <span style="color:#228b22;">Date</span> nextExecutionTime(<span style="color:#228b22;">TriggerContext</span> triggerContext) {
+      <span style="color:#228b22;">Date</span> lastTime = triggerContext.lastActualExecutionTime();
+      <span style="color:#228b22;">Date</span> nextExecutionTime = (lastTime == null)
+         ? <span style="color:#a020f0;">new</span> <span style="color:#228b22;">Date</span>()
+         : <span style="color:#a020f0;">new</span> <span style="color:#228b22;">Date</span>(lastTime.getTime() + delay);
+         System.out.println("DynamicSchedule -- delay: " + delay +
+              ", lastActualExecutionTime: " + lastTime +
+              "; nextExecutionTime: " + nextExecutionTime);
+      return nextExecutionTime;
+   }
+
+}</pre>
+
+
+<p>Note the reset method which stops the scheduled task, changes the delay and then restarts the task.  If you are changing the delay to a shorter delay, you want to restart with the new delay so it happens immediately.  Alternately, you can skip canceling the task and the new delay is picked up on the next execution.
+<br/><br/>
+The rest of the code is the same, except for the SchedulerProcessor which has the @Scheduled annotation removed from the process method:<p><pre><span style="color:#b8860b;">@Component</span><span style="color:#a020f0;">
+public</span> <span style="color:#a020f0;">class</span> <span style="color:#228b22;">ScheduledProcessor</span> {
+
+<span style="color:#a020f0;">   private</span> <span style="color:#a020f0;">final</span> <span style="color:#228b22;">AtomicInteger</span> counter = <span style="color:#a020f0;">new</span> <span style="color:#228b22;">AtomicInteger</span>();
+
+<span style="color:#b8860b;">   @Autowired
+   </span><span style="color:#a020f0;">private</span> <span style="color:#228b22;">Worker</span> worker;
+
+<span style="color:#a020f0;">   public</span> <span style="color:#a020f0;">void</span> process() {<span style="color:#228b22;">
+      System</span>.out.println(<span style="color:#bc8f8f;">"processing next 10 at "</span> + <span style="color:#a020f0;">new</span> <span style="color:#228b22;">Date</span>());
+      <span style="color:#a020f0;">for</span> (<span style="color:#a020f0;">int</span> i = 0; i &lt; 10; i++) {
+         worker.work(counter.incrementAndGet());
+      }
+   }
+
+}</pre><p>In the XML configuration, we add a name to the scheduler and create the DynamicSchedule. We pass it the scheduler, the process method (wrapped in a MethodInvokingRunnable) and the default delay:</p><pre>   &lt;<span style="color:#000000;">context</span>:<span style="color:#0000ff;">component-scan</span> <span style="color:#b8860b;">base-package</span>=<span style="color:#bc8f8f;">"com/test"</span> /&gt;
+
+   &lt;<span style="color:#000000;">task</span>:<span style="color:#0000ff;">annotation-driven</span> /&gt;
+
+   &lt;<span style="color:#000000;">task</span>:<span style="color:#0000ff;">scheduler</span> <span style="color:#b8860b;">id</span>=<span style="color:#bc8f8f;">"scheduler"</span> /&gt;
+
+   &lt;<span style="color:#0000ff;">bean</span> <span style="color:#b8860b;">id</span>=<span style="color:#bc8f8f;">"dynamicSchedule"</span> <span style="color:#b8860b;">class</span>=<span style="color:#bc8f8f;">"com.test.DynamicSchedule"</span>&gt;
+      &lt;<span style="color:#0000ff;">constructor-arg</span> <span style="color:#b8860b;">ref</span>=<span style="color:#bc8f8f;">"scheduler"</span> /&gt;
+      &lt;<span style="color:#0000ff;">constructor-arg</span>&gt;
+         &lt;<span style="color:#0000ff;">bean</span> <span style="color:#b8860b;">class</span>=<span style="color:#bc8f8f;">"org.springframework.scheduling.support.MethodInvokingRunnable"</span>&gt;
+            &lt;<span style="color:#0000ff;">property</span> <span style="color:#b8860b;">name</span>=<span style="color:#bc8f8f;">"targetObject"</span> <span style="color:#b8860b;">ref</span>=<span style="color:#bc8f8f;">"scheduledProcessor"</span> /&gt;
+            &lt;<span style="color:#0000ff;">property</span> <span style="color:#b8860b;">name</span>=<span style="color:#bc8f8f;">"targetMethod"</span> <span style="color:#b8860b;">value</span>=<span style="color:#bc8f8f;">"process"</span> /&gt;
+         &lt;/<span style="color:#0000ff;">bean</span>&gt;
+      &lt;/<span style="color:#0000ff;">constructor-arg</span>&gt;
+      &lt;<span style="color:#0000ff;">constructor-arg</span> <span style="color:#b8860b;">value</span>=<span style="color:#bc8f8f;">"3000"</span> /&gt;
+   &lt;/<span style="color:#0000ff;">bean</span>&gt;</pre><p>Now we can add a separate process that changes the delay to a random delay to test it out:</p><pre><span style="color:#b8860b;">@Component</span>
+<span style="color:#a020f0;">public</span> <span style="color:#a020f0;">class</span> <span style="color:#228b22;">ScheduleChanger</span> {
+
+<span style="color:#b8860b;">   @Autowired</span>
+<span style="color:#a020f0;">   private</span> <span style="color:#228b22;">DynamicSchedule</span> dynamicSchedule;
+
+<span style="color:#b8860b;">   @Scheduled</span>(fixedDelay=30000)
+<span style="color:#a020f0;">   public</span> <span style="color:#a020f0;">void</span> change() {
+<span style="color:#228b22;">      Random</span> rnd = <span style="color:#a020f0;">new</span> <span style="color:#228b22;">Random</span>();
+      <span style="color:#a020f0;">int</span> nextTimeout = rnd.nextInt(30000);
+<span style="color:#228b22;">      System</span>.out.println(<span style="color:#bc8f8f;">"Changing poll time to: "</span> + nextTimeout);
+      dynamicSchedule.reset(nextTimeout);
+   }
+
+}</pre><p>When you run this and view the output, you will see where the dynamic schedule trigger is fired and where the schedule gets changed.</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2011/08/11/introduction-to-node/">An Introduction to Node.js</a></h1>
     
     
@@ -423,47 +755,9 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/06/16/implementing-rest-authentication/">Implementing REST Authentication</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-06-16T19:00:00-05:00" pubdate data-updated="true">Jun 16<span>th</span>, 2011</time>
-        
-         | <a href="/blog/2011/06/16/implementing-rest-authentication/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>While there is not much written about REST authentication, there does seem to be a common theme among the few articles written about it that REST services should be authenticated by signing the query parameters using a private key and making the calls over HTTPS.  This posting will provide an example of the signing of query parameters using a simple Spring server. We&#8217;ll provide a small twist by putting the authentication information in headers.</p>
-
-<p><a href="http://www.objectpartners.com/2011/06/16/implementing-rest-authentication/">more&#8230;</a></p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
+    
+      <a class="prev" href="/blog/page/2/">&larr; Older</a>
     
     <a href="/blog/archives">Blog Archives</a>
     

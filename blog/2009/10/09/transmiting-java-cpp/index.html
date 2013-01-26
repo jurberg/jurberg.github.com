@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Implementing REST Authentication - The UrBlog</title>
+  <title>Transmitting Unicode data between C++ and Java - The UrBlog</title>
   <meta name="author" content="John Urberg">
 
   
-  <meta name="description" content="While there is not much written about REST authentication, there does seem to be a common theme among the few articles written about it that REST &hellip;">
+  <meta name="description" content="We ran into an issue this week were we had to figure out how to transmit Unicode data between a C++ program and a Java program using TCP. We have a &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://jurberg.github.com/blog/2011/06/16/implementing-rest-authentication/">
+  <link rel="canonical" href="http://jurberg.github.com/blog/2009/10/09/transmiting-java-cpp/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -67,7 +67,7 @@
   
   <header>
     
-      <h1 class="entry-title">Implementing REST Authentication</h1>
+      <h1 class="entry-title">Transmitting Unicode Data Between C++ and Java</h1>
     
     
       <p class="meta">
@@ -83,7 +83,7 @@
   
 
 
-<time datetime="2011-06-16T19:00:00-05:00" pubdate data-updated="true">Jun 16<span>th</span>, 2011</time>
+<time datetime="2009-10-09T19:00:00-05:00" pubdate data-updated="true">Oct 9<span>th</span>, 2009</time>
         
          | <a href="#disqus_thread">Comments</a>
         
@@ -92,9 +92,89 @@
   </header>
 
 
-<div class="entry-content"><p>While there is not much written about REST authentication, there does seem to be a common theme among the few articles written about it that REST services should be authenticated by signing the query parameters using a private key and making the calls over HTTPS.  This posting will provide an example of the signing of query parameters using a simple Spring server. We&#8217;ll provide a small twist by putting the authentication information in headers.</p>
+<div class="entry-content"><p>We ran into an issue this week were we had to figure out how to transmit Unicode data between a C++ program and a Java program using TCP.  We have a working program that is sending ASCII just fine.  We expected the C++ Unicode work would be difficult and the Java work would be easy.  It turns out the C++ side was not as difficult as we thought.  The Java side turned out to be easy, but it took some time to figure out how to make it work.  Here&#8217;s a quick explanation of what we found:</p>
 
-<p><a href="http://www.objectpartners.com/2011/06/16/implementing-rest-authentication/">more&#8230;</a></p>
+<h3>C++</h3>
+
+
+<p>Most of our C++ code is using the standard library (i.e. std::string) and boost::asio for the networking.  After a bit if research, I created a tstring.hpp file using code I found <a href="http://www.rioki.org/2008/02/18/stdtstring/">here</a> and <a href="http://www.codeproject.com/KB/stl/upgradingstlappstounicode.aspx">here</a>.  I changed the networking code to use the new std::tstring instead of std::string and was able to deal with Unicode data.  Here&#8217;s an example of the asio code to read data sent from Java.  Java sends a header with &#8220;file0000000000&#8221; where the 10 digits contain the data length, followed by the data itself.  Notice the buffer size is the size * sizeof(TCHAR) to account for the fact that wide char are twice the size of normal char.</p>
+
+
+<pre><font color="#a020f0">class</font> <font color="#228b22">session</font> : <font color="#a020f0">public</font> <font color="#228b22">boost</font>::enable_shared_from_this&lt;session&gt;
+{
+<font color="#5f9ea0">public</font>:
+  <font color="#228b22">void</font> <font color="#0000ff">read_header</font>()
+  {
+    buffer_.resize(14);
+    boost::asio::async_read(
+      socket_,
+      boost::asio::buffer(buffer_, buffer_.size() * <font color="#a020f0">sizeof</font>(TCHAR)),
+      boost::bind(
+    &amp;session::handle_read_header, 
+    shared_from_this(),
+    boost::asio::placeholders::error,
+    boost::asio::placeholders::bytes_transferred));
+  }
+
+  <font color="#228b22">void</font> <font color="#0000ff">handle_read_header</font>(<font color="#a020f0">const</font> boost::system::error_code&amp; error, <font color="#228b22">size_t</font> <font color="#b8860b">bytes_transferred</font>)
+  {
+    <font color="#a020f0">if</font> (error) <font color="#a020f0">return</font>;
+
+    std::tstring data(buffer_.begin(), buffer_.end());
+    <font color="#228b22">short</font> <font color="#b8860b">length</font> = boost::lexical_cast&lt;<font color="#228b22">short</font>&gt;(data.substr(4));
+
+    buffer_.resize(length);
+    boost::asio::async_read(
+      socket_,
+      boost::asio::buffer(buffer_, buffer_.size() * <font color="#a020f0">sizeof</font>(TCHAR)),
+      boost::bind(
+    &amp;session::handle_read_data, 
+    shared_from_this(),
+    boost::asio::placeholders::error,
+    boost::asio::placeholders::bytes_transferred));
+  }
+
+  <font color="#228b22">void</font> <font color="#0000ff">handle_read_data</font>(<font color="#a020f0">const</font> boost::system::error_code&amp; error, <font color="#228b22">size_t</font> <font color="#b8860b">bytes_transferred</font>)
+  {
+    <font color="#a020f0">if</font> (error &amp;&amp; error.value() != 2) <font color="#a020f0">return</font>;
+    std::tstring data(buffer_.begin(), buffer_.end());
+    <font color="#b22222">// process data
+</font>    read_header();
+  }
+
+<font color="#5f9ea0">private</font>:
+  tcp::socket socket_;
+  std::<font color="#228b22">vector</font>&lt;<font color="#228b22">TCHAR</font>&gt; <font color="#b8860b">buffer_</font>;
+  <font color="#228b22">int</font> <font color="#b8860b">count_</font>;
+
+};
+</pre>
+
+
+<h3>Java</h3>
+
+
+<p>For an example, we created a simple Java program that would load in a Unicode file, append a header and send it to the C++ code above.  What took a great deal of time was figuring out how to get the data in the correct format.  It turns out the way the C++ program was looking for data was in UTF-16LE format.  We took our data string and called getBytes(&#8220;UTF-16LE&#8221;) to get the data in the correct format to send.</p>
+
+
+<pre><font color="#228b22">String</font> <font color="#b8860b">data</font> = getFileContents();
+<font color="#228b22">Formatter</font> <font color="#b8860b">f</font> = <font color="#a020f0">new</font> <font color="#228b22">Formatter</font>();
+<font color="#228b22">String</font> <font color="#b8860b">header</font> = f.format(<font color="#bc8f8f">&quot;file%010d&quot;</font>, data.length() * 2).toString(); 
+data = header + data;
+<font color="#228b22">byte</font>[] <font color="#b8860b">buffer</font> = data.getBytes(<font color="#bc8f8f">&quot;UTF-16LE&quot;</font>);
+<font color="#228b22">Socket</font> <font color="#b8860b">socket</font> = <font color="#a020f0">new</font> <font color="#228b22">Socket</font>(address, port);
+<font color="#228b22">BufferedOutputStream</font> <font color="#b8860b">bis</font> = <font color="#a020f0">new</font> <font color="#228b22">BufferedOutputStream</font>(socket.getOutputStream());
+<font color="#a020f0">try</font> {
+   bis.write(buffer);
+   bis.flush();
+} <font color="#a020f0">finally</font> {
+   bis.close();
+}
+</pre>
+
+
+<p>In the end, this turns out to be easy to do.  It just takes a bit of time to figure out the settings.  We had to spend time searching for bits and pieces of info to put this together.  If you happen to know any good resources to help others with this, feel free to add a comment.</p>
+
 </div>
 
 
@@ -127,12 +207,12 @@
   
 
 
-<time datetime="2011-06-16T19:00:00-05:00" pubdate data-updated="true">Jun 16<span>th</span>, 2011</time>
+<time datetime="2009-10-09T19:00:00-05:00" pubdate data-updated="true">Oct 9<span>th</span>, 2009</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/java/'>Java</a>
+    <a class='category' href='/blog/categories/c-/'>C++</a>, <a class='category' href='/blog/categories/java/'>Java</a>
   
 </span>
 
@@ -141,7 +221,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://jurberg.github.com/blog/2011/06/16/implementing-rest-authentication/" data-via="jurberg" data-counturl="http://jurberg.github.com/blog/2011/06/16/implementing-rest-authentication/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://jurberg.github.com/blog/2009/10/09/transmiting-java-cpp/" data-via="jurberg" data-counturl="http://jurberg.github.com/blog/2009/10/09/transmiting-java-cpp/" >Tweet</a>
   
   
   
@@ -150,10 +230,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2011/02/17/hosting-maven-repo-file-share/" title="Previous Post: Hosting a Maven internal repository on a file share">&laquo; Hosting a Maven internal repository on a file share</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2011/08/09/scaling-with-single-threading/" title="Next Post: Scaling with Single Threading">Scaling with Single Threading &raquo;</a>
+        <a class="basic-alignment right" href="/blog/2010/12/17/spring-host-name-verifier/" title="Next Post: Using a HostnameVerifier with Spring Web Services">Using a HostnameVerifier with Spring Web Services &raquo;</a>
       
     </p>
   </footer>
@@ -277,8 +355,8 @@
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://jurberg.github.com/blog/2011/06/16/implementing-rest-authentication/';
-        var disqus_url = 'http://jurberg.github.com/blog/2011/06/16/implementing-rest-authentication/';
+        var disqus_identifier = 'http://jurberg.github.com/blog/2009/10/09/transmiting-java-cpp/';
+        var disqus_url = 'http://jurberg.github.com/blog/2009/10/09/transmiting-java-cpp/';
         var disqus_script = 'embed.js';
       
     (function () {
