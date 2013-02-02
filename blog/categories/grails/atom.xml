@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Grails | The UrBlog]]></title>
   <link href="http://jurberg.github.com/blog/categories/grails/atom.xml" rel="self"/>
   <link href="http://jurberg.github.com/"/>
-  <updated>2013-01-26T15:16:22-06:00</updated>
+  <updated>2013-02-02T16:19:48-06:00</updated>
   <id>http://jurberg.github.com/</id>
   <author>
     <name><![CDATA[John Urberg]]></name>
@@ -12,6 +12,34 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Running the Require.JS optimizer in a Grails build]]></title>
+    <link href="http://jurberg.github.com/blog/2013/02/02/requirejs-in-grails-build/"/>
+    <updated>2013-02-02T22:06:00-06:00</updated>
+    <id>http://jurberg.github.com/blog/2013/02/02/requirejs-in-grails-build</id>
+    <content type="html"><![CDATA[<p>The <a href="http://grails.org/plugin/resources">Grails Resource Plugin</a> provides some dependency management for your JavaScript resources by allowing you to define modules of scripts, including their dependencies.  This works fine for applications with small numbers of JavaScript.  If you're writing an application with a large amount of JavaScript, having to keep those dependencies in sync in a separate Groovy config file can get difficult.  Enter <a href="http://requirejs.org/">Require.JS</a>.  Require.JS is an <a href="https://github.com/amdjs/amdjs-api/wiki/AMD">Asynchronous Module Definition (AMD) API</a> for JavaScript.  It allows you to define modules in JavaScript, including what modules it depends on.  The module loader will then load the dependencies when needed.  This is easier to manage in a large JavaScript project since you define the dependencies in each JavaScript file.</p>
+
+
+<p>Require.JS comes with an <a href="http://requirejs.org/docs/optimization.html">optimizer</a> that will crawl thru all your code, evaluate the dependencies, merge them into one file and minimize it.  The optimizer code is in a JavaScript file that can be run using <a href="http://nodejs.org/">Node.JS</a> or <a href="https://developer.mozilla.org/en-US/docs/Rhino">Rhino</a>.  We would like to run this as part of the Grails build during the war command.</p>
+
+
+<p>The Grails war command will copy the resources for the war file into a staging directory.  Before the war file is built, we will get a "CreateWarStart" event which gets the war name and the staging directory.  This is where we can call the optimizer command. Following is an example that can be placed in our _Events.groovy script.   It assumes you've placed the Rhino js.jar and the Require.JS r.js optimizer script in the Scripts folder.</p>
+
+
+<script src="https://gist.github.com/4699237.js"></script>
+
+
+<p>We run the script using the Java command instead of ant.java to avoid any issues from code loaded by Grails.  The scripts are run from the project root, so we reference the js.jar and r.js files in the .\Scripts directory.  The JavaScript files will be copied to the stagingDir in the js folder.  We'll set the baseUrl to that directory and output the build file there also.  While the example does not show it, you can also pass removeCombined=true to remove the JavaScript files that were combined.</p>
+
+
+<p>The final step is to update our GSP file so it uses the -build version of the main script.  Following is an example of the script line adds -build if we are running in a war</p>
+
+
+<script src="https://gist.github.com/4699505.js"></script>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Add a context-param to Grails]]></title>
@@ -91,21 +119,6 @@
     <content type="html"><![CDATA[<p>The <a href="http://grails.org/plugin/jmx">Grails JMX plugin</a> is a great way to quickly make a service available through JMX.  Things get trickier when you want to only expose a few methods on the service.  The plugin provides the option to list methods to exclude, but you need to list all of them including the ones Grails added to the service.  Fortunately, we can use the metaclass to help us out.  We can add a list of the few methods we want exposed and then use to that to generate the list of exclude method as follows:</p>
 
 <script src="https://gist.github.com/3977988.js"> </script>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Grails clean-test-app script]]></title>
-    <link href="http://jurberg.github.com/blog/2012/10/17/grails-clean-test-app-script/"/>
-    <updated>2012-10-17T19:00:00-05:00</updated>
-    <id>http://jurberg.github.com/blog/2012/10/17/grails-clean-test-app-script</id>
-    <content type="html"><![CDATA[<p>I've been developing Grails apps in Spring Tool Suite. STS will compile your Groovy code as you save it just as Eclipse does for Java code.  This is great during coding, but can cause issues when it's time to check in.  If you deleted a class and then run <span style="font-family:Monospace;">test-app</span>, that class may not be cleared from your target/classes and tests may pass that shouldn't.  Before checking in, I now need to run <span style="font-family:Monospace;">clean</span>, then <span style="font-family:Monospace;">refresh-dependencies</span>, then <span style="font-family:Monospace;">test-app</span>.  To save some time, I created the following script that will do it all at once.  Now I can just run <span style="font-family:Monospace;">clean-test-app</span>.</p>
-
-<br/>
-
-
-<script src="https://gist.github.com/3909243.js?file=CleanTestApp.groovy"></script>
 
 ]]></content>
   </entry>
