@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Grails | The UrBlog]]></title>
   <link href="http://jurberg.github.com/blog/categories/grails/atom.xml" rel="self"/>
   <link href="http://jurberg.github.com/"/>
-  <updated>2013-02-02T16:19:48-06:00</updated>
+  <updated>2013-02-26T21:41:34-06:00</updated>
   <id>http://jurberg.github.com/</id>
   <author>
     <name><![CDATA[John Urberg]]></name>
@@ -12,6 +12,31 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[A simple JavaScript module]]></title>
+    <link href="http://jurberg.github.com/blog/2013/02/26/simple-define-js/"/>
+    <updated>2013-02-26T21:00:00-06:00</updated>
+    <id>http://jurberg.github.com/blog/2013/02/26/simple-define-js</id>
+    <content type="html"><![CDATA[<p>When developing JavaScript, I like to break my code into modules and define what modules the depend on.  <a href="http://requirejs.org/">Require.JS</a> is a great tool for this, but it also means bringing in module loading.  I'm on a project using <a href="http://grails.org/">Grails</a> that has a moderate amount of JavaScript.  Grails provides a resource plugin that handles bundling of resources.  I would still like to use the Require.JS style of defining modules and their dependencies while still loading scripts the normal way so Grails is happy.</p>
+
+
+<p>I ended up creating <a href="https://github.com/jurberg/define.js">define.js</a>.  This libary provides a simple 'define' and 'require' method.  The 'define' uses the global object to hold the modules so they are also available in html handlers.  Using the global object as the module list also allows us to treat third party libraries such as jQuery as dependencies.</p>
+
+
+<p>The following example creates a module that depends on the domain.person module, jQuery and the window object.  Since we are using the global to store modules, we can treat jQuery and window just like any other dependency we have defined.</p>
+
+
+<script src="https://gist.github.com/jurberg/5044824.js"></script>
+
+
+<p>Using the global object to hold modules also allows us to access them in html</p>
+
+
+<script src="https://gist.github.com/jurberg/5044843.js"></script>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Running the Require.JS optimizer in a Grails build]]></title>
@@ -107,18 +132,6 @@
 
 
 <p>The above piece of code abstracts the processing into 8 lines of code.  It is a testament to the power of a dynamic language that provides closures.</p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[An easier way to exclude methods from Grails JMX plugin services]]></title>
-    <link href="http://jurberg.github.com/blog/2012/10/29/exclude-methods-grails-jmx-plugin/"/>
-    <updated>2012-10-29T19:00:00-05:00</updated>
-    <id>http://jurberg.github.com/blog/2012/10/29/exclude-methods-grails-jmx-plugin</id>
-    <content type="html"><![CDATA[<p>The <a href="http://grails.org/plugin/jmx">Grails JMX plugin</a> is a great way to quickly make a service available through JMX.  Things get trickier when you want to only expose a few methods on the service.  The plugin provides the option to list methods to exclude, but you need to list all of them including the ones Grails added to the service.  Fortunately, we can use the metaclass to help us out.  We can add a list of the few methods we want exposed and then use to that to generate the list of exclude method as follows:</p>
-
-<script src="https://gist.github.com/3977988.js"> </script>
 
 ]]></content>
   </entry>

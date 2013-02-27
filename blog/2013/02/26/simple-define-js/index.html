@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Grails script to generate JAXB classes - The UrBlog</title>
+  <title>A simple JavaScript module - The UrBlog</title>
   <meta name="author" content="John Urberg">
 
   
-  <meta name="description" content="I think Groovy&#8217;s MarkupBuilder is great and I use it often. Sometimes though, I need to generate a complex XML document that conforms to an XSD &hellip;">
+  <meta name="description" content="When developing JavaScript, I like to break my code into modules and define what modules the depend on. Require.JS is a great tool for this, but it &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://jurberg.github.com/blog/2012/11/27/grails-script-to-generate-JAXB-classes/">
+  <link rel="canonical" href="http://jurberg.github.com/blog/2013/02/26/simple-define-js/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -67,7 +67,7 @@
   
   <header>
     
-      <h1 class="entry-title">Grails Script to Generate JAXB Classes</h1>
+      <h1 class="entry-title">A Simple JavaScript Module</h1>
     
     
       <p class="meta">
@@ -83,28 +83,29 @@
   
 
 
-<time datetime="2012-11-27T19:00:00-06:00" pubdate data-updated="true">Nov 27<span>th</span>, 2012</time>
+<time datetime="2013-02-26T21:00:00-06:00" pubdate data-updated="true">Feb 26<span>th</span>, 2013</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>I think Groovy&#8217;s <a href="http://groovy.codehaus.org/api/groovy/xml/MarkupBuilder.html">MarkupBuilder</a> is great and I use it often.  Sometimes though, I need to generate a complex XML document that conforms to an XSD.  MarkupBuilder often leads to markup and business logic being mixed together much like HTML and Java code gets mixed in complex JSP pages. In cases like this, I like to use JAXB instead.  I can generate classes from the XSD, load up an object model and let JAXB generate the markup.</p>
+<div class="entry-content"><p>When developing JavaScript, I like to break my code into modules and define what modules the depend on.  <a href="http://requirejs.org/">Require.JS</a> is a great tool for this, but it also means bringing in module loading.  I&#8217;m on a project using <a href="http://grails.org/">Grails</a> that has a moderate amount of JavaScript.  Grails provides a resource plugin that handles bundling of resources.  I would still like to use the Require.JS style of defining modules and their dependencies while still loading scripts the normal way so Grails is happy.</p>
 
 
-<p>It&#8217;s fairly easy to create a script to handle generating the JAXB classes for you.  JAXB comes with a handy Ant task that takes your XSD and generates classes. The trick is passing the build classpath to the task.  There is a &#8220;grailsSettings&#8221; variable available in scripts that contains <a href="https://github.com/grails/grails-core/blob/master/grails-bootstrap/src/main/groovy/grails/util/BuildSettings.groovy">BuildSettings</a>.  We can get the list of build dependencies files from this class to generate the classpath.  Here is a simple example that takes the Microsoft <a href="http://msdn.microsoft.com/en-us/library/ms256485.aspx">books.xsd</a> in the etc/schema directory and generates the code to the src/java directory:</p>
+<p>I ended up creating <a href="https://github.com/jurberg/define.js">define.js</a>.  This libary provides a simple &#8216;define&#8217; and &#8216;require&#8217; method.  The &#8216;define&#8217; uses the global object to hold the modules so they are also available in html handlers.  Using the global object as the module list also allows us to treat third party libraries such as jQuery as dependencies.</p>
 
 
-<script src="https://gist.github.com/4158702.js"> </script>
+<p>The following example creates a module that depends on the domain.person module, jQuery and the window object.  Since we are using the global to store modules, we can treat jQuery and window just like any other dependency we have defined.</p>
 
 
-<p>UPDATE: Sometimes having the JAXB jars on your path can cause problems with your application.  In those cases, you call the generation class directly:</p>
+<script src="https://gist.github.com/jurberg/5044824.js"></script>
 
 
-<script src="https://gist.github.com/4186366.js"> </script>
+<p>Using the global object to hold modules also allows us to access them in html</p>
 
 
+<script src="https://gist.github.com/jurberg/5044843.js"></script>
 
 </div>
 
@@ -138,12 +139,12 @@
   
 
 
-<time datetime="2012-11-27T19:00:00-06:00" pubdate data-updated="true">Nov 27<span>th</span>, 2012</time>
+<time datetime="2013-02-26T21:00:00-06:00" pubdate data-updated="true">Feb 26<span>th</span>, 2013</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/grails/'>Grails</a>
+    <a class='category' href='/blog/categories/grails/'>Grails</a>, <a class='category' href='/blog/categories/javascript/'>JavaScript</a>
   
 </span>
 
@@ -152,7 +153,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://jurberg.github.com/blog/2012/11/27/grails-script-to-generate-JAXB-classes/" data-via="jurberg" data-counturl="http://jurberg.github.com/blog/2012/11/27/grails-script-to-generate-JAXB-classes/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://jurberg.github.com/blog/2013/02/26/simple-define-js/" data-via="jurberg" data-counturl="http://jurberg.github.com/blog/2013/02/26/simple-define-js/" >Tweet</a>
   
   
   
@@ -161,10 +162,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2012/11/11/convert-xml-to-flat-files-with-groovy/" title="Previous Post: Converting XML to Flat Files with Groovy">&laquo; Converting XML to Flat Files with Groovy</a>
+        <a class="basic-alignment left" href="/blog/2013/02/02/requirejs-in-grails-build/" title="Previous Post: Running the Require.JS optimizer in a Grails build">&laquo; Running the Require.JS optimizer in a Grails build</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2013/01/14/welcome-to-the-urblog-reborn/" title="Next Post: Welcome to the UrBlog Reborn">Welcome to the UrBlog Reborn &raquo;</a>
       
     </p>
   </footer>
@@ -292,8 +291,8 @@
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://jurberg.github.com/blog/2012/11/27/grails-script-to-generate-JAXB-classes/';
-        var disqus_url = 'http://jurberg.github.com/blog/2012/11/27/grails-script-to-generate-JAXB-classes/';
+        var disqus_identifier = 'http://jurberg.github.com/blog/2013/02/26/simple-define-js/';
+        var disqus_url = 'http://jurberg.github.com/blog/2013/02/26/simple-define-js/';
         var disqus_script = 'embed.js';
       
     (function () {

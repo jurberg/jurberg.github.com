@@ -9,7 +9,7 @@
   <meta name="author" content="John Urberg">
 
   
-  <meta name="description" content="The Grails Resource Plugin provides some dependency management for your JavaScript resources by allowing you to define modules of scripts, including &hellip;">
+  <meta name="description" content="When developing JavaScript, I like to break my code into modules and define what modules the depend on. Require.JS is a great tool for this, but it &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -64,6 +64,58 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/02/26/simple-define-js/">A Simple JavaScript Module</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-02-26T21:00:00-06:00" pubdate data-updated="true">Feb 26<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>When developing JavaScript, I like to break my code into modules and define what modules the depend on.  <a href="http://requirejs.org/">Require.JS</a> is a great tool for this, but it also means bringing in module loading.  I&#8217;m on a project using <a href="http://grails.org/">Grails</a> that has a moderate amount of JavaScript.  Grails provides a resource plugin that handles bundling of resources.  I would still like to use the Require.JS style of defining modules and their dependencies while still loading scripts the normal way so Grails is happy.</p>
+
+
+<p>I ended up creating <a href="https://github.com/jurberg/define.js">define.js</a>.  This libary provides a simple &#8216;define&#8217; and &#8216;require&#8217; method.  The &#8216;define&#8217; uses the global object to hold the modules so they are also available in html handlers.  Using the global object as the module list also allows us to treat third party libraries such as jQuery as dependencies.</p>
+
+
+<p>The following example creates a module that depends on the domain.person module, jQuery and the window object.  Since we are using the global to store modules, we can treat jQuery and window just like any other dependency we have defined.</p>
+
+
+<script src="https://gist.github.com/jurberg/5044824.js"></script>
+
+
+<p>Using the global object to hold modules also allows us to access them in html</p>
+
+
+<script src="https://gist.github.com/jurberg/5044843.js"></script>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -716,42 +768,6 @@ public</span> <span style="color:#a020f0;">class</span> <span style="color:#228b
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/08/11/introduction-to-node/">An Introduction to Node.js</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-08-11T19:00:00-05:00" pubdate data-updated="true">Aug 11<span>th</span>, 2011</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Node.js is an evented I/O server built on Google&#8217;s V8 JavaScript engine. Node provides a simple way to build highly scalable server applications. This article will provide an introduction to Node along with installation details and a first server. <a href="http://www.objectpartners.com/2011/08/23/an-introduction-to-node-js/">more&#8230;</a></p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -771,6 +787,10 @@ public</span> <span style="color:#a020f0;">class</span> <span style="color:#228b
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/02/26/simple-define-js/">A simple JavaScript module</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/02/02/requirejs-in-grails-build/">Running the Require.JS optimizer in a Grails build</a>
       </li>
     
@@ -784,10 +804,6 @@ public</span> <span style="color:#a020f0;">class</span> <span style="color:#228b
     
       <li class="post">
         <a href="/blog/2012/11/27/grails-script-to-generate-JAXB-classes/">Grails script to generate JAXB classes</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/11/11/convert-xml-to-flat-files-with-groovy/">Converting XML to Flat Files with Groovy</a>
       </li>
     
   </ul>
