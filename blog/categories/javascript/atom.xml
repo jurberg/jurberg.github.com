@@ -4,7 +4,7 @@
   <title><![CDATA[Category: JavaScript | The UrBlog]]></title>
   <link href="http://jurberg.github.com/blog/categories/javascript/atom.xml" rel="self"/>
   <link href="http://jurberg.github.com/"/>
-  <updated>2013-02-26T21:41:34-06:00</updated>
+  <updated>2013-02-26T21:43:06-06:00</updated>
   <id>http://jurberg.github.com/</id>
   <author>
     <name><![CDATA[John Urberg]]></name>
@@ -14,7 +14,7 @@
 
   
   <entry>
-    <title type="html"><![CDATA[A simple JavaScript module]]></title>
+    <title type="html"><![CDATA[A simple JavaScript module library]]></title>
     <link href="http://jurberg.github.com/blog/2013/02/26/simple-define-js/"/>
     <updated>2013-02-26T21:00:00-06:00</updated>
     <id>http://jurberg.github.com/blog/2013/02/26/simple-define-js</id>
