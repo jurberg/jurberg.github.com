@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>An introduction to Node.js - The UrBlog</title>
+  <title>Roll Your Own Controllers with Express and Require.JS - The UrBlog</title>
   <meta name="author" content="John Urberg">
 
   
-  <meta name="description" content="Node.js is an evented I/O server built on Google&#8217;s V8 JavaScript engine. Node provides a simple way to build highly scalable server &hellip;">
+  <meta name="description" content="I&#8217;m a Grails developer at work, so I&#8217;ve gotten used to convention over configuration for controllers. I just create a class with a name &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://jurberg.github.com/blog/2011/08/11/introduction-to-node/">
+  <link rel="canonical" href="http://jurberg.github.com/blog/2013/04/10/express-requirejs-controllers/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -67,7 +67,7 @@
   
   <header>
     
-      <h1 class="entry-title">An Introduction to Node.js</h1>
+      <h1 class="entry-title">Roll Your Own Controllers With Express and Require.JS</h1>
     
     
       <p class="meta">
@@ -83,14 +83,37 @@
   
 
 
-<time datetime="2011-08-11T19:00:00-05:00" pubdate data-updated="true">Aug 11<span>th</span>, 2011</time>
+<time datetime="2013-04-10T21:00:00-05:00" pubdate data-updated="true">Apr 10<span>th</span>, 2013</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>Node.js is an evented I/O server built on Google&#8217;s V8 JavaScript engine. Node provides a simple way to build highly scalable server applications. This article will provide an introduction to Node along with installation details and a first server. <a href="http://www.objectpartners.com/2011/08/23/an-introduction-to-node-js/">more&#8230;</a></p>
+<div class="entry-content"><p>I&#8217;m a Grails developer at work, so I&#8217;ve gotten used to convention over configuration for controllers.  I just create a class with a name that ends in Controller and place it the controller folder.  Each method in the controller is an action and it allows me to access that method via /controller/action/id.</p>
+
+
+
+
+<p>While Node and Express have full blown Rails copies (such as <a href="http://geddyjs.org/">Geddy</a>), I want something simpler.  I prefer to use <a href="http://requirejs.org/">Require.JS</a> to help me manage my dependencies.  It includes a require method that allows me to load a module by name.</p>
+
+
+
+
+<p>This gave me an idea.  What if I could make a /controller/acton/id route in Express and use require to dynamically load the controller.  I could then call the action on the controller as a key.  It turns out it&#8217;s pretty simple:</a>
+<script src="https://gist.github.com/jurberg/5360006.js"></script>
+
+<p>Now any module in app/controller that has a method that takes a request and response can act as a controller with no configuration.  This example responds to /health/index.  Since we set it up to go to index when there&#8217;s no action, it will also respond to /health.</p>
+<script src="https://gist.github.com/anonymous/99f7c50f17734aa0fb8a.js"></script>
+
+<p>There are cases where your URL does not match /controller/action.  Grails allows you to setup a UrlMapping file that maps URLs to controllers.  We could setup a similar file in JavaScript:</p>
+<script src="https://gist.github.com/jurberg/ebba91d0bdf5dbc57fff.js"></script>
+
+<p>We can then loop thru the mappings and register them with Express:</p>
+<script src="https://gist.github.com/jurberg/5360024.js"></script>
+
+<p>With just Express, Require.JS and a few lines of JavaScript, I now have convention over configuration controllers</p>
+
 </div>
 
 
@@ -123,12 +146,12 @@
   
 
 
-<time datetime="2011-08-11T19:00:00-05:00" pubdate data-updated="true">Aug 11<span>th</span>, 2011</time>
+<time datetime="2013-04-10T21:00:00-05:00" pubdate data-updated="true">Apr 10<span>th</span>, 2013</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/javascript/'>JavaScript</a>
+    <a class='category' href='/blog/categories/express/'>Express</a>, <a class='category' href='/blog/categories/javascript/'>JavaScript</a>, <a class='category' href='/blog/categories/require-js/'>Require.JS</a>
   
 </span>
 
@@ -137,7 +160,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://jurberg.github.com/blog/2011/08/11/introduction-to-node/" data-via="jurberg" data-counturl="http://jurberg.github.com/blog/2011/08/11/introduction-to-node/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://jurberg.github.com/blog/2013/04/10/express-requirejs-controllers/" data-via="jurberg" data-counturl="http://jurberg.github.com/blog/2013/04/10/express-requirejs-controllers/" >Tweet</a>
   
   
   
@@ -146,10 +169,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2011/08/09/scaling-with-single-threading/" title="Previous Post: Scaling with Single Threading">&laquo; Scaling with Single Threading</a>
+        <a class="basic-alignment left" href="/blog/2013/02/26/simple-define-js/" title="Previous Post: A simple JavaScript module library">&laquo; A simple JavaScript module library</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2011/11/05/custom-scheduling-spring/" title="Next Post: Custom Scheduling in Spring">Custom Scheduling in Spring &raquo;</a>
       
     </p>
   </footer>
@@ -277,8 +298,8 @@
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://jurberg.github.com/blog/2011/08/11/introduction-to-node/';
-        var disqus_url = 'http://jurberg.github.com/blog/2011/08/11/introduction-to-node/';
+        var disqus_identifier = 'http://jurberg.github.com/blog/2013/04/10/express-requirejs-controllers/';
+        var disqus_url = 'http://jurberg.github.com/blog/2013/04/10/express-requirejs-controllers/';
         var disqus_script = 'embed.js';
       
     (function () {

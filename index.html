@@ -9,7 +9,7 @@
   <meta name="author" content="John Urberg">
 
   
-  <meta name="description" content="When developing JavaScript, I like to break my code into modules and define what modules the depend on. Require.JS is a great tool for this, but it &hellip;">
+  <meta name="description" content="I&#8217;m a Grails developer at work, so I&#8217;ve gotten used to convention over configuration for controllers. I just create a class with a name &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -64,6 +64,65 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/04/10/express-requirejs-controllers/">Roll Your Own Controllers With Express and Require.JS</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-10T21:00:00-05:00" pubdate data-updated="true">Apr 10<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&#8217;m a Grails developer at work, so I&#8217;ve gotten used to convention over configuration for controllers.  I just create a class with a name that ends in Controller and place it the controller folder.  Each method in the controller is an action and it allows me to access that method via /controller/action/id.</p>
+
+
+
+
+<p>While Node and Express have full blown Rails copies (such as <a href="http://geddyjs.org/">Geddy</a>), I want something simpler.  I prefer to use <a href="http://requirejs.org/">Require.JS</a> to help me manage my dependencies.  It includes a require method that allows me to load a module by name.</p>
+
+
+
+
+<p>This gave me an idea.  What if I could make a /controller/acton/id route in Express and use require to dynamically load the controller.  I could then call the action on the controller as a key.  It turns out it&#8217;s pretty simple:</a>
+<script src="https://gist.github.com/jurberg/5360006.js"></script>
+
+<p>Now any module in app/controller that has a method that takes a request and response can act as a controller with no configuration.  This example responds to /health/index.  Since we set it up to go to index when there&#8217;s no action, it will also respond to /health.</p>
+<script src="https://gist.github.com/anonymous/99f7c50f17734aa0fb8a.js"></script>
+
+<p>There are cases where your URL does not match /controller/action.  Grails allows you to setup a UrlMapping file that maps URLs to controllers.  We could setup a similar file in JavaScript:</p>
+<script src="https://gist.github.com/jurberg/ebba91d0bdf5dbc57fff.js"></script>
+
+<p>We can then loop thru the mappings and register them with Express:</p>
+<script src="https://gist.github.com/jurberg/5360024.js"></script>
+
+<p>With just Express, Require.JS and a few lines of JavaScript, I now have convention over configuration controllers</p>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -640,134 +699,6 @@ Spring has now become our factory method.  As new price codes are added, we can 
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/11/05/custom-scheduling-spring/">Custom Scheduling in Spring</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-11-05T19:00:00-05:00" pubdate data-updated="true">Nov 5<span>th</span>, 2011</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Spring 3.0 has <a href="http://blog.springsource.com/2010/01/05/task-scheduling-simplifications-in-spring-3-0/">simplified task scheduling</a>.  As part if this, they have deprecated the MethodInvokingTimerTaskFactoryBean and ScheduledTimerTask.  Instead you create a scheduler that implements the TaskScheduler interface and uses a Trigger to specify when a task is scheduled to run.  The XML and annotations allow you to specify fixedDelay,  fixedRate or cron string.  These are fixed at run time.  This works great for triggers that are fixed at run time, but does not allow you any way to modify these at run time.  The TaskScheduler interface provides methods to schedule a task with a trigger, so this gives us an opportunity to pass in a custom trigger that can have it&#8217;s trigger interval changed at run time.  There are a number of ways to configure this.  Here is a simple way I came up with that uses a single bean to schedule the task and change the fixedDelay at run time.  This extends the example provided on the Spring blog noted earlier.</p>
-
-<br/><br/>
-
-
-<p>First we need a class that takes the scheduler, task and starting delay.  For simplicity, it will also implement the Timer interface.</p>
-
-<pre><span style="color:#a020f0;">public</span> <span style="color:#a020f0;">class</span> <span style="color:#228b22;">DynamicSchedule</span> <span style="color:#a020f0;">implements</span> <span style="color:#228b22;">Trigger</span> {
-
-<span style="color:#a020f0;">   private</span> <span style="color:#228b22;">TaskScheduler</span> scheduler;
-   <span style="color:#a020f0;">private</span> <span style="color:#228b22;">Runnable</span> task;
-   <span style="color:#a020f0;">private</span> <span style="color:#228b22;">ScheduledFuture</span>&lt;?&gt; future;
-   <span style="color:#a020f0;">private</span> <span style="color:#a020f0;">int</span> delay;
-
-   <span style="color:#a020f0;">public</span> <span style="color:#228b22;">DynamicSchedule</span>(<span style="color:#228b22;">TaskScheduler</span> scheduler, <span style="color:#228b22;">Runnable</span> task, <span style="color:#a020f0;">int</span> delay) {
-      <span style="color:#a020f0;">this</span>.scheduler = scheduler;
-      <span style="color:#a020f0;">this</span>.task = task;
-      reset(delay);
-   }
-
-   <span style="color:#a020f0;">public</span> <span style="color:#a020f0;">void</span> reset(<span style="color:#a020f0;">int</span> delay) {
-      <span style="color:#a020f0;">if</span> (future != null) {
-         <span style="color:#228b22;">System</span>.out.println(<span style="color:#bc8f8f;">"Cancelling task..."</span>);
-         future.cancel(<span style="color:#b8860b;">true</span>);
-      }
-      <span style="color:#a020f0;">this</span>.delay = delay;
-      <span style="color:#228b22;">System</span>.out.println(<span style="color:#bc8f8f;">"Starting task..."</span>);
-      future = scheduler.schedule(task, <span style="color:#a020f0;">this</span>);
-   }
-
-<span style="color:#b8860b;">   @Override</span>
-   <span style="color:#a020f0;">public</span> <span style="color:#228b22;">Date</span> nextExecutionTime(<span style="color:#228b22;">TriggerContext</span> triggerContext) {
-      <span style="color:#228b22;">Date</span> lastTime = triggerContext.lastActualExecutionTime();
-      <span style="color:#228b22;">Date</span> nextExecutionTime = (lastTime == null)
-         ? <span style="color:#a020f0;">new</span> <span style="color:#228b22;">Date</span>()
-         : <span style="color:#a020f0;">new</span> <span style="color:#228b22;">Date</span>(lastTime.getTime() + delay);
-         System.out.println("DynamicSchedule -- delay: " + delay +
-              ", lastActualExecutionTime: " + lastTime +
-              "; nextExecutionTime: " + nextExecutionTime);
-      return nextExecutionTime;
-   }
-
-}</pre>
-
-
-<p>Note the reset method which stops the scheduled task, changes the delay and then restarts the task.  If you are changing the delay to a shorter delay, you want to restart with the new delay so it happens immediately.  Alternately, you can skip canceling the task and the new delay is picked up on the next execution.
-<br/><br/>
-The rest of the code is the same, except for the SchedulerProcessor which has the @Scheduled annotation removed from the process method:<p><pre><span style="color:#b8860b;">@Component</span><span style="color:#a020f0;">
-public</span> <span style="color:#a020f0;">class</span> <span style="color:#228b22;">ScheduledProcessor</span> {
-
-<span style="color:#a020f0;">   private</span> <span style="color:#a020f0;">final</span> <span style="color:#228b22;">AtomicInteger</span> counter = <span style="color:#a020f0;">new</span> <span style="color:#228b22;">AtomicInteger</span>();
-
-<span style="color:#b8860b;">   @Autowired
-   </span><span style="color:#a020f0;">private</span> <span style="color:#228b22;">Worker</span> worker;
-
-<span style="color:#a020f0;">   public</span> <span style="color:#a020f0;">void</span> process() {<span style="color:#228b22;">
-      System</span>.out.println(<span style="color:#bc8f8f;">"processing next 10 at "</span> + <span style="color:#a020f0;">new</span> <span style="color:#228b22;">Date</span>());
-      <span style="color:#a020f0;">for</span> (<span style="color:#a020f0;">int</span> i = 0; i &lt; 10; i++) {
-         worker.work(counter.incrementAndGet());
-      }
-   }
-
-}</pre><p>In the XML configuration, we add a name to the scheduler and create the DynamicSchedule. We pass it the scheduler, the process method (wrapped in a MethodInvokingRunnable) and the default delay:</p><pre>   &lt;<span style="color:#000000;">context</span>:<span style="color:#0000ff;">component-scan</span> <span style="color:#b8860b;">base-package</span>=<span style="color:#bc8f8f;">"com/test"</span> /&gt;
-
-   &lt;<span style="color:#000000;">task</span>:<span style="color:#0000ff;">annotation-driven</span> /&gt;
-
-   &lt;<span style="color:#000000;">task</span>:<span style="color:#0000ff;">scheduler</span> <span style="color:#b8860b;">id</span>=<span style="color:#bc8f8f;">"scheduler"</span> /&gt;
-
-   &lt;<span style="color:#0000ff;">bean</span> <span style="color:#b8860b;">id</span>=<span style="color:#bc8f8f;">"dynamicSchedule"</span> <span style="color:#b8860b;">class</span>=<span style="color:#bc8f8f;">"com.test.DynamicSchedule"</span>&gt;
-      &lt;<span style="color:#0000ff;">constructor-arg</span> <span style="color:#b8860b;">ref</span>=<span style="color:#bc8f8f;">"scheduler"</span> /&gt;
-      &lt;<span style="color:#0000ff;">constructor-arg</span>&gt;
-         &lt;<span style="color:#0000ff;">bean</span> <span style="color:#b8860b;">class</span>=<span style="color:#bc8f8f;">"org.springframework.scheduling.support.MethodInvokingRunnable"</span>&gt;
-            &lt;<span style="color:#0000ff;">property</span> <span style="color:#b8860b;">name</span>=<span style="color:#bc8f8f;">"targetObject"</span> <span style="color:#b8860b;">ref</span>=<span style="color:#bc8f8f;">"scheduledProcessor"</span> /&gt;
-            &lt;<span style="color:#0000ff;">property</span> <span style="color:#b8860b;">name</span>=<span style="color:#bc8f8f;">"targetMethod"</span> <span style="color:#b8860b;">value</span>=<span style="color:#bc8f8f;">"process"</span> /&gt;
-         &lt;/<span style="color:#0000ff;">bean</span>&gt;
-      &lt;/<span style="color:#0000ff;">constructor-arg</span>&gt;
-      &lt;<span style="color:#0000ff;">constructor-arg</span> <span style="color:#b8860b;">value</span>=<span style="color:#bc8f8f;">"3000"</span> /&gt;
-   &lt;/<span style="color:#0000ff;">bean</span>&gt;</pre><p>Now we can add a separate process that changes the delay to a random delay to test it out:</p><pre><span style="color:#b8860b;">@Component</span>
-<span style="color:#a020f0;">public</span> <span style="color:#a020f0;">class</span> <span style="color:#228b22;">ScheduleChanger</span> {
-
-<span style="color:#b8860b;">   @Autowired</span>
-<span style="color:#a020f0;">   private</span> <span style="color:#228b22;">DynamicSchedule</span> dynamicSchedule;
-
-<span style="color:#b8860b;">   @Scheduled</span>(fixedDelay=30000)
-<span style="color:#a020f0;">   public</span> <span style="color:#a020f0;">void</span> change() {
-<span style="color:#228b22;">      Random</span> rnd = <span style="color:#a020f0;">new</span> <span style="color:#228b22;">Random</span>();
-      <span style="color:#a020f0;">int</span> nextTimeout = rnd.nextInt(30000);
-<span style="color:#228b22;">      System</span>.out.println(<span style="color:#bc8f8f;">"Changing poll time to: "</span> + nextTimeout);
-      dynamicSchedule.reset(nextTimeout);
-   }
-
-}</pre><p>When you run this and view the output, you will see where the dynamic schedule trigger is fired and where the schedule gets changed.</p>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -787,6 +718,10 @@ public</span> <span style="color:#a020f0;">class</span> <span style="color:#228b
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/04/10/express-requirejs-controllers/">Roll Your Own Controllers with Express and Require.JS</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/02/26/simple-define-js/">A simple JavaScript module library</a>
       </li>
     
@@ -800,10 +735,6 @@ public</span> <span style="color:#a020f0;">class</span> <span style="color:#228b
     
       <li class="post">
         <a href="/blog/2013/01/14/welcome-to-the-urblog-reborn/">Welcome to the UrBlog Reborn</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/11/27/grails-script-to-generate-JAXB-classes/">Grails script to generate JAXB classes</a>
       </li>
     
   </ul>
