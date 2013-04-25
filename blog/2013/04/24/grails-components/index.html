@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Roll Your Own Controllers with Express and Require.JS - The UrBlog</title>
+  <title>Creating Grails UI 'Components' - The UrBlog</title>
   <meta name="author" content="John Urberg">
 
   
-  <meta name="description" content="I&#8217;m a Grails developer at work, so I&#8217;ve gotten used to convention over configuration for controllers. I just create a class with a name &hellip;">
+  <meta name="description" content="I&#8217;m working on a Grails application with a large amount of JavaScript. I often have UI &#8216;components&#8217; that have markup, CSS and &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://jurberg.github.com/blog/2013/04/10/express-requirejs-controllers/">
+  <link rel="canonical" href="http://jurberg.github.com/blog/2013/04/24/grails-components/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -72,7 +72,7 @@
   
   <header>
     
-      <h1 class="entry-title">Roll Your Own Controllers With Express and Require.JS</h1>
+      <h1 class="entry-title">Creating Grails UI 'Components'</h1>
     
     
       <p class="meta">
@@ -88,36 +88,42 @@
   
 
 
-<time datetime="2013-04-10T21:00:00-05:00" pubdate data-updated="true">Apr 10<span>th</span>, 2013</time>
+<time datetime="2013-04-24T21:00:00-05:00" pubdate data-updated="true">Apr 24<span>th</span>, 2013</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>I&#8217;m a Grails developer at work, so I&#8217;ve gotten used to convention over configuration for controllers.  I just create a class with a name that ends in Controller and place it the controller folder.  Each method in the controller is an action and it allows me to access that method via /controller/action/id.</p>
+<div class="entry-content"><p>I&#8217;m working on a Grails application with a large amount of JavaScript.  I often have UI &#8216;components&#8217; that have markup, CSS and JavaScript associated with them that are used on several pages.  A couple of examples are shopping carts and dialogs.  I&#8217;ve found a good way to organize this code is to make use of the resources plugin to put the pieces together into modules that I can then place into the pages.  As an example, I made a simple dialog that has a GSP for the layout, a CSS file with some styling and JavaScript to open the dialog.  The first step is to create some markup for the dialog in a template:</p>
 
 
+<script src="https://gist.github.com/jurberg/5457059.js"></script>
 
 
-<p>While Node and Express have full blown Rails copies (such as <a href="http://geddyjs.org/">Geddy</a>), I want something simpler.  I prefer to use <a href="http://requirejs.org/">Require.JS</a> to help me manage my dependencies.  It includes a require method that allows me to load a module by name.</p>
+<p>I added a require at the top to pull in the module definition from the ApplicationResources file.  This will pull the CSS and JavaScript for the component in each page that uses the template.</p>
 
 
+<p></p>
+
+<script src="https://gist.github.com/jurberg/5457071.js"></script>
 
 
-<p>This gave me an idea.  What if I could make a /controller/acton/id route in Express and use require to dynamically load the controller.  I could then call the action on the controller as a key.  It turns out it&#8217;s pretty simple:</a>
-<script src="https://gist.github.com/jurberg/5360006.js"></script>
+<p>A little CSS and JavaScript will bring the component to life:</p>
 
-<p>Now any module in app/controller that has a method that takes a request and response can act as a controller with no configuration.  This example responds to /health/index.  Since we set it up to go to index when there&#8217;s no action, it will also respond to /health.</p>
-<script src="https://gist.github.com/anonymous/99f7c50f17734aa0fb8a.js"></script>
 
-<p>There are cases where your URL does not match /controller/action.  Grails allows you to setup a UrlMapping file that maps URLs to controllers.  We could setup a similar file in JavaScript:</p>
-<script src="https://gist.github.com/jurberg/ebba91d0bdf5dbc57fff.js"></script>
+<script src="https://gist.github.com/jurberg/5457099.js"></script>
 
-<p>We can then loop thru the mappings and register them with Express:</p>
-<script src="https://gist.github.com/jurberg/5360024.js"></script>
 
-<p>With just Express, Require.JS and a few lines of JavaScript, I now have convention over configuration controllers</p>
+<script src="https://gist.github.com/jurberg/5457104.js"></script>
+
+
+<p>I can now include the template on the page and all the pieces of my component are pulled in.  I can now open the dialog from my page.</p>
+
+
+<script src="https://gist.github.com/jurberg/5457112.js"></script>
+
+
 
 </div>
 
@@ -151,12 +157,12 @@
   
 
 
-<time datetime="2013-04-10T21:00:00-05:00" pubdate data-updated="true">Apr 10<span>th</span>, 2013</time>
+<time datetime="2013-04-24T21:00:00-05:00" pubdate data-updated="true">Apr 24<span>th</span>, 2013</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/express/'>Express</a>, <a class='category' href='/blog/categories/javascript/'>JavaScript</a>, <a class='category' href='/blog/categories/require-js/'>Require.JS</a>
+    <a class='category' href='/blog/categories/grails/'>Grails</a>, <a class='category' href='/blog/categories/javascript/'>JavaScript</a>
   
 </span>
 
@@ -165,7 +171,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://jurberg.github.com/blog/2013/04/10/express-requirejs-controllers/" data-via="jurberg" data-counturl="http://jurberg.github.com/blog/2013/04/10/express-requirejs-controllers/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://jurberg.github.com/blog/2013/04/24/grails-components/" data-via="jurberg" data-counturl="http://jurberg.github.com/blog/2013/04/24/grails-components/" >Tweet</a>
   
   
   
@@ -174,10 +180,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013/02/26/simple-define-js/" title="Previous Post: A simple JavaScript module library">&laquo; A simple JavaScript module library</a>
+        <a class="basic-alignment left" href="/blog/2013/04/10/express-requirejs-controllers/" title="Previous Post: Roll Your Own Controllers with Express and Require.JS">&laquo; Roll Your Own Controllers with Express and Require.JS</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2013/04/24/grails-components/" title="Next Post: Creating Grails UI 'Components'">Creating Grails UI 'Components' &raquo;</a>
       
     </p>
   </footer>
@@ -305,8 +309,8 @@
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://jurberg.github.com/blog/2013/04/10/express-requirejs-controllers/';
-        var disqus_url = 'http://jurberg.github.com/blog/2013/04/10/express-requirejs-controllers/';
+        var disqus_identifier = 'http://jurberg.github.com/blog/2013/04/24/grails-components/';
+        var disqus_url = 'http://jurberg.github.com/blog/2013/04/24/grails-components/';
         var disqus_script = 'embed.js';
       
     (function () {

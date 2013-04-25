@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Grails | The UrBlog]]></title>
   <link href="http://jurberg.github.com/blog/categories/grails/atom.xml" rel="self"/>
   <link href="http://jurberg.github.com/"/>
-  <updated>2013-04-10T21:42:53-05:00</updated>
+  <updated>2013-04-24T21:43:03-05:00</updated>
   <id>http://jurberg.github.com/</id>
   <author>
     <name><![CDATA[John Urberg]]></name>
@@ -12,6 +12,44 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Creating Grails UI 'Components']]></title>
+    <link href="http://jurberg.github.com/blog/2013/04/24/grails-components/"/>
+    <updated>2013-04-24T21:00:00-05:00</updated>
+    <id>http://jurberg.github.com/blog/2013/04/24/grails-components</id>
+    <content type="html"><![CDATA[<p>I'm working on a Grails application with a large amount of JavaScript.  I often have UI 'components' that have markup, CSS and JavaScript associated with them that are used on several pages.  A couple of examples are shopping carts and dialogs.  I've found a good way to organize this code is to make use of the resources plugin to put the pieces together into modules that I can then place into the pages.  As an example, I made a simple dialog that has a GSP for the layout, a CSS file with some styling and JavaScript to open the dialog.  The first step is to create some markup for the dialog in a template:</p>
+
+
+<script src="https://gist.github.com/jurberg/5457059.js"></script>
+
+
+<p>I added a require at the top to pull in the module definition from the ApplicationResources file.  This will pull the CSS and JavaScript for the component in each page that uses the template.</p>
+
+
+<p></p>
+
+<script src="https://gist.github.com/jurberg/5457071.js"></script>
+
+
+<p>A little CSS and JavaScript will bring the component to life:</p>
+
+
+<script src="https://gist.github.com/jurberg/5457099.js"></script>
+
+
+<script src="https://gist.github.com/jurberg/5457104.js"></script>
+
+
+<p>I can now include the template on the page and all the pieces of my component are pulled in.  I can now open the dialog from my page.</p>
+
+
+<script src="https://gist.github.com/jurberg/5457112.js"></script>
+
+
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[A simple JavaScript module library]]></title>
@@ -98,40 +136,6 @@
 <script src="https://gist.github.com/4186366.js"> </script>
 
 
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Converting XML to Flat Files with Groovy]]></title>
-    <link href="http://jurberg.github.com/blog/2012/11/11/convert-xml-to-flat-files-with-groovy/"/>
-    <updated>2012-11-11T19:00:00-06:00</updated>
-    <id>http://jurberg.github.com/blog/2012/11/11/convert-xml-to-flat-files-with-groovy</id>
-    <content type="html"><![CDATA[<p>When integrating systems, you often need to convert data from one format to another.  For example, you may receive data from a web service in XML and need to convert it to a flat file for a legacy system.  It's usually not as simple as just moving data from a tag to a column either.  There's often calculations and formatting required.  Most often the code has the work of parsing, converting and formatting all mixed together.  With a dynamic language like Groovy which has closures, we can abstract much of that work.  For our example, we'll take a subset of the <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/ms762271(v=vs.85).aspx">Microsoft sample books.xml file</a>:</p>
-
-
-<script src="https://gist.github.com/4056093.js"> </script>
-
-
-<p>We would like to provided a mapping for each column that allows us to pull data out of the XML file and define the width of the column.  We'll keep it simple to start with by assuming a fixed width flat file with all columns left justified.  Following is a simple mapping using an array of maps:</p>
-
-
-<script src="https://gist.github.com/4056280.js"> </script>
-
-
-<p>Each closure should get a GPathResult to a "row" in the XML file.  The closure should return the text that should go in the column.  We'll need to supply the tag that identifies the tag in the XML file to pass to the closure.  Following is an example test using our books data:</p>
-
-
-<script src="https://gist.github.com/4056102.js"> </script>
-
-
-<p>The implementation is fairly simple.  We process each "tag" in the XML.  For each mapping, we set the delegate for the closure to a map with the tag name and the GPathResults for that tag.  The closure can then be executed to get the text for the column:</p>
-
-
-<script src="https://gist.github.com/4056079.js"> </script>
-
-
-<p>The above piece of code abstracts the processing into 8 lines of code.  It is a testament to the power of a dynamic language that provides closures.</p>
 
 ]]></content>
   </entry>

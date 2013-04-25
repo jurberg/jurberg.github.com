@@ -4,7 +4,7 @@
   <title><![CDATA[The UrBlog]]></title>
   <link href="http://jurberg.github.com/atom.xml" rel="self"/>
   <link href="http://jurberg.github.com/"/>
-  <updated>2013-04-10T21:42:53-05:00</updated>
+  <updated>2013-04-24T21:43:03-05:00</updated>
   <id>http://jurberg.github.com/</id>
   <author>
     <name><![CDATA[John Urberg]]></name>
@@ -12,6 +12,44 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Creating Grails UI 'Components']]></title>
+    <link href="http://jurberg.github.com/blog/2013/04/24/grails-components/"/>
+    <updated>2013-04-24T21:00:00-05:00</updated>
+    <id>http://jurberg.github.com/blog/2013/04/24/grails-components</id>
+    <content type="html"><![CDATA[<p>I&#8217;m working on a Grails application with a large amount of JavaScript.  I often have UI &#8216;components&#8217; that have markup, CSS and JavaScript associated with them that are used on several pages.  A couple of examples are shopping carts and dialogs.  I&#8217;ve found a good way to organize this code is to make use of the resources plugin to put the pieces together into modules that I can then place into the pages.  As an example, I made a simple dialog that has a GSP for the layout, a CSS file with some styling and JavaScript to open the dialog.  The first step is to create some markup for the dialog in a template:</p>
+
+
+<script src="https://gist.github.com/jurberg/5457059.js"></script>
+
+
+<p>I added a require at the top to pull in the module definition from the ApplicationResources file.  This will pull the CSS and JavaScript for the component in each page that uses the template.</p>
+
+
+<p></p>
+
+<script src="https://gist.github.com/jurberg/5457071.js"></script>
+
+
+<p>A little CSS and JavaScript will bring the component to life:</p>
+
+
+<script src="https://gist.github.com/jurberg/5457099.js"></script>
+
+
+<script src="https://gist.github.com/jurberg/5457104.js"></script>
+
+
+<p>I can now include the template on the page and all the pieces of my component are pulled in.  I can now open the dialog from my page.</p>
+
+
+<script src="https://gist.github.com/jurberg/5457112.js"></script>
+
+
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Roll Your Own Controllers with Express and Require.JS]]></title>
