@@ -4,7 +4,7 @@
   <title><![CDATA[The UrBlog]]></title>
   <link href="http://jurberg.github.com/atom.xml" rel="self"/>
   <link href="http://jurberg.github.com/"/>
-  <updated>2013-04-24T21:43:03-05:00</updated>
+  <updated>2013-09-27T22:22:20-05:00</updated>
   <id>http://jurberg.github.com/</id>
   <author>
     <name><![CDATA[John Urberg]]></name>
@@ -12,6 +12,28 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Grails Tip: Always call package-plugin]]></title>
+    <link href="http://jurberg.github.com/blog/2013/09/27/grails-inline-plugins/"/>
+    <updated>2013-09-27T21:00:00-05:00</updated>
+    <id>http://jurberg.github.com/blog/2013/09/27/grails-inline-plugins</id>
+    <content type="html"><![CDATA[<p>Grails allows you to modularize your code by creating plugins.  If you&#8217;re only using the plugin within your project, you can create it inline.  You just need to add a line to the BuildConfig of each project using the plugin:</p>
+
+
+<pre><code class="java">grails.plugin.location.'core-module' = "../core-module"</code></pre>
+
+
+<p>When you build the webapp that uses the plugin, Grails will include the plugin in the distribution.  A plugin.xml is generated in the plugin directory during this process.</p>
+
+
+<p>Here be dragons though&#8230;  If the plugin.xml file already exists, Grails won&#8217;t recreate it.  If you change the plugin version, the plugin.xml will still have the old version number.  Everything will still work ok unless you have resources.  The resources will be stored in a directory with the plugin.xml version number but the plugin will look for them in a directory with the new version number.</p>
+
+
+<p>The best way to fix this is to always call package-plugin on the plugin before building the app.</p>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Creating Grails UI 'Components']]></title>

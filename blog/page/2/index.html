@@ -9,7 +9,7 @@
   <meta name="author" content="John Urberg">
 
   
-  <meta name="description" content="One common strategy in object-oriented program is to use the dependency inversion principle to decouple high level code from the low level details. &hellip;">
+  <meta name="description" content="I&#8217;ve been developing Grails apps in Spring Tool Suite. STS will compile your Groovy code as you save it just as Eclipse does for Java code. &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -33,6 +33,10 @@
     width: 100%;
   }
 </style>
+<link rel="stylesheet" href="/stylesheets/default.css">
+<script src="/javascripts/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
 
   
 
@@ -69,6 +73,48 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/10/17/grails-clean-test-app-script/">Grails Clean-test-app Script</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-10-17T19:00:00-05:00" pubdate data-updated="true">Oct 17<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&#8217;ve been developing Grails apps in Spring Tool Suite. STS will compile your Groovy code as you save it just as Eclipse does for Java code.  This is great during coding, but can cause issues when it&#8217;s time to check in.  If you deleted a class and then run <span style="font-family:Monospace;">test-app</span>, that class may not be cleared from your target/classes and tests may pass that shouldn&#8217;t.  Before checking in, I now need to run <span style="font-family:Monospace;">clean</span>, then <span style="font-family:Monospace;">refresh-dependencies</span>, then <span style="font-family:Monospace;">test-app</span>.  To save some time, I created the following script that will do it all at once.  Now I can just run <span style="font-family:Monospace;">clean-test-app</span>.</p>
+
+<br/>
+
+
+<script src="https://gist.github.com/3909243.js?file=CleanTestApp.groovy"></script>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -820,6 +866,10 @@ data = header + data;
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/09/27/grails-inline-plugins/">Grails Tip: Always call package-plugin</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/04/24/grails-components/">Creating Grails UI &#8216;Components&#8217;</a>
       </li>
     
@@ -833,10 +883,6 @@ data = header + data;
     
       <li class="post">
         <a href="/blog/2013/02/02/requirejs-in-grails-build/">Running the Require.JS optimizer in a Grails build</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/01/23/add-a-context-param-to-grails/">Add a context-param to Grails</a>
       </li>
     
   </ul>
