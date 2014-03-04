@@ -4,7 +4,7 @@
   <title><![CDATA[The UrBlog]]></title>
   <link href="http://jurberg.github.com/atom.xml" rel="self"/>
   <link href="http://jurberg.github.com/"/>
-  <updated>2013-10-06T20:55:01-05:00</updated>
+  <updated>2014-03-03T22:02:22-06:00</updated>
   <id>http://jurberg.github.com/</id>
   <author>
     <name><![CDATA[John Urberg]]></name>
@@ -14,32 +14,32 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Grails Tip: Always call package-plugin]]></title>
-    <link href="http://jurberg.github.com/blog/2013/09/27/grails-inline-plugins/"/>
-    <updated>2013-09-27T21:00:00-05:00</updated>
-    <id>http://jurberg.github.com/blog/2013/09/27/grails-inline-plugins</id>
-    <content type="html"><![CDATA[<p>Grails allows you to modularize your code by creating plugins.  If you&#8217;re only using the plugin within your project, you can create it inline.  You just need to add a line to the BuildConfig of each project using the plugin:</p>
+    <title type="html"><![CDATA[Unit Testing with the OneTimeData Plugin]]></title>
+    <link href="http://jurberg.github.com/blog/2014/03/03/onetimedata-test/"/>
+    <updated>2014-03-03T21:00:00-06:00</updated>
+    <id>http://jurberg.github.com/blog/2014/03/03/onetimedata-test</id>
+    <content type="html"><![CDATA[<p>The <a href="http://grails.org/plugin/one-time-data">OneTimeData</a> plugin is handy when flash doesn&#8217;t work for you. I recently had to use it in an application that required an extra redirect between controller actions.  The OneTimeData plugin does not come with any unit testing assistance, so I created a simple mixin that adds the OneTimeData methods to a controller under test and backs them with a mock map on the spec to make it easy to access what the controller passed. The following class creates the mixin.</p>
 
 
-<pre><code class="java">grails.plugin.location.'core-module' = "../core-module"</code></pre>
+<script src="https://gist.github.com/jurberg/9338727.js"></script>
 
 
-<p>When you build the webapp that uses the plugin, Grails will include the plugin in the distribution.  A plugin.xml is generated in the plugin directory during this process.</p>
+<p>Using it requires two steps: 1) Add the mixin using the @TestMixn annotation and 2) call mockOneTimeData passing in the spec and the controller.</p>
 
 
-<p>Here be dragons though&#8230;  If the plugin.xml file already exists, Grails won&#8217;t recreate it.  If you change the plugin version, the plugin.xml will still have the old version number.  Everything will still work ok unless you have resources.  The resources will be stored in a directory with the plugin.xml version number but the plugin will look for them in a directory with the new version number.</p>
+<script src="https://gist.github.com/jurberg/9338807.js"></script>
 
 
-<p>The best way to fix this is to always call package-plugin on the plugin before building the app.</p>
+<p>If anyone knows of a way to capture the spec and controller inside the mixin, please comment. Thanks!</p>
 
 ]]></content>
   </entry>
   
   <entry>
     <title type="html"><![CDATA[Grails Tip: Always call package-plugin]]></title>
-    <link href="http://jurberg.github.com/blog/2013/09/27/beware-config-slurper/"/>
+    <link href="http://jurberg.github.com/blog/2013/09/27/grails-inline-plugins/"/>
     <updated>2013-09-27T21:00:00-05:00</updated>
-    <id>http://jurberg.github.com/blog/2013/09/27/beware-config-slurper</id>
+    <id>http://jurberg.github.com/blog/2013/09/27/grails-inline-plugins</id>
     <content type="html"><![CDATA[<p>Grails allows you to modularize your code by creating plugins.  If you&#8217;re only using the plugin within your project, you can create it inline.  You just need to add a line to the BuildConfig of each project using the plugin:</p>
 
 

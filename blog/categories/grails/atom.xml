@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Grails | The UrBlog]]></title>
   <link href="http://jurberg.github.com/blog/categories/grails/atom.xml" rel="self"/>
   <link href="http://jurberg.github.com/"/>
-  <updated>2013-10-06T20:55:24-05:00</updated>
+  <updated>2014-03-03T22:02:22-06:00</updated>
   <id>http://jurberg.github.com/</id>
   <author>
     <name><![CDATA[John Urberg]]></name>
@@ -12,6 +12,28 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Unit Testing with the OneTimeData Plugin]]></title>
+    <link href="http://jurberg.github.com/blog/2014/03/03/onetimedata-test/"/>
+    <updated>2014-03-03T21:00:00-06:00</updated>
+    <id>http://jurberg.github.com/blog/2014/03/03/onetimedata-test</id>
+    <content type="html"><![CDATA[<p>The <a href="http://grails.org/plugin/one-time-data">OneTimeData</a> plugin is handy when flash doesn't work for you. I recently had to use it in an application that required an extra redirect between controller actions.  The OneTimeData plugin does not come with any unit testing assistance, so I created a simple mixin that adds the OneTimeData methods to a controller under test and backs them with a mock map on the spec to make it easy to access what the controller passed. The following class creates the mixin.</p>
+
+
+<script src="https://gist.github.com/jurberg/9338727.js"></script>
+
+
+<p>Using it requires two steps: 1) Add the mixin using the @TestMixn annotation and 2) call mockOneTimeData passing in the spec and the controller.</p>
+
+
+<script src="https://gist.github.com/jurberg/9338807.js"></script>
+
+
+<p>If anyone knows of a way to capture the spec and controller inside the mixin, please comment. Thanks!</p>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Grails Tip: Always call package-plugin]]></title>
@@ -122,18 +144,6 @@
 
 
 <script src="https://gist.github.com/4699505.js"></script>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Add a context-param to Grails]]></title>
-    <link href="http://jurberg.github.com/blog/2013/01/23/add-a-context-param-to-grails/"/>
-    <updated>2013-01-23T22:06:00-06:00</updated>
-    <id>http://jurberg.github.com/blog/2013/01/23/add-a-context-param-to-grails</id>
-    <content type="html"><![CDATA[<p>With the recent <a href="https://www.aspectsecurity.com/uploads/downloads/2012/12/Remote-Code-with-Expression-Language-Injection.pdf">Spring vulnerability</a>, we thought it would be a good idea to disable EL in our Grails application.  To do this, we need to add a context-param to the beginning of the generated web.xml file.  Rather than using install-templates, I used the eventWebXmlEnd event to insert it.  XMLSlurper would have been nice, but it does not have a simple way to insert a node at the beginning.  So instead I used the XmlParser and came up with the following.</p>
-
-<script src="https://gist.github.com/4617534.js"></script>
 
 ]]></content>
   </entry>

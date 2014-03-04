@@ -9,7 +9,7 @@
   <meta name="author" content="John Urberg">
 
   
-  <meta name="description" content="Grails allows you to modularize your code by creating plugins. If you&#8217;re only using the plugin within your project, you can create it inline. &hellip;">
+  <meta name="description" content="The OneTimeData plugin is handy when flash doesn&#8217;t work for you. I recently had to use it in an application that required an extra redirect &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,7 +79,7 @@
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2013/09/27/grails-inline-plugins/">Grails Tip: Always Call Package-plugin</a></h1>
+      <h1 class="entry-title"><a href="/blog/2014/03/03/onetimedata-test/">Unit Testing With the OneTimeData Plugin</a></h1>
     
     
       <p class="meta">
@@ -95,26 +95,26 @@
   
 
 
-<time datetime="2013-09-27T21:00:00-05:00" pubdate data-updated="true">Sep 27<span>th</span>, 2013</time>
+<time datetime="2014-03-03T21:00:00-06:00" pubdate data-updated="true">Mar 3<span>rd</span>, 2014</time>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><p>Grails allows you to modularize your code by creating plugins.  If you&#8217;re only using the plugin within your project, you can create it inline.  You just need to add a line to the BuildConfig of each project using the plugin:</p>
+  <div class="entry-content"><p>The <a href="http://grails.org/plugin/one-time-data">OneTimeData</a> plugin is handy when flash doesn&#8217;t work for you. I recently had to use it in an application that required an extra redirect between controller actions.  The OneTimeData plugin does not come with any unit testing assistance, so I created a simple mixin that adds the OneTimeData methods to a controller under test and backs them with a mock map on the spec to make it easy to access what the controller passed. The following class creates the mixin.</p>
 
 
-<pre><code class="java">grails.plugin.location.'core-module' = "../core-module"</code></pre>
+<script src="https://gist.github.com/jurberg/9338727.js"></script>
 
 
-<p>When you build the webapp that uses the plugin, Grails will include the plugin in the distribution.  A plugin.xml is generated in the plugin directory during this process.</p>
+<p>Using it requires two steps: 1) Add the mixin using the @TestMixn annotation and 2) call mockOneTimeData passing in the spec and the controller.</p>
 
 
-<p>Here be dragons though&#8230;  If the plugin.xml file already exists, Grails won&#8217;t recreate it.  If you change the plugin version, the plugin.xml will still have the old version number.  Everything will still work ok unless you have resources.  The resources will be stored in a directory with the plugin.xml version number but the plugin will look for them in a directory with the new version number.</p>
+<script src="https://gist.github.com/jurberg/9338807.js"></script>
 
 
-<p>The best way to fix this is to always call package-plugin on the plugin before building the app.</p>
+<p>If anyone knows of a way to capture the spec and controller inside the mixin, please comment. Thanks!</p>
 
 </div>
   
@@ -128,7 +128,7 @@
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2013/09/27/beware-config-slurper/">Grails Tip: Always Call Package-plugin</a></h1>
+      <h1 class="entry-title"><a href="/blog/2013/09/27/grails-inline-plugins/">Grails Tip: Always Call Package-plugin</a></h1>
     
     
       <p class="meta">
@@ -609,11 +609,11 @@
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2013/09/27/grails-inline-plugins/">Grails Tip: Always call package-plugin</a>
+        <a href="/blog/2014/03/03/onetimedata-test/">Unit Testing with the OneTimeData Plugin</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2013/09/27/beware-config-slurper/">Grails Tip: Always call package-plugin</a>
+        <a href="/blog/2013/09/27/grails-inline-plugins/">Grails Tip: Always call package-plugin</a>
       </li>
     
       <li class="post">
@@ -699,7 +699,7 @@
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2013 - John Urberg -
+  Copyright &copy; 2014 - John Urberg -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 
