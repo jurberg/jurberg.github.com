@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Welcome to the UrBlog Reborn - The UrBlog</title>
+  <title>Grails Tip: Always call package-plugin - The UrBlog</title>
   <meta name="author" content="John Urberg">
 
   
-  <meta name="description" content="Welcome to my new blog hosted on Github! I&#8217;ve moved a number of the posts from my old blog. If you want to see all my old posts, the old blog &hellip;">
+  <meta name="description" content="Grails allows you to modularize your code by creating plugins. If you&#8217;re only using the plugin within your project, you can create it inline. &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://jurberg.github.com/blog/2013/01/14/welcome-to-the-urblog-reborn/">
+  <link rel="canonical" href="http://jurberg.github.com/blog/2013/09/27/beware-config-slurper/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -76,7 +76,7 @@
   
   <header>
     
-      <h1 class="entry-title">Welcome to the UrBlog Reborn</h1>
+      <h1 class="entry-title">Grails Tip: Always Call Package-plugin</h1>
     
     
       <p class="meta">
@@ -92,14 +92,27 @@
   
 
 
-<time datetime="2013-01-14T21:21:00-06:00" pubdate data-updated="true">Jan 14<span>th</span>, 2013</time>
+<time datetime="2013-09-27T21:00:00-05:00" pubdate data-updated="true">Sep 27<span>th</span>, 2013</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>Welcome to my new blog hosted on Github!  I&#8217;ve moved a number of the posts from my old blog.  If you want to see all my old posts, the old blog is <a href="http://www.jroller.com/jurberg/">here</a>.</p>
+<div class="entry-content"><p>Grails allows you to modularize your code by creating plugins.  If you&#8217;re only using the plugin within your project, you can create it inline.  You just need to add a line to the BuildConfig of each project using the plugin:</p>
+
+
+<pre><code class="java">grails.plugin.location.'core-module' = "../core-module"</code></pre>
+
+
+<p>When you build the webapp that uses the plugin, Grails will include the plugin in the distribution.  A plugin.xml is generated in the plugin directory during this process.</p>
+
+
+<p>Here be dragons though&#8230;  If the plugin.xml file already exists, Grails won&#8217;t recreate it.  If you change the plugin version, the plugin.xml will still have the old version number.  Everything will still work ok unless you have resources.  The resources will be stored in a directory with the plugin.xml version number but the plugin will look for them in a directory with the new version number.</p>
+
+
+<p>The best way to fix this is to always call package-plugin on the plugin before building the app.</p>
+
 </div>
 
 
@@ -132,12 +145,12 @@
   
 
 
-<time datetime="2013-01-14T21:21:00-06:00" pubdate data-updated="true">Jan 14<span>th</span>, 2013</time>
+<time datetime="2013-09-27T21:00:00-05:00" pubdate data-updated="true">Sep 27<span>th</span>, 2013</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/blogging/'>blogging</a>
+    <a class='category' href='/blog/categories/grails/'>Grails</a>
   
 </span>
 
@@ -146,7 +159,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://jurberg.github.com/blog/2013/01/14/welcome-to-the-urblog-reborn/" data-via="jurberg" data-counturl="http://jurberg.github.com/blog/2013/01/14/welcome-to-the-urblog-reborn/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://jurberg.github.com/blog/2013/09/27/beware-config-slurper/" data-via="jurberg" data-counturl="http://jurberg.github.com/blog/2013/09/27/beware-config-slurper/" >Tweet</a>
   
   
   
@@ -155,10 +168,10 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2012/11/27/grails-script-to-generate-JAXB-classes/" title="Previous Post: Grails script to generate JAXB classes">&laquo; Grails script to generate JAXB classes</a>
+        <a class="basic-alignment left" href="/blog/2013/04/24/grails-components/" title="Previous Post: Creating Grails UI 'Components'">&laquo; Creating Grails UI 'Components'</a>
       
       
-        <a class="basic-alignment right" href="/blog/2013/01/23/add-a-context-param-to-grails/" title="Next Post: Add a context-param to Grails">Add a context-param to Grails &raquo;</a>
+        <a class="basic-alignment right" href="/blog/2013/09/27/grails-inline-plugins/" title="Next Post: Grails Tip: Always call package-plugin">Grails Tip: Always call package-plugin &raquo;</a>
       
     </p>
   </footer>
@@ -286,8 +299,8 @@
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://jurberg.github.com/blog/2013/01/14/welcome-to-the-urblog-reborn/';
-        var disqus_url = 'http://jurberg.github.com/blog/2013/01/14/welcome-to-the-urblog-reborn/';
+        var disqus_identifier = 'http://jurberg.github.com/blog/2013/09/27/beware-config-slurper/';
+        var disqus_url = 'http://jurberg.github.com/blog/2013/09/27/beware-config-slurper/';
         var disqus_script = 'embed.js';
       
     (function () {

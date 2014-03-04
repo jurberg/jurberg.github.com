@@ -9,7 +9,7 @@
   <meta name="author" content="John Urberg">
 
   
-  <meta name="description" content="I&#8217;ve been developing Grails apps in Spring Tool Suite. STS will compile your Groovy code as you save it just as Eclipse does for Java code. &hellip;">
+  <meta name="description" content="The Grails JMX plugin is a great way to quickly make a service available through JMX. Things get trickier when you want to only expose a few methods &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,6 +73,45 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/10/29/exclude-methods-grails-jmx-plugin/">An Easier Way to Exclude Methods From Grails JMX Plugin Services</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-10-29T19:00:00-05:00" pubdate data-updated="true">Oct 29<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>The <a href="http://grails.org/plugin/jmx">Grails JMX plugin</a> is a great way to quickly make a service available through JMX.  Things get trickier when you want to only expose a few methods on the service.  The plugin provides the option to list methods to exclude, but you need to list all of them including the ones Grails added to the service.  Fortunately, we can use the metaclass to help us out.  We can add a list of the few methods we want exposed and then use to that to generate the list of exclude method as follows:</p>
+
+<script src="https://gist.github.com/3977988.js"> </script>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -870,6 +909,10 @@ data = header + data;
       </li>
     
       <li class="post">
+        <a href="/blog/2013/09/27/beware-config-slurper/">Grails Tip: Always call package-plugin</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/04/24/grails-components/">Creating Grails UI &#8216;Components&#8217;</a>
       </li>
     
@@ -879,10 +922,6 @@ data = header + data;
     
       <li class="post">
         <a href="/blog/2013/02/26/simple-define-js/">A simple JavaScript module library</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/02/02/requirejs-in-grails-build/">Running the Require.JS optimizer in a Grails build</a>
       </li>
     
   </ul>
