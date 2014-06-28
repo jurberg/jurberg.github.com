@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Express | The UrBlog]]></title>
+  <link href="http://jurberg.github.com/blog/categories/express/atom.xml" rel="self"/>
+  <link href="http://jurberg.github.com/"/>
+  <updated>2014-03-03T22:02:22-06:00</updated>
+  <id>http://jurberg.github.com/</id>
+  <author>
+    <name><![CDATA[John Urberg]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Roll Your Own Controllers with Express and Require.JS]]></title>
+    <link href="http://jurberg.github.com/blog/2013/04/10/express-requirejs-controllers/"/>
+    <updated>2013-04-10T21:00:00-05:00</updated>
+    <id>http://jurberg.github.com/blog/2013/04/10/express-requirejs-controllers</id>
+    <content type="html"><![CDATA[<p>I'm a Grails developer at work, so I've gotten used to convention over configuration for controllers.  I just create a class with a name that ends in Controller and place it the controller folder.  Each method in the controller is an action and it allows me to access that method via /controller/action/id.</p>
+
+
+
+
+<p>While Node and Express have full blown Rails copies (such as <a href="http://geddyjs.org/">Geddy</a>), I want something simpler.  I prefer to use <a href="http://requirejs.org/">Require.JS</a> to help me manage my dependencies.  It includes a require method that allows me to load a module by name.</p>
+
+
+
+
+<p>This gave me an idea.  What if I could make a /controller/acton/id route in Express and use require to dynamically load the controller.  I could then call the action on the controller as a key.  It turns out it's pretty simple:</a>
+<script src="https://gist.github.com/jurberg/5360006.js"></script>
+
+<p>Now any module in app/controller that has a method that takes a request and response can act as a controller with no configuration.  This example responds to /health/index.  Since we set it up to go to index when there's no action, it will also respond to /health.</p>
+<script src="https://gist.github.com/anonymous/99f7c50f17734aa0fb8a.js"></script>
+
+<p>There are cases where your URL does not match /controller/action.  Grails allows you to setup a UrlMapping file that maps URLs to controllers.  We could setup a similar file in JavaScript:</p>
+<script src="https://gist.github.com/jurberg/ebba91d0bdf5dbc57fff.js"></script>
+
+<p>We can then loop thru the mappings and register them with Express:</p>
+<script src="https://gist.github.com/jurberg/5360024.js"></script>
+
+<p>With just Express, Require.JS and a few lines of JavaScript, I now have convention over configuration controllers</p>
+
+]]></content>
+  </entry>
+  
+</feed>
