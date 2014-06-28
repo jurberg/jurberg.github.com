@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>The UrBlog</title>
+  <title>Complexity and Angular DI - The UrBlog</title>
   <meta name="author" content="John Urberg">
 
   
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://jurberg.github.com/">
+  <link rel="canonical" href="http://jurberg.github.com/blog/2014/06/22/thoughts-on-angular-dependency-injection/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -67,15 +67,12 @@
 </nav>
   <div id="main">
     <div id="content">
-      <div class="blog-index">
+      <div>
+<article class="hentry" role="article">
   
-  
-  
-    <article>
-      
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2014/06/22/thoughts-on-angular-dependency-injection/">Complexity and Angular DI</a></h1>
+      <h1 class="entry-title">Complexity and Angular DI</h1>
     
     
       <p class="meta">
@@ -98,7 +95,7 @@
   </header>
 
 
-  <div class="entry-content"><p>We chose AngularJS as our primary JavaScript framework and I&#8217;ve had the opportunity to use it heavily in a project.  
+<div class="entry-content"><p>We chose AngularJS as our primary JavaScript framework and I&#8217;ve had the opportunity to use it heavily in a project.  
 While controllers and directives are cool, I find the dependency injection to be overly complicated.  There are many 
 different ways to provide objects to inject: provider, factory, value, service and constant.  In the end, most of 
 these are shortcuts that do the same thing.  The following example is modified from the 
@@ -415,71 +412,26 @@ use no globals other than the define and require methods of AMD.</p>
 </span></code></pre></td></tr></table></div></figure>
 
 </div>
-  
-  
 
 
-    </article>
-  
-  
-    <article>
+  <footer>
+     <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-6995989828356521";
+      /* UrBlog Post */
+      google_ad_slot = "9938118229";
+      google_ad_width = 468;
+      google_ad_height = 60;
+      //-->
+    </script>
+    <script type="text/javascript" src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+    </script>
+    <p class="meta">
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/03/03/onetimedata-test/">Unit Testing With the OneTimeData Plugin</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
   
 
+<span class="byline author vcard">Posted by <span class="fn">John Urberg</span></span>
 
-<time datetime="2014-03-03T21:00:00-06:00" pubdate data-updated="true">Mar 3<span>rd</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>The <a href="http://grails.org/plugin/one-time-data">OneTimeData</a> plugin is handy when flash doesn&#8217;t work for you. I recently had to use it in an application that required an extra redirect between controller actions.  The OneTimeData plugin does not come with any unit testing assistance, so I created a simple mixin that adds the OneTimeData methods to a controller under test and backs them with a mock map on the spec to make it easy to access what the controller passed. The following class creates the mixin.</p>
-
-
-<script src="https://gist.github.com/jurberg/9338727.js"></script>
-
-
-<p>Using it requires two steps: 1) Add the mixin using the @TestMixn annotation and 2) call mockOneTimeData passing in the spec and the controller.</p>
-
-
-<script src="https://gist.github.com/jurberg/9338807.js"></script>
-
-
-<p>If anyone knows of a way to capture the spec and controller inside the mixin, please comment. Thanks!</p>
-
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/04/24/grails-components/">Creating Grails UI &#8216;Components&#8217;</a></h1>
-    
-    
-      <p class="meta">
-        
 
 
 
@@ -491,416 +443,49 @@ use no globals other than the define and require methods of AMD.</p>
   
 
 
-<time datetime="2013-04-24T21:00:00-05:00" pubdate data-updated="true">Apr 24<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I&#8217;m working on a Grails application with a large amount of JavaScript.  I often have UI &#8216;components&#8217; that have markup, CSS and JavaScript associated with them that are used on several pages.  A couple of examples are shopping carts and dialogs.  I&#8217;ve found a good way to organize this code is to make use of the resources plugin to put the pieces together into modules that I can then place into the pages.  As an example, I made a simple dialog that has a GSP for the layout, a CSS file with some styling and JavaScript to open the dialog.  The first step is to create some markup for the dialog in a template:</p>
-
-
-<script src="https://gist.github.com/jurberg/5457059.js"></script>
-
-
-<p>I added a require at the top to pull in the module definition from the ApplicationResources file.  This will pull the CSS and JavaScript for the component in each page that uses the template.</p>
-
-
-<p></p>
-
-<script src="https://gist.github.com/jurberg/5457071.js"></script>
-
-
-<p>A little CSS and JavaScript will bring the component to life:</p>
-
-
-<script src="https://gist.github.com/jurberg/5457099.js"></script>
-
-
-<script src="https://gist.github.com/jurberg/5457104.js"></script>
-
-
-<p>I can now include the template on the page and all the pieces of my component are pulled in.  I can now open the dialog from my page.</p>
-
-
-<script src="https://gist.github.com/jurberg/5457112.js"></script>
-
-
-
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
+<time datetime="2014-06-22T21:00:00-05:00" pubdate data-updated="true">Jun 22<span>nd</span>, 2014</time>
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/04/10/express-requirejs-controllers/">Roll Your Own Controllers With Express and Require.JS</a></h1>
-    
-    
-      <p class="meta">
-        
 
-
-
-
-
-
-
-
+<span class="categories">
   
+    <a class='category' href='/blog/categories/angularjs/'>AngularJS</a>
+  
+</span>
 
 
-<time datetime="2013-04-10T21:00:00-05:00" pubdate data-updated="true">Apr 10<span>th</span>, 2013</time>
-        
-      </p>
+    </p>
     
-  </header>
-
-
-  <div class="entry-content"><p>I&#8217;m a Grails developer at work, so I&#8217;ve gotten used to convention over configuration for controllers.  I just create a class with a name that ends in Controller and place it the controller folder.  Each method in the controller is an action and it allows me to access that method via /controller/action/id.</p>
-
-
-
-
-<p>While Node and Express have full blown Rails copies (such as <a href="http://geddyjs.org/">Geddy</a>), I want something simpler.  I prefer to use <a href="http://requirejs.org/">Require.JS</a> to help me manage my dependencies.  It includes a require method that allows me to load a module by name.</p>
-
-
-
-
-<p>This gave me an idea.  What if I could make a /controller/acton/id route in Express and use require to dynamically load the controller.  I could then call the action on the controller as a key.  It turns out it&#8217;s pretty simple:</a>
-<script src="https://gist.github.com/jurberg/5360006.js"></script>
-
-<p>Now any module in app/controller that has a method that takes a request and response can act as a controller with no configuration.  This example responds to /health/index.  Since we set it up to go to index when there&#8217;s no action, it will also respond to /health.</p>
-<script src="https://gist.github.com/anonymous/99f7c50f17734aa0fb8a.js"></script>
-
-<p>There are cases where your URL does not match /controller/action.  Grails allows you to setup a UrlMapping file that maps URLs to controllers.  We could setup a similar file in JavaScript:</p>
-<script src="https://gist.github.com/jurberg/ebba91d0bdf5dbc57fff.js"></script>
-
-<p>We can then loop thru the mappings and register them with Express:</p>
-<script src="https://gist.github.com/jurberg/5360024.js"></script>
-
-<p>With just Express, Require.JS and a few lines of JavaScript, I now have convention over configuration controllers</p>
-
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://jurberg.github.com/blog/2014/06/22/thoughts-on-angular-dependency-injection/" data-via="jurberg" data-counturl="http://jurberg.github.com/blog/2014/06/22/thoughts-on-angular-dependency-injection/" >Tweet</a>
+  
+  
+  
 </div>
-  
-  
 
-
-    </article>
-  
-  
-    <article>
+    
+    <p class="meta">
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/02/26/simple-define-js/">A Simple JavaScript Module Library</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-02-26T21:00:00-06:00" pubdate data-updated="true">Feb 26<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>When developing JavaScript, I like to break my code into modules and define what modules the depend on.  <a href="http://requirejs.org/">Require.JS</a> is a great tool for this, but it also means bringing in module loading.  I&#8217;m on a project using <a href="http://grails.org/">Grails</a> that has a moderate amount of JavaScript.  Grails provides a resource plugin that handles bundling of resources.  I would still like to use the Require.JS style of defining modules and their dependencies while still loading scripts the normal way so Grails is happy.</p>
-
-
-<p>I ended up creating <a href="https://github.com/jurberg/define.js">define.js</a>.  This libary provides a simple &#8216;define&#8217; and &#8216;require&#8217; method.  The &#8216;define&#8217; uses the global object to hold the modules so they are also available in html handlers.  Using the global object as the module list also allows us to treat third party libraries such as jQuery as dependencies.</p>
-
-
-<p>The following example creates a module that depends on the domain.person module, jQuery and the window object.  Since we are using the global to store modules, we can treat jQuery and window just like any other dependency we have defined.</p>
-
-
-<script src="https://gist.github.com/jurberg/5044824.js"></script>
-
-
-<p>Using the global object to hold modules also allows us to access them in html</p>
-
-
-<script src="https://gist.github.com/jurberg/5044843.js"></script>
-
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
+        <a class="basic-alignment left" href="/blog/2014/03/03/onetimedata-test/" title="Previous Post: Unit Testing with the OneTimeData Plugin">&laquo; Unit Testing with the OneTimeData Plugin</a>
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/02/02/requirejs-in-grails-build/">Running the Require.JS Optimizer in a Grails Build</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-02-02T22:06:00-06:00" pubdate data-updated="true">Feb 2<span>nd</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>The <a href="http://grails.org/plugin/resources">Grails Resource Plugin</a> provides some dependency management for your JavaScript resources by allowing you to define modules of scripts, including their dependencies.  This works fine for applications with small numbers of JavaScript.  If you&#8217;re writing an application with a large amount of JavaScript, having to keep those dependencies in sync in a separate Groovy config file can get difficult.  Enter <a href="http://requirejs.org/">Require.JS</a>.  Require.JS is an <a href="https://github.com/amdjs/amdjs-api/wiki/AMD">Asynchronous Module Definition (AMD) API</a> for JavaScript.  It allows you to define modules in JavaScript, including what modules it depends on.  The module loader will then load the dependencies when needed.  This is easier to manage in a large JavaScript project since you define the dependencies in each JavaScript file.</p>
-
-
-<p>Require.JS comes with an <a href="http://requirejs.org/docs/optimization.html">optimizer</a> that will crawl thru all your code, evaluate the dependencies, merge them into one file and minimize it.  The optimizer code is in a JavaScript file that can be run using <a href="http://nodejs.org/">Node.JS</a> or <a href="https://developer.mozilla.org/en-US/docs/Rhino">Rhino</a>.  We would like to run this as part of the Grails build during the war command.</p>
-
-
-<p>The Grails war command will copy the resources for the war file into a staging directory.  Before the war file is built, we will get a &#8220;CreateWarStart&#8221; event which gets the war name and the staging directory.  This is where we can call the optimizer command. Following is an example that can be placed in our _Events.groovy script.   It assumes you&#8217;ve placed the Rhino js.jar and the Require.JS r.js optimizer script in the Scripts folder.</p>
-
-
-<script src="https://gist.github.com/4699237.js"></script>
-
-
-<p>We run the script using the Java command instead of ant.java to avoid any issues from code loaded by Grails.  The scripts are run from the project root, so we reference the js.jar and r.js files in the .\Scripts directory.  The JavaScript files will be copied to the stagingDir in the js folder.  We&#8217;ll set the baseUrl to that directory and output the build file there also.  While the example does not show it, you can also pass removeCombined=true to remove the JavaScript files that were combined.</p>
-
-
-<p>The final step is to update our GSP file so it uses the -build version of the main script.  Following is an example of the script line adds -build if we are running in a war</p>
-
-
-<script src="https://gist.github.com/4699505.js"></script>
-
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/01/23/add-a-context-param-to-grails/">Add a Context-param to Grails</a></h1>
-    
-    
-      <p class="meta">
-        
+    </p>
+  </footer>
+</article>
 
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-01-23T22:06:00-06:00" pubdate data-updated="true">Jan 23<span>rd</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>With the recent <a href="https://www.aspectsecurity.com/uploads/downloads/2012/12/Remote-Code-with-Expression-Language-Injection.pdf">Spring vulnerability</a>, we thought it would be a good idea to disable EL in our Grails application.  To do this, we need to add a context-param to the beginning of the generated web.xml file.  Rather than using install-templates, I used the eventWebXmlEnd event to insert it.  XMLSlurper would have been nice, but it does not have a simple way to insert a node at the beginning.  So instead I used the XmlParser and came up with the following.</p>
-
-<script src="https://gist.github.com/4617534.js"></script>
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
 
 </div>
-  
-  
 
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/01/14/welcome-to-the-urblog-reborn/">Welcome to the UrBlog Reborn</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-01-14T21:21:00-06:00" pubdate data-updated="true">Jan 14<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Welcome to my new blog hosted on Github!  I&#8217;ve moved a number of the posts from my old blog.  If you want to see all my old posts, the old blog is <a href="http://www.jroller.com/jurberg/">here</a>.</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/11/27/grails-script-to-generate-JAXB-classes/">Grails Script to Generate JAXB Classes</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-11-27T19:00:00-06:00" pubdate data-updated="true">Nov 27<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I think Groovy&#8217;s <a href="http://groovy.codehaus.org/api/groovy/xml/MarkupBuilder.html">MarkupBuilder</a> is great and I use it often.  Sometimes though, I need to generate a complex XML document that conforms to an XSD.  MarkupBuilder often leads to markup and business logic being mixed together much like HTML and Java code gets mixed in complex JSP pages. In cases like this, I like to use JAXB instead.  I can generate classes from the XSD, load up an object model and let JAXB generate the markup.</p>
-
-
-<p>It&#8217;s fairly easy to create a script to handle generating the JAXB classes for you.  JAXB comes with a handy Ant task that takes your XSD and generates classes. The trick is passing the build classpath to the task.  There is a &#8220;grailsSettings&#8221; variable available in scripts that contains <a href="https://github.com/grails/grails-core/blob/master/grails-bootstrap/src/main/groovy/grails/util/BuildSettings.groovy">BuildSettings</a>.  We can get the list of build dependencies files from this class to generate the classpath.  Here is a simple example that takes the Microsoft <a href="http://msdn.microsoft.com/en-us/library/ms256485.aspx">books.xsd</a> in the etc/schema directory and generates the code to the src/java directory:</p>
-
-
-<script src="https://gist.github.com/4158702.js"> </script>
-
-
-<p>UPDATE: Sometimes having the JAXB jars on your path can cause problems with your application.  In those cases, you call the generation class directly:</p>
-
-
-<script src="https://gist.github.com/4186366.js"> </script>
-
-
-
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/11/11/convert-xml-to-flat-files-with-groovy/">Converting XML to Flat Files With Groovy</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-11-11T19:00:00-06:00" pubdate data-updated="true">Nov 11<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>When integrating systems, you often need to convert data from one format to another.  For example, you may receive data from a web service in XML and need to convert it to a flat file for a legacy system.  It&#8217;s usually not as simple as just moving data from a tag to a column either.  There&#8217;s often calculations and formatting required.  Most often the code has the work of parsing, converting and formatting all mixed together.  With a dynamic language like Groovy which has closures, we can abstract much of that work.  For our example, we&#8217;ll take a subset of the <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/ms762271(v=vs.85).aspx">Microsoft sample books.xml file</a>:</p>
-
-
-<script src="https://gist.github.com/4056093.js"> </script>
-
-
-<p>We would like to provided a mapping for each column that allows us to pull data out of the XML file and define the width of the column.  We&#8217;ll keep it simple to start with by assuming a fixed width flat file with all columns left justified.  Following is a simple mapping using an array of maps:</p>
-
-
-<script src="https://gist.github.com/4056280.js"> </script>
-
-
-<p>Each closure should get a GPathResult to a &#8220;row&#8221; in the XML file.  The closure should return the text that should go in the column.  We&#8217;ll need to supply the tag that identifies the tag in the XML file to pass to the closure.  Following is an example test using our books data:</p>
-
-
-<script src="https://gist.github.com/4056102.js"> </script>
-
-
-<p>The implementation is fairly simple.  We process each &#8220;tag&#8221; in the XML.  For each mapping, we set the delegate for the closure to a map with the tag name and the GPathResults for that tag.  The closure can then be executed to get the text for the column:</p>
-
-
-<script src="https://gist.github.com/4056079.js"> </script>
-
-
-<p>The above piece of code abstracts the processing into 8 lines of code.  It is a testament to the power of a dynamic language that provides closures.</p>
-
-</div>
-  
-  
-
-
-    </article>
-  
-  <div class="pagination">
-    
-      <a class="prev" href="/blog/page/2/">&larr; Older</a>
-    
-    <a href="/blog/archives">Blog Archives</a>
-    
-  </div>
-</div>
 <aside class="sidebar">
   
     <section>
   <h1>About Me</h1>
-  <p>I am a software professional with 2 decades of experience in the software field.  I&#8217;ve been in roles in all aspects of software development.  My current position is in consulting building web sites with Grails, JavaScript and JEE. Check me out on <a href="http://www.linkedin.com/pub/john-urberg/4/203/80a">Linkedin</a></p>
+  <p>I am a software professional with 2 decades of experience in the software field.  I've been in roles in all aspects of software development.  My current position is in consulting building web sites with Grails, JavaScript and JEE. Check me out on <a href="http://www.linkedin.com/pub/john-urberg/4/203/80a">Linkedin</a></p>
 </section>
 <section>
   <h1>Recent Posts</h1>
@@ -915,7 +500,7 @@ use no globals other than the define and require methods of AMD.</p>
       </li>
     
       <li class="post">
-        <a href="/blog/2013/04/24/grails-components/">Creating Grails UI &#8216;Components&#8217;</a>
+        <a href="/blog/2013/04/24/grails-components/">Creating Grails UI 'Components'</a>
       </li>
     
       <li class="post">
@@ -932,7 +517,7 @@ use no globals other than the define and require methods of AMD.</p>
 <section>
   <h1>GitHub Repos</h1>
   <ul id="gh_repos">
-    <li class="loading">Status updating&#8230;</li>
+    <li class="loading">Status updating...</li>
   </ul>
   
   <a href="https://github.com/jurberg">@jurberg</a> on GitHub
@@ -962,7 +547,7 @@ use no globals other than the define and require methods of AMD.</p>
 <section>
   <h1>Latest Tweets</h1>
   <ul id="tweets">
-    <li class="loading">Status updating&#8230;</li>
+    <li class="loading">Status updating...</li>
   </ul>
   <script type="text/javascript">
     $.domReady(function(){
@@ -994,6 +579,7 @@ use no globals other than the define and require methods of AMD.</p>
   
 </aside>
 
+
     </div>
   </div>
   <footer role="contentinfo"><p>
@@ -1008,7 +594,10 @@ use no globals other than the define and require methods of AMD.</p>
       var disqus_shortname = 'urblog';
       
         
-        var disqus_script = 'count.js';
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://jurberg.github.com/blog/2014/06/22/thoughts-on-angular-dependency-injection/';
+        var disqus_url = 'http://jurberg.github.com/blog/2014/06/22/thoughts-on-angular-dependency-injection/';
+        var disqus_script = 'embed.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: LMAX | The UrBlog]]></title>
+  <link href="http://jurberg.github.com/blog/categories/lmax/atom.xml" rel="self"/>
+  <link href="http://jurberg.github.com/"/>
+  <updated>2014-06-28T17:00:20-05:00</updated>
+  <id>http://jurberg.github.com/</id>
+  <author>
+    <name><![CDATA[John Urberg]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Scaling with Single Threading]]></title>
+    <link href="http://jurberg.github.com/blog/2011/08/09/scaling-with-single-threading/"/>
+    <updated>2011-08-09T19:00:00-05:00</updated>
+    <id>http://jurberg.github.com/blog/2011/08/09/scaling-with-single-threading</id>
+    <content type="html"><![CDATA[<p>The free lunch is over. To speed up applications we are told we must write multithreaded programs and avoid mutable state. Functional programming can help with it's immutable state. There's also Erlang with the Actor model or Clojure with it's software transactional memory. One other option to consider is single threading your code. Following are a few examples where single threading was used to scale applications.</p>
+
+<p><a href="http://www.objectpartners.com/2011/08/09/scaling-with-single-threading/">more...</a></p>
+]]></content>
+  </entry>
+  
+</feed>

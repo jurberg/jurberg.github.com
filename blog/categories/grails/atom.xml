@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Grails | The UrBlog]]></title>
+  <link href="http://jurberg.github.com/blog/categories/grails/atom.xml" rel="self"/>
+  <link href="http://jurberg.github.com/"/>
+  <updated>2014-06-28T17:00:20-05:00</updated>
+  <id>http://jurberg.github.com/</id>
+  <author>
+    <name><![CDATA[John Urberg]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Unit Testing with the OneTimeData Plugin]]></title>
+    <link href="http://jurberg.github.com/blog/2014/03/03/onetimedata-test/"/>
+    <updated>2014-03-03T21:00:00-06:00</updated>
+    <id>http://jurberg.github.com/blog/2014/03/03/onetimedata-test</id>
+    <content type="html"><![CDATA[<p>The <a href="http://grails.org/plugin/one-time-data">OneTimeData</a> plugin is handy when flash doesn't work for you. I recently had to use it in an application that required an extra redirect between controller actions.  The OneTimeData plugin does not come with any unit testing assistance, so I created a simple mixin that adds the OneTimeData methods to a controller under test and backs them with a mock map on the spec to make it easy to access what the controller passed. The following class creates the mixin.</p>
+
+
+<script src="https://gist.github.com/jurberg/9338727.js"></script>
+
+
+<p>Using it requires two steps: 1) Add the mixin using the @TestMixn annotation and 2) call mockOneTimeData passing in the spec and the controller.</p>
+
+
+<script src="https://gist.github.com/jurberg/9338807.js"></script>
+
+
+<p>If anyone knows of a way to capture the spec and controller inside the mixin, please comment. Thanks!</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Creating Grails UI 'Components']]></title>
+    <link href="http://jurberg.github.com/blog/2013/04/24/grails-components/"/>
+    <updated>2013-04-24T21:00:00-05:00</updated>
+    <id>http://jurberg.github.com/blog/2013/04/24/grails-components</id>
+    <content type="html"><![CDATA[<p>I'm working on a Grails application with a large amount of JavaScript.  I often have UI 'components' that have markup, CSS and JavaScript associated with them that are used on several pages.  A couple of examples are shopping carts and dialogs.  I've found a good way to organize this code is to make use of the resources plugin to put the pieces together into modules that I can then place into the pages.  As an example, I made a simple dialog that has a GSP for the layout, a CSS file with some styling and JavaScript to open the dialog.  The first step is to create some markup for the dialog in a template:</p>
+
+
+<script src="https://gist.github.com/jurberg/5457059.js"></script>
+
+
+<p>I added a require at the top to pull in the module definition from the ApplicationResources file.  This will pull the CSS and JavaScript for the component in each page that uses the template.</p>
+
+
+<p></p>
+
+<script src="https://gist.github.com/jurberg/5457071.js"></script>
+
+
+<p>A little CSS and JavaScript will bring the component to life:</p>
+
+
+<script src="https://gist.github.com/jurberg/5457099.js"></script>
+
+
+<script src="https://gist.github.com/jurberg/5457104.js"></script>
+
+
+<p>I can now include the template on the page and all the pieces of my component are pulled in.  I can now open the dialog from my page.</p>
+
+
+<script src="https://gist.github.com/jurberg/5457112.js"></script>
+
+
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[A simple JavaScript module library]]></title>
+    <link href="http://jurberg.github.com/blog/2013/02/26/simple-define-js/"/>
+    <updated>2013-02-26T21:00:00-06:00</updated>
+    <id>http://jurberg.github.com/blog/2013/02/26/simple-define-js</id>
+    <content type="html"><![CDATA[<p>When developing JavaScript, I like to break my code into modules and define what modules the depend on.  <a href="http://requirejs.org/">Require.JS</a> is a great tool for this, but it also means bringing in module loading.  I'm on a project using <a href="http://grails.org/">Grails</a> that has a moderate amount of JavaScript.  Grails provides a resource plugin that handles bundling of resources.  I would still like to use the Require.JS style of defining modules and their dependencies while still loading scripts the normal way so Grails is happy.</p>
+
+
+<p>I ended up creating <a href="https://github.com/jurberg/define.js">define.js</a>.  This libary provides a simple 'define' and 'require' method.  The 'define' uses the global object to hold the modules so they are also available in html handlers.  Using the global object as the module list also allows us to treat third party libraries such as jQuery as dependencies.</p>
+
+
+<p>The following example creates a module that depends on the domain.person module, jQuery and the window object.  Since we are using the global to store modules, we can treat jQuery and window just like any other dependency we have defined.</p>
+
+
+<script src="https://gist.github.com/jurberg/5044824.js"></script>
+
+
+<p>Using the global object to hold modules also allows us to access them in html</p>
+
+
+<script src="https://gist.github.com/jurberg/5044843.js"></script>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Running the Require.JS optimizer in a Grails build]]></title>
+    <link href="http://jurberg.github.com/blog/2013/02/02/requirejs-in-grails-build/"/>
+    <updated>2013-02-02T22:06:00-06:00</updated>
+    <id>http://jurberg.github.com/blog/2013/02/02/requirejs-in-grails-build</id>
+    <content type="html"><![CDATA[<p>The <a href="http://grails.org/plugin/resources">Grails Resource Plugin</a> provides some dependency management for your JavaScript resources by allowing you to define modules of scripts, including their dependencies.  This works fine for applications with small numbers of JavaScript.  If you're writing an application with a large amount of JavaScript, having to keep those dependencies in sync in a separate Groovy config file can get difficult.  Enter <a href="http://requirejs.org/">Require.JS</a>.  Require.JS is an <a href="https://github.com/amdjs/amdjs-api/wiki/AMD">Asynchronous Module Definition (AMD) API</a> for JavaScript.  It allows you to define modules in JavaScript, including what modules it depends on.  The module loader will then load the dependencies when needed.  This is easier to manage in a large JavaScript project since you define the dependencies in each JavaScript file.</p>
+
+
+<p>Require.JS comes with an <a href="http://requirejs.org/docs/optimization.html">optimizer</a> that will crawl thru all your code, evaluate the dependencies, merge them into one file and minimize it.  The optimizer code is in a JavaScript file that can be run using <a href="http://nodejs.org/">Node.JS</a> or <a href="https://developer.mozilla.org/en-US/docs/Rhino">Rhino</a>.  We would like to run this as part of the Grails build during the war command.</p>
+
+
+<p>The Grails war command will copy the resources for the war file into a staging directory.  Before the war file is built, we will get a "CreateWarStart" event which gets the war name and the staging directory.  This is where we can call the optimizer command. Following is an example that can be placed in our _Events.groovy script.   It assumes you've placed the Rhino js.jar and the Require.JS r.js optimizer script in the Scripts folder.</p>
+
+
+<script src="https://gist.github.com/4699237.js"></script>
+
+
+<p>We run the script using the Java command instead of ant.java to avoid any issues from code loaded by Grails.  The scripts are run from the project root, so we reference the js.jar and r.js files in the .\Scripts directory.  The JavaScript files will be copied to the stagingDir in the js folder.  We'll set the baseUrl to that directory and output the build file there also.  While the example does not show it, you can also pass removeCombined=true to remove the JavaScript files that were combined.</p>
+
+
+<p>The final step is to update our GSP file so it uses the -build version of the main script.  Following is an example of the script line adds -build if we are running in a war</p>
+
+
+<script src="https://gist.github.com/4699505.js"></script>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Add a context-param to Grails]]></title>
+    <link href="http://jurberg.github.com/blog/2013/01/23/add-a-context-param-to-grails/"/>
+    <updated>2013-01-23T22:06:00-06:00</updated>
+    <id>http://jurberg.github.com/blog/2013/01/23/add-a-context-param-to-grails</id>
+    <content type="html"><![CDATA[<p>With the recent <a href="https://www.aspectsecurity.com/uploads/downloads/2012/12/Remote-Code-with-Expression-Language-Injection.pdf">Spring vulnerability</a>, we thought it would be a good idea to disable EL in our Grails application.  To do this, we need to add a context-param to the beginning of the generated web.xml file.  Rather than using install-templates, I used the eventWebXmlEnd event to insert it.  XMLSlurper would have been nice, but it does not have a simple way to insert a node at the beginning.  So instead I used the XmlParser and came up with the following.</p>
+
+<script src="https://gist.github.com/4617534.js"></script>
+
+]]></content>
+  </entry>
+  
+</feed>

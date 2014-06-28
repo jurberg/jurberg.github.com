@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: blogging | The UrBlog]]></title>
+  <link href="http://jurberg.github.com/blog/categories/blogging/atom.xml" rel="self"/>
+  <link href="http://jurberg.github.com/"/>
+  <updated>2014-06-28T17:00:20-05:00</updated>
+  <id>http://jurberg.github.com/</id>
+  <author>
+    <name><![CDATA[John Urberg]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Welcome to the UrBlog Reborn]]></title>
+    <link href="http://jurberg.github.com/blog/2013/01/14/welcome-to-the-urblog-reborn/"/>
+    <updated>2013-01-14T21:21:00-06:00</updated>
+    <id>http://jurberg.github.com/blog/2013/01/14/welcome-to-the-urblog-reborn</id>
+    <content type="html"><![CDATA[<p>Welcome to my new blog hosted on Github!  I've moved a number of the posts from my old blog.  If you want to see all my old posts, the old blog is <a href="http://www.jroller.com/jurberg/">here</a>.</p>
+]]></content>
+  </entry>
+  
+</feed>

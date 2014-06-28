@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: JavaScript | The UrBlog]]></title>
+  <link href="http://jurberg.github.com/blog/categories/javascript/atom.xml" rel="self"/>
+  <link href="http://jurberg.github.com/"/>
+  <updated>2014-06-28T17:00:20-05:00</updated>
+  <id>http://jurberg.github.com/</id>
+  <author>
+    <name><![CDATA[John Urberg]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Creating Grails UI 'Components']]></title>
+    <link href="http://jurberg.github.com/blog/2013/04/24/grails-components/"/>
+    <updated>2013-04-24T21:00:00-05:00</updated>
+    <id>http://jurberg.github.com/blog/2013/04/24/grails-components</id>
+    <content type="html"><![CDATA[<p>I'm working on a Grails application with a large amount of JavaScript.  I often have UI 'components' that have markup, CSS and JavaScript associated with them that are used on several pages.  A couple of examples are shopping carts and dialogs.  I've found a good way to organize this code is to make use of the resources plugin to put the pieces together into modules that I can then place into the pages.  As an example, I made a simple dialog that has a GSP for the layout, a CSS file with some styling and JavaScript to open the dialog.  The first step is to create some markup for the dialog in a template:</p>
+
+
+<script src="https://gist.github.com/jurberg/5457059.js"></script>
+
+
+<p>I added a require at the top to pull in the module definition from the ApplicationResources file.  This will pull the CSS and JavaScript for the component in each page that uses the template.</p>
+
+
+<p></p>
+
+<script src="https://gist.github.com/jurberg/5457071.js"></script>
+
+
+<p>A little CSS and JavaScript will bring the component to life:</p>
+
+
+<script src="https://gist.github.com/jurberg/5457099.js"></script>
+
+
+<script src="https://gist.github.com/jurberg/5457104.js"></script>
+
+
+<p>I can now include the template on the page and all the pieces of my component are pulled in.  I can now open the dialog from my page.</p>
+
+
+<script src="https://gist.github.com/jurberg/5457112.js"></script>
+
+
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Roll Your Own Controllers with Express and Require.JS]]></title>
+    <link href="http://jurberg.github.com/blog/2013/04/10/express-requirejs-controllers/"/>
+    <updated>2013-04-10T21:00:00-05:00</updated>
+    <id>http://jurberg.github.com/blog/2013/04/10/express-requirejs-controllers</id>
+    <content type="html"><![CDATA[<p>I'm a Grails developer at work, so I've gotten used to convention over configuration for controllers.  I just create a class with a name that ends in Controller and place it the controller folder.  Each method in the controller is an action and it allows me to access that method via /controller/action/id.</p>
+
+
+
+
+<p>While Node and Express have full blown Rails copies (such as <a href="http://geddyjs.org/">Geddy</a>), I want something simpler.  I prefer to use <a href="http://requirejs.org/">Require.JS</a> to help me manage my dependencies.  It includes a require method that allows me to load a module by name.</p>
+
+
+
+
+<p>This gave me an idea.  What if I could make a /controller/acton/id route in Express and use require to dynamically load the controller.  I could then call the action on the controller as a key.  It turns out it's pretty simple:</a>
+<script src="https://gist.github.com/jurberg/5360006.js"></script>
+
+<p>Now any module in app/controller that has a method that takes a request and response can act as a controller with no configuration.  This example responds to /health/index.  Since we set it up to go to index when there's no action, it will also respond to /health.</p>
+<script src="https://gist.github.com/anonymous/99f7c50f17734aa0fb8a.js"></script>
+
+<p>There are cases where your URL does not match /controller/action.  Grails allows you to setup a UrlMapping file that maps URLs to controllers.  We could setup a similar file in JavaScript:</p>
+<script src="https://gist.github.com/jurberg/ebba91d0bdf5dbc57fff.js"></script>
+
+<p>We can then loop thru the mappings and register them with Express:</p>
+<script src="https://gist.github.com/jurberg/5360024.js"></script>
+
+<p>With just Express, Require.JS and a few lines of JavaScript, I now have convention over configuration controllers</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[A simple JavaScript module library]]></title>
+    <link href="http://jurberg.github.com/blog/2013/02/26/simple-define-js/"/>
+    <updated>2013-02-26T21:00:00-06:00</updated>
+    <id>http://jurberg.github.com/blog/2013/02/26/simple-define-js</id>
+    <content type="html"><![CDATA[<p>When developing JavaScript, I like to break my code into modules and define what modules the depend on.  <a href="http://requirejs.org/">Require.JS</a> is a great tool for this, but it also means bringing in module loading.  I'm on a project using <a href="http://grails.org/">Grails</a> that has a moderate amount of JavaScript.  Grails provides a resource plugin that handles bundling of resources.  I would still like to use the Require.JS style of defining modules and their dependencies while still loading scripts the normal way so Grails is happy.</p>
+
+
+<p>I ended up creating <a href="https://github.com/jurberg/define.js">define.js</a>.  This libary provides a simple 'define' and 'require' method.  The 'define' uses the global object to hold the modules so they are also available in html handlers.  Using the global object as the module list also allows us to treat third party libraries such as jQuery as dependencies.</p>
+
+
+<p>The following example creates a module that depends on the domain.person module, jQuery and the window object.  Since we are using the global to store modules, we can treat jQuery and window just like any other dependency we have defined.</p>
+
+
+<script src="https://gist.github.com/jurberg/5044824.js"></script>
+
+
+<p>Using the global object to hold modules also allows us to access them in html</p>
+
+
+<script src="https://gist.github.com/jurberg/5044843.js"></script>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[An introduction to Node.js]]></title>
+    <link href="http://jurberg.github.com/blog/2011/08/11/introduction-to-node/"/>
+    <updated>2011-08-11T19:00:00-05:00</updated>
+    <id>http://jurberg.github.com/blog/2011/08/11/introduction-to-node</id>
+    <content type="html"><![CDATA[<p>Node.js is an evented I/O server built on Google's V8 JavaScript engine. Node provides a simple way to build highly scalable server applications. This article will provide an introduction to Node along with installation details and a first server. <a href="http://www.objectpartners.com/2011/08/23/an-introduction-to-node-js/">more...</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Scaling with Single Threading]]></title>
+    <link href="http://jurberg.github.com/blog/2011/08/09/scaling-with-single-threading/"/>
+    <updated>2011-08-09T19:00:00-05:00</updated>
+    <id>http://jurberg.github.com/blog/2011/08/09/scaling-with-single-threading</id>
+    <content type="html"><![CDATA[<p>The free lunch is over. To speed up applications we are told we must write multithreaded programs and avoid mutable state. Functional programming can help with it's immutable state. There's also Erlang with the Actor model or Clojure with it's software transactional memory. One other option to consider is single threading your code. Following are a few examples where single threading was used to scale applications.</p>
+
+<p><a href="http://www.objectpartners.com/2011/08/09/scaling-with-single-threading/">more...</a></p>
+]]></content>
+  </entry>
+  
+</feed>

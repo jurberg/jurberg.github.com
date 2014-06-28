@@ -1,0 +1,1106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[The UrBlog]]></title>
+  <link href="http://jurberg.github.com/atom.xml" rel="self"/>
+  <link href="http://jurberg.github.com/"/>
+  <updated>2014-06-28T17:00:20-05:00</updated>
+  <id>http://jurberg.github.com/</id>
+  <author>
+    <name><![CDATA[John Urberg]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Complexity and Angular DI]]></title>
+    <link href="http://jurberg.github.com/blog/2014/06/22/thoughts-on-angular-dependency-injection/"/>
+    <updated>2014-06-22T21:00:00-05:00</updated>
+    <id>http://jurberg.github.com/blog/2014/06/22/thoughts-on-angular-dependency-injection</id>
+    <content type="html"><![CDATA[<p>We chose AngularJS as our primary JavaScript framework and I&#8217;ve had the opportunity to use it heavily in a project.  
+While controllers and directives are cool, I find the dependency injection to be overly complicated.  There are many 
+different ways to provide objects to inject: provider, factory, value, service and constant.  In the end, most of 
+these are shortcuts that do the same thing.  The following example is modified from the 
+<a href="https://github.com/angular/angular.js/wiki/Understanding-Dependency-Injection">angular documentation</a> 
+and creates a simple alert function that can be injected through angular DI.</p>
+
+
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">app</span> <span class="o">=</span> <span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">&#39;app&#39;</span><span class="p">,</span> <span class="p">[]);</span>
+</span><span class='line'><span class="c1">// Using a provider:</span>
+</span><span class='line'><span class="nx">app</span><span class="p">.</span><span class="nx">provider</span><span class="p">(</span><span class="s1">&#39;greeting&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;$window&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$window</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">this</span><span class="p">.</span><span class="nx">$get</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nx">alert</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="nx">$window</span><span class="p">.</span><span class="nx">alert</span><span class="p">(</span><span class="s2">&quot;Hello, &quot;</span> <span class="o">+</span> <span class="nx">name</span><span class="p">);</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>    <span class="p">};</span>
+</span><span class='line'>  <span class="p">};</span>
+</span><span class='line'><span class="p">}]);</span>
+</span><span class='line'><span class="c1">// Using a factory:</span>
+</span><span class='line'><span class="nx">app</span><span class="p">.</span><span class="nx">factory</span><span class="p">(</span><span class="s1">&#39;greeting&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;$window&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$window</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">return</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">alert</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nx">$window</span><span class="p">.</span><span class="nx">alert</span><span class="p">(</span><span class="s2">&quot;Hello, &quot;</span> <span class="o">+</span> <span class="nx">name</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>  <span class="p">};</span>
+</span><span class='line'><span class="p">}]);</span>
+</span><span class='line'><span class="c1">// Using a service:</span>
+</span><span class='line'><span class="nx">app</span><span class="p">.</span><span class="nx">service</span><span class="p">(</span><span class="s1">&#39;greeting&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;$window&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$window</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">this</span><span class="p">.</span><span class="nx">alert</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">$window</span><span class="p">.</span><span class="nx">alert</span><span class="p">(</span><span class="s2">&quot;Hello, &quot;</span> <span class="o">+</span> <span class="nx">name</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">};</span>
+</span><span class='line'><span class="p">});</span>
+</span><span class='line'><span class="c1">// Using a value:</span>
+</span><span class='line'><span class="nx">app</span><span class="p">.</span><span class="nx">value</span><span class="p">(</span><span class="s1">&#39;greeting&#39;</span><span class="p">,</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">alert</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">alert</span><span class="p">(</span><span class="s2">&quot;Hello, &quot;</span> <span class="o">+</span> <span class="nx">name</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<p>There are a few minor differences: the service takes a constructor to create the object, while provider and factory 
+take the results of calling a function for the object.  Value takes the object and provides no dependency injection.  Otherwise,
+these are all creating exactly the same module.</p>
+
+
+<p>Contrast this to creating modules using AMD.  In the past I&#8217;ve used either <a href="http://requirejs.org/">RequireJS</a> 
+or <a href="https://github.com/jurberg/define.js/tree/master">define.js</a> as libraries to add AMD to my projects.  I use
+ them mostly as a way to organize my code, but I get a form of dependency injection also.  When using RequireJS, I can 
+ add <a href="https://github.com/iammerrick/Squire.js/">Squire.js</a> to mock module dependencies. define.js includes 
+ this ability in the library.  AMD has the dependencies &#8220;injected&#8221; into the module. The only 
+ difference from AngularJS is that they are injected when the module is loaded.  Here&#8217;s the same module created
+ using AMD:</p>
+
+
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">define</span><span class="p">(</span><span class="s1">&#39;greeting&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;window&#39;</span><span class="p">],</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$window</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">return</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">alert</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nx">$window</span><span class="p">.</span><span class="nx">alert</span><span class="p">(</span><span class="s2">&quot;Hello, &quot;</span> <span class="o">+</span> <span class="nx">name</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>  <span class="p">};</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<p>  Here&#8217;s a test for the angular code using the angular mock library:</p>
+
+
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">define</span><span class="p">(</span><span class="s2">&quot;Greeting module&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">mockWindow</span><span class="p">,</span> <span class="nx">service</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nx">beforeEach</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">mockWindow</span><span class="p">.</span><span class="nx">alert</span> <span class="o">=</span> <span class="nx">jasmine</span><span class="p">.</span><span class="nx">createSpy</span><span class="p">();</span>
+</span><span class='line'>    <span class="nx">module</span><span class="p">(</span><span class="s1">&#39;app&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$provide</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nx">provide</span><span class="p">.</span><span class="nx">value</span><span class="p">(</span><span class="s1">&#39;$window&#39;</span><span class="p">,</span> <span class="nx">mockWindow</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">});</span>
+</span><span class='line'>    <span class="nx">inject</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">$injector</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nx">service</span> <span class="o">=</span> <span class="nx">$injector</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;greeting&#39;</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">});</span>
+</span><span class='line'>  <span class="p">});</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nx">it</span><span class="p">(</span><span class="s2">&quot;should show alert&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>     <span class="nx">service</span><span class="p">.</span><span class="nx">alert</span><span class="p">(</span><span class="s1">&#39;everyone&#39;</span><span class="p">);</span>
+</span><span class='line'>     <span class="nx">expect</span><span class="p">(</span><span class="nx">mockWindow</span><span class="p">.</span><span class="nx">alert</span><span class="p">).</span><span class="nx">toHaveBeenCalledWith</span><span class="p">(</span><span class="s2">&quot;Hello, everyone&quot;</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">});</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<p>Here is the same test with define.js and no additional libraries:</p>
+
+
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">define</span><span class="p">(</span><span class="s2">&quot;Greeting module&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">mockWindow</span><span class="p">,</span> <span class="nx">service</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nx">beforeEach</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">mockWindow</span><span class="p">.</span><span class="nx">alert</span> <span class="o">=</span> <span class="nx">jasmine</span><span class="p">.</span><span class="nx">createSpy</span><span class="p">();</span>
+</span><span class='line'>    <span class="nx">redefine</span><span class="p">(</span><span class="s1">&#39;greeting&#39;</span><span class="p">,</span> <span class="p">{</span> <span class="s1">&#39;$window&#39;</span><span class="o">:</span> <span class="nx">mockWindow</span> <span class="p">});</span>
+</span><span class='line'>    <span class="nx">require</span><span class="p">([</span><span class="s1">&#39;greeting&#39;</span><span class="p">],</span> <span class="kd">function</span><span class="p">(</span><span class="nx">greeting</span><span class="p">)</span> <span class="p">{</span> <span class="nx">service</span> <span class="o">=</span> <span class="nx">greeting</span><span class="p">;</span> <span class="p">});</span>
+</span><span class='line'>  <span class="p">});</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nx">afterEach</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>     <span class="nx">redefine</span><span class="p">(</span><span class="s1">&#39;greeting&#39;</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">});</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nx">it</span><span class="p">(</span><span class="s2">&quot;should show alert&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>     <span class="nx">service</span><span class="p">.</span><span class="nx">alert</span><span class="p">(</span><span class="s1">&#39;everyone&#39;</span><span class="p">);</span>
+</span><span class='line'>     <span class="nx">expect</span><span class="p">(</span><span class="nx">mockWindow</span><span class="p">.</span><span class="nx">alert</span><span class="p">).</span><span class="nx">toHaveBeenCalledWith</span><span class="p">(</span><span class="s2">&quot;Hello, everyone&quot;</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">});</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<p>So AMD gives you most of the ability provided by Angular DI with only one way to do it.  If you are using RequireJS,
+you have the added ability to automatically resolve dependencies and load them asynchronously.</p>
+
+
+<p>Of course, you can always use both.  If you treat Angular as a dependency container and build your 
+modules in AMD, you can get to a place were you can have more fine grain organization of your code and not have to 
+force everything that&#8217;s not a controller or directive into a service.  Here&#8217;s a quick example that is setup to
+use no globals other than the define and require methods of AMD.</p>
+
+
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">define</span><span class="p">(</span><span class="s1">&#39;app&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;angular&#39;</span><span class="p">],</span> <span class="kd">function</span><span class="p">(</span><span class="nx">angular</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">return</span> <span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">&#39;app&#39;</span><span class="p">,</span> <span class="p">[]);</span>
+</span><span class='line'><span class="p">});</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// A utility module that doesn&#39;t need to be a service</span>
+</span><span class='line'><span class="nx">define</span><span class="p">(</span><span class="s1">&#39;app/util&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">return</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">upper</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nx">value</span><span class="p">.</span><span class="nx">toUpperCase</span><span class="p">();</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">});</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">define</span><span class="p">(</span><span class="s1">&#39;app/service&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;app&#39;</span><span class="p">,</span> <span class="s1">&#39;app/util&#39;</span><span class="p">],</span> <span class="kd">function</span><span class="p">(</span><span class="nx">app</span><span class="p">,</span> <span class="nx">util</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">function</span> <span class="nx">Service</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="s1">&#39;service&#39;</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nx">Service</span><span class="p">.</span><span class="nx">prototype</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">getName</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>      <span class="k">return</span> <span class="nx">util</span><span class="p">.</span><span class="nx">upper</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">name</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">},</span>
+</span><span class='line'>    <span class="nx">setName</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">name</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>  <span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nx">app</span><span class="p">.</span><span class="nx">service</span><span class="p">(</span><span class="s1">&#39;MyService&#39;</span><span class="p">,</span> <span class="nx">Service</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">return</span> <span class="p">{};</span>
+</span><span class='line'><span class="p">});</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">define</span><span class="p">(</span><span class="s1">&#39;app/MyCtrl&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;app&#39;</span><span class="p">],</span> <span class="kd">function</span><span class="p">(</span><span class="nx">app</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">function</span> <span class="nx">MyCtrl</span><span class="p">(</span><span class="nx">$scope</span><span class="p">,</span> <span class="nx">$window</span><span class="p">,</span> <span class="nx">MyService</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>     <span class="nx">$scope</span><span class="p">.</span><span class="nx">click</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>       <span class="nx">$window</span><span class="p">.</span><span class="nx">alert</span><span class="p">(</span><span class="nx">MyService</span><span class="p">.</span><span class="nx">getName</span><span class="p">());</span>
+</span><span class='line'>     <span class="p">};</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nx">app</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">&#39;MyCtrl&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;$scope&#39;</span><span class="p">,</span> <span class="s1">&#39;$window&#39;</span><span class="p">,</span> <span class="s1">&#39;MyService&#39;</span><span class="p">,</span> <span class="nx">MyCtrl</span><span class="p">]);</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">return</span> <span class="p">{};</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Unit Testing with the OneTimeData Plugin]]></title>
+    <link href="http://jurberg.github.com/blog/2014/03/03/onetimedata-test/"/>
+    <updated>2014-03-03T21:00:00-06:00</updated>
+    <id>http://jurberg.github.com/blog/2014/03/03/onetimedata-test</id>
+    <content type="html"><![CDATA[<p>The <a href="http://grails.org/plugin/one-time-data">OneTimeData</a> plugin is handy when flash doesn&#8217;t work for you. I recently had to use it in an application that required an extra redirect between controller actions.  The OneTimeData plugin does not come with any unit testing assistance, so I created a simple mixin that adds the OneTimeData methods to a controller under test and backs them with a mock map on the spec to make it easy to access what the controller passed. The following class creates the mixin.</p>
+
+
+<script src="https://gist.github.com/jurberg/9338727.js"></script>
+
+
+<p>Using it requires two steps: 1) Add the mixin using the @TestMixn annotation and 2) call mockOneTimeData passing in the spec and the controller.</p>
+
+
+<script src="https://gist.github.com/jurberg/9338807.js"></script>
+
+
+<p>If anyone knows of a way to capture the spec and controller inside the mixin, please comment. Thanks!</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Creating Grails UI 'Components']]></title>
+    <link href="http://jurberg.github.com/blog/2013/04/24/grails-components/"/>
+    <updated>2013-04-24T21:00:00-05:00</updated>
+    <id>http://jurberg.github.com/blog/2013/04/24/grails-components</id>
+    <content type="html"><![CDATA[<p>I&#8217;m working on a Grails application with a large amount of JavaScript.  I often have UI &#8216;components&#8217; that have markup, CSS and JavaScript associated with them that are used on several pages.  A couple of examples are shopping carts and dialogs.  I&#8217;ve found a good way to organize this code is to make use of the resources plugin to put the pieces together into modules that I can then place into the pages.  As an example, I made a simple dialog that has a GSP for the layout, a CSS file with some styling and JavaScript to open the dialog.  The first step is to create some markup for the dialog in a template:</p>
+
+
+<script src="https://gist.github.com/jurberg/5457059.js"></script>
+
+
+<p>I added a require at the top to pull in the module definition from the ApplicationResources file.  This will pull the CSS and JavaScript for the component in each page that uses the template.</p>
+
+
+<p></p>
+
+<script src="https://gist.github.com/jurberg/5457071.js"></script>
+
+
+<p>A little CSS and JavaScript will bring the component to life:</p>
+
+
+<script src="https://gist.github.com/jurberg/5457099.js"></script>
+
+
+<script src="https://gist.github.com/jurberg/5457104.js"></script>
+
+
+<p>I can now include the template on the page and all the pieces of my component are pulled in.  I can now open the dialog from my page.</p>
+
+
+<script src="https://gist.github.com/jurberg/5457112.js"></script>
+
+
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Roll Your Own Controllers with Express and Require.JS]]></title>
+    <link href="http://jurberg.github.com/blog/2013/04/10/express-requirejs-controllers/"/>
+    <updated>2013-04-10T21:00:00-05:00</updated>
+    <id>http://jurberg.github.com/blog/2013/04/10/express-requirejs-controllers</id>
+    <content type="html"><![CDATA[<p>I&#8217;m a Grails developer at work, so I&#8217;ve gotten used to convention over configuration for controllers.  I just create a class with a name that ends in Controller and place it the controller folder.  Each method in the controller is an action and it allows me to access that method via /controller/action/id.</p>
+
+
+
+
+<p>While Node and Express have full blown Rails copies (such as <a href="http://geddyjs.org/">Geddy</a>), I want something simpler.  I prefer to use <a href="http://requirejs.org/">Require.JS</a> to help me manage my dependencies.  It includes a require method that allows me to load a module by name.</p>
+
+
+
+
+<p>This gave me an idea.  What if I could make a /controller/acton/id route in Express and use require to dynamically load the controller.  I could then call the action on the controller as a key.  It turns out it&#8217;s pretty simple:</a>
+<script src="https://gist.github.com/jurberg/5360006.js"></script>
+
+<p>Now any module in app/controller that has a method that takes a request and response can act as a controller with no configuration.  This example responds to /health/index.  Since we set it up to go to index when there&#8217;s no action, it will also respond to /health.</p>
+<script src="https://gist.github.com/anonymous/99f7c50f17734aa0fb8a.js"></script>
+
+<p>There are cases where your URL does not match /controller/action.  Grails allows you to setup a UrlMapping file that maps URLs to controllers.  We could setup a similar file in JavaScript:</p>
+<script src="https://gist.github.com/jurberg/ebba91d0bdf5dbc57fff.js"></script>
+
+<p>We can then loop thru the mappings and register them with Express:</p>
+<script src="https://gist.github.com/jurberg/5360024.js"></script>
+
+<p>With just Express, Require.JS and a few lines of JavaScript, I now have convention over configuration controllers</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[A simple JavaScript module library]]></title>
+    <link href="http://jurberg.github.com/blog/2013/02/26/simple-define-js/"/>
+    <updated>2013-02-26T21:00:00-06:00</updated>
+    <id>http://jurberg.github.com/blog/2013/02/26/simple-define-js</id>
+    <content type="html"><![CDATA[<p>When developing JavaScript, I like to break my code into modules and define what modules the depend on.  <a href="http://requirejs.org/">Require.JS</a> is a great tool for this, but it also means bringing in module loading.  I&#8217;m on a project using <a href="http://grails.org/">Grails</a> that has a moderate amount of JavaScript.  Grails provides a resource plugin that handles bundling of resources.  I would still like to use the Require.JS style of defining modules and their dependencies while still loading scripts the normal way so Grails is happy.</p>
+
+
+<p>I ended up creating <a href="https://github.com/jurberg/define.js">define.js</a>.  This libary provides a simple &#8216;define&#8217; and &#8216;require&#8217; method.  The &#8216;define&#8217; uses the global object to hold the modules so they are also available in html handlers.  Using the global object as the module list also allows us to treat third party libraries such as jQuery as dependencies.</p>
+
+
+<p>The following example creates a module that depends on the domain.person module, jQuery and the window object.  Since we are using the global to store modules, we can treat jQuery and window just like any other dependency we have defined.</p>
+
+
+<script src="https://gist.github.com/jurberg/5044824.js"></script>
+
+
+<p>Using the global object to hold modules also allows us to access them in html</p>
+
+
+<script src="https://gist.github.com/jurberg/5044843.js"></script>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Running the Require.JS optimizer in a Grails build]]></title>
+    <link href="http://jurberg.github.com/blog/2013/02/02/requirejs-in-grails-build/"/>
+    <updated>2013-02-02T22:06:00-06:00</updated>
+    <id>http://jurberg.github.com/blog/2013/02/02/requirejs-in-grails-build</id>
+    <content type="html"><![CDATA[<p>The <a href="http://grails.org/plugin/resources">Grails Resource Plugin</a> provides some dependency management for your JavaScript resources by allowing you to define modules of scripts, including their dependencies.  This works fine for applications with small numbers of JavaScript.  If you&#8217;re writing an application with a large amount of JavaScript, having to keep those dependencies in sync in a separate Groovy config file can get difficult.  Enter <a href="http://requirejs.org/">Require.JS</a>.  Require.JS is an <a href="https://github.com/amdjs/amdjs-api/wiki/AMD">Asynchronous Module Definition (AMD) API</a> for JavaScript.  It allows you to define modules in JavaScript, including what modules it depends on.  The module loader will then load the dependencies when needed.  This is easier to manage in a large JavaScript project since you define the dependencies in each JavaScript file.</p>
+
+
+<p>Require.JS comes with an <a href="http://requirejs.org/docs/optimization.html">optimizer</a> that will crawl thru all your code, evaluate the dependencies, merge them into one file and minimize it.  The optimizer code is in a JavaScript file that can be run using <a href="http://nodejs.org/">Node.JS</a> or <a href="https://developer.mozilla.org/en-US/docs/Rhino">Rhino</a>.  We would like to run this as part of the Grails build during the war command.</p>
+
+
+<p>The Grails war command will copy the resources for the war file into a staging directory.  Before the war file is built, we will get a &#8220;CreateWarStart&#8221; event which gets the war name and the staging directory.  This is where we can call the optimizer command. Following is an example that can be placed in our _Events.groovy script.   It assumes you&#8217;ve placed the Rhino js.jar and the Require.JS r.js optimizer script in the Scripts folder.</p>
+
+
+<script src="https://gist.github.com/4699237.js"></script>
+
+
+<p>We run the script using the Java command instead of ant.java to avoid any issues from code loaded by Grails.  The scripts are run from the project root, so we reference the js.jar and r.js files in the .\Scripts directory.  The JavaScript files will be copied to the stagingDir in the js folder.  We&#8217;ll set the baseUrl to that directory and output the build file there also.  While the example does not show it, you can also pass removeCombined=true to remove the JavaScript files that were combined.</p>
+
+
+<p>The final step is to update our GSP file so it uses the -build version of the main script.  Following is an example of the script line adds -build if we are running in a war</p>
+
+
+<script src="https://gist.github.com/4699505.js"></script>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Add a context-param to Grails]]></title>
+    <link href="http://jurberg.github.com/blog/2013/01/23/add-a-context-param-to-grails/"/>
+    <updated>2013-01-23T22:06:00-06:00</updated>
+    <id>http://jurberg.github.com/blog/2013/01/23/add-a-context-param-to-grails</id>
+    <content type="html"><![CDATA[<p>With the recent <a href="https://www.aspectsecurity.com/uploads/downloads/2012/12/Remote-Code-with-Expression-Language-Injection.pdf">Spring vulnerability</a>, we thought it would be a good idea to disable EL in our Grails application.  To do this, we need to add a context-param to the beginning of the generated web.xml file.  Rather than using install-templates, I used the eventWebXmlEnd event to insert it.  XMLSlurper would have been nice, but it does not have a simple way to insert a node at the beginning.  So instead I used the XmlParser and came up with the following.</p>
+
+<script src="https://gist.github.com/4617534.js"></script>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Welcome to the UrBlog Reborn]]></title>
+    <link href="http://jurberg.github.com/blog/2013/01/14/welcome-to-the-urblog-reborn/"/>
+    <updated>2013-01-14T21:21:00-06:00</updated>
+    <id>http://jurberg.github.com/blog/2013/01/14/welcome-to-the-urblog-reborn</id>
+    <content type="html"><![CDATA[<p>Welcome to my new blog hosted on Github!  I&#8217;ve moved a number of the posts from my old blog.  If you want to see all my old posts, the old blog is <a href="http://www.jroller.com/jurberg/">here</a>.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Grails script to generate JAXB classes]]></title>
+    <link href="http://jurberg.github.com/blog/2012/11/27/grails-script-to-generate-JAXB-classes/"/>
+    <updated>2012-11-27T19:00:00-06:00</updated>
+    <id>http://jurberg.github.com/blog/2012/11/27/grails-script-to-generate-JAXB-classes</id>
+    <content type="html"><![CDATA[<p>I think Groovy&#8217;s <a href="http://groovy.codehaus.org/api/groovy/xml/MarkupBuilder.html">MarkupBuilder</a> is great and I use it often.  Sometimes though, I need to generate a complex XML document that conforms to an XSD.  MarkupBuilder often leads to markup and business logic being mixed together much like HTML and Java code gets mixed in complex JSP pages. In cases like this, I like to use JAXB instead.  I can generate classes from the XSD, load up an object model and let JAXB generate the markup.</p>
+
+
+<p>It&#8217;s fairly easy to create a script to handle generating the JAXB classes for you.  JAXB comes with a handy Ant task that takes your XSD and generates classes. The trick is passing the build classpath to the task.  There is a &#8220;grailsSettings&#8221; variable available in scripts that contains <a href="https://github.com/grails/grails-core/blob/master/grails-bootstrap/src/main/groovy/grails/util/BuildSettings.groovy">BuildSettings</a>.  We can get the list of build dependencies files from this class to generate the classpath.  Here is a simple example that takes the Microsoft <a href="http://msdn.microsoft.com/en-us/library/ms256485.aspx">books.xsd</a> in the etc/schema directory and generates the code to the src/java directory:</p>
+
+
+<script src="https://gist.github.com/4158702.js"> </script>
+
+
+<p>UPDATE: Sometimes having the JAXB jars on your path can cause problems with your application.  In those cases, you call the generation class directly:</p>
+
+
+<script src="https://gist.github.com/4186366.js"> </script>
+
+
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Converting XML to Flat Files with Groovy]]></title>
+    <link href="http://jurberg.github.com/blog/2012/11/11/convert-xml-to-flat-files-with-groovy/"/>
+    <updated>2012-11-11T19:00:00-06:00</updated>
+    <id>http://jurberg.github.com/blog/2012/11/11/convert-xml-to-flat-files-with-groovy</id>
+    <content type="html"><![CDATA[<p>When integrating systems, you often need to convert data from one format to another.  For example, you may receive data from a web service in XML and need to convert it to a flat file for a legacy system.  It&#8217;s usually not as simple as just moving data from a tag to a column either.  There&#8217;s often calculations and formatting required.  Most often the code has the work of parsing, converting and formatting all mixed together.  With a dynamic language like Groovy which has closures, we can abstract much of that work.  For our example, we&#8217;ll take a subset of the <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/ms762271(v=vs.85).aspx">Microsoft sample books.xml file</a>:</p>
+
+
+<script src="https://gist.github.com/4056093.js"> </script>
+
+
+<p>We would like to provided a mapping for each column that allows us to pull data out of the XML file and define the width of the column.  We&#8217;ll keep it simple to start with by assuming a fixed width flat file with all columns left justified.  Following is a simple mapping using an array of maps:</p>
+
+
+<script src="https://gist.github.com/4056280.js"> </script>
+
+
+<p>Each closure should get a GPathResult to a &#8220;row&#8221; in the XML file.  The closure should return the text that should go in the column.  We&#8217;ll need to supply the tag that identifies the tag in the XML file to pass to the closure.  Following is an example test using our books data:</p>
+
+
+<script src="https://gist.github.com/4056102.js"> </script>
+
+
+<p>The implementation is fairly simple.  We process each &#8220;tag&#8221; in the XML.  For each mapping, we set the delegate for the closure to a map with the tag name and the GPathResults for that tag.  The closure can then be executed to get the text for the column:</p>
+
+
+<script src="https://gist.github.com/4056079.js"> </script>
+
+
+<p>The above piece of code abstracts the processing into 8 lines of code.  It is a testament to the power of a dynamic language that provides closures.</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[An easier way to exclude methods from Grails JMX plugin services]]></title>
+    <link href="http://jurberg.github.com/blog/2012/10/29/exclude-methods-grails-jmx-plugin/"/>
+    <updated>2012-10-29T19:00:00-05:00</updated>
+    <id>http://jurberg.github.com/blog/2012/10/29/exclude-methods-grails-jmx-plugin</id>
+    <content type="html"><![CDATA[<p>The <a href="http://grails.org/plugin/jmx">Grails JMX plugin</a> is a great way to quickly make a service available through JMX.  Things get trickier when you want to only expose a few methods on the service.  The plugin provides the option to list methods to exclude, but you need to list all of them including the ones Grails added to the service.  Fortunately, we can use the metaclass to help us out.  We can add a list of the few methods we want exposed and then use to that to generate the list of exclude method as follows:</p>
+
+<script src="https://gist.github.com/3977988.js"> </script>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Grails clean-test-app script]]></title>
+    <link href="http://jurberg.github.com/blog/2012/10/17/grails-clean-test-app-script/"/>
+    <updated>2012-10-17T19:00:00-05:00</updated>
+    <id>http://jurberg.github.com/blog/2012/10/17/grails-clean-test-app-script</id>
+    <content type="html"><![CDATA[<p>I&#8217;ve been developing Grails apps in Spring Tool Suite. STS will compile your Groovy code as you save it just as Eclipse does for Java code.  This is great during coding, but can cause issues when it&#8217;s time to check in.  If you deleted a class and then run <span style="font-family:Monospace;">test-app</span>, that class may not be cleared from your target/classes and tests may pass that shouldn&#8217;t.  Before checking in, I now need to run <span style="font-family:Monospace;">clean</span>, then <span style="font-family:Monospace;">refresh-dependencies</span>, then <span style="font-family:Monospace;">test-app</span>.  To save some time, I created the following script that will do it all at once.  Now I can just run <span style="font-family:Monospace;">clean-test-app</span>.</p>
+
+<br/>
+
+
+<script src="https://gist.github.com/3909243.js?file=CleanTestApp.groovy"></script>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Using Spring as a Factory Method]]></title>
+    <link href="http://jurberg.github.com/blog/2011/11/11/spring-as-a-factory-method/"/>
+    <updated>2011-11-11T19:00:00-06:00</updated>
+    <id>http://jurberg.github.com/blog/2011/11/11/spring-as-a-factory-method</id>
+    <content type="html"><![CDATA[<p>One common strategy in object-oriented program is to use the <a href="http://en.wikipedia.org/wiki/Dependency_inversion_principle">dependency inversion principle</a> to decouple high level code from the low level details. To demonstrate this, let&#8217;s use the movie example from <a href="http://www.amazon.com/Refactoring-Improving-Design-Existing-Code/dp/0201485672">Martin Fowler&#8217;s Refactoring book</a>.</p>
+
+<br/><br/>
+
+
+<p>After some initial refactoring, we have a Movie class that can calculate it&#8217;s charge based on days rented:</p>
+
+<pre><span style="color:#000000;">// </span><span style="color:#b22222;">From book: 'Refactoring' by Martin Fowler
+</span><span style="color:#a020f0;">public</span> <span style="color:#a020f0;">class</span> <span style="color:#228b22;">Movie</span> {
+
+   <span style="color:#a020f0;">public</span> <span style="color:#a020f0;">static</span> <span style="color:#a020f0;">final</span> <span style="color:#a020f0;">int</span> <span style="color:#228b22;">CHILDRENS</span> = 2;
+   <span style="color:#a020f0;">public</span> <span style="color:#a020f0;">static</span> <span style="color:#a020f0;">final</span> <span style="color:#a020f0;">int</span> <span style="color:#228b22;">NEW_RELEASE</span> = 1;
+   <span style="color:#a020f0;">public</span> <span style="color:#a020f0;">static</span> <span style="color:#a020f0;">final</span> <span style="color:#a020f0;">int</span> <span style="color:#228b22;">REGULAR</span> = 0;
+
+   <span style="color:#a020f0;">double</span> charge(<span style="color:#a020f0;">int</span> daysRented) {
+      <span style="color:#a020f0;">double</span> result = 0;
+      <span style="color:#a020f0;">switch</span> (getPriceCode()) {
+    <span style="color:#a020f0;">case</span> <span style="color:#228b22;">Movie</span>.<span style="color:#228b22;">REGULAR</span>:
+       result += 2;
+       <span style="color:#a020f0;">if</span> (daysRented &gt; 2)
+          result += (daysRented - 2) * 1.5;
+       <span style="color:#a020f0;">break</span>;
+    <span style="color:#a020f0;">case</span> <span style="color:#228b22;">Movie</span>.<span style="color:#228b22;">NEW_RELEASE</span>:
+       result += daysRented * 3;
+       <span style="color:#a020f0;">break</span>;
+    <span style="color:#a020f0;">case</span> <span style="color:#228b22;">Movie</span>.<span style="color:#228b22;">CHILDRENS</span>:
+       result += 1.5;
+       <span style="color:#a020f0;">if</span> (daysRented &gt; 3)
+          result += (daysRented - 3) * 1.5;
+       <span style="color:#a020f0;">break</span>;
+    }
+    <span style="color:#a020f0;">return</span> result;
+   }
+
+}</pre>
+
+
+<p>Next we replace the switch statement with polymorphism using the state pattern:</p>
+
+
+<pre><span style="color:#000000;">// </span><span style="color:#b22222;">From book: 'Refactoring' by Martin Fowler
+</span><span style="color:#a020f0;">public</span> <span style="color:#a020f0;">class</span> <span style="color:#228b22;">Movie</span> {
+
+   <span style="color:#a020f0;">public</span> <span style="color:#a020f0;">static</span> <span style="color:#a020f0;">final</span> <span style="color:#a020f0;">int</span> <span style="color:#228b22;">CHILDRENS</span> = 2;
+   <span style="color:#a020f0;">public</span> <span style="color:#a020f0;">static</span> <span style="color:#a020f0;">final</span> <span style="color:#a020f0;">int</span> <span style="color:#228b22;">NEW_RELEASE</span> = 1;
+   <span style="color:#a020f0;">public</span> <span style="color:#a020f0;">static</span> <span style="color:#a020f0;">final</span> <span style="color:#a020f0;">int</span> <span style="color:#228b22;">REGULAR</span> = 0;
+
+   <span style="color:#a020f0;">public</span> <span style="color:#a020f0;">static</span> <span style="color:#228b22;">Price</span> newPrice(<span style="color:#a020f0;">int</span> priceCode) {
+      <span style="color:#a020f0;">switch</span> (priceCode) {
+         <span style="color:#a020f0;">case</span> <span style="color:#228b22;">REGULAR</span>:
+        <span style="color:#a020f0;">return</span> <span style="color:#a020f0;">new</span> <span style="color:#228b22;">RegularPrice</span>();
+     <span style="color:#a020f0;">case</span> <span style="color:#228b22;">NEW_RELEASE</span>:
+        <span style="color:#a020f0;">return</span> <span style="color:#a020f0;">new</span> <span style="color:#228b22;">NewReleasePrice</span>();
+     <span style="color:#a020f0;">case</span> <span style="color:#228b22;">CHILDRENS</span>:
+        <span style="color:#a020f0;">return</span> <span style="color:#a020f0;">new</span> <span style="color:#228b22;">ChildrensPrice</span>();
+     <span style="color:#a020f0;">default</span>:
+        <span style="color:#a020f0;">throw</span> <span style="color:#a020f0;">new</span> <span style="color:#228b22;">IllegalArgumentException</span>();
+    }
+   }
+
+   <span style="color:#a020f0;">double</span> charge(<span style="color:#a020f0;">int</span> daysRented) {
+      <span style="color:#a020f0;">return</span> newPrice(getPriceCode()).charge(daysRented);
+   }
+
+}
+
+<span style="color:#a020f0;">public</span> <span style="color:#a020f0;">interface</span> <span style="color:#228b22;">Price</span> {
+   <span style="color:#a020f0;">double</span> charge(<span style="color:#a020f0;">int</span> daysRented);
+}
+
+<span style="color:#a020f0;">public</span> <span style="color:#a020f0;">class</span> <span style="color:#228b22;">RegularPrice</span> <span style="color:#a020f0;">implements</span> <span style="color:#228b22;">Price</span> {
+   <span style="color:#a020f0;">public</span> <span style="color:#a020f0;">double</span> charge(<span style="color:#a020f0;">int</span> daysRented) {
+      <span style="color:#a020f0;">double</span> result = 2;
+      <span style="color:#a020f0;">if</span> (daysRented &gt; 2)
+         result += (daysRented - 2) * 1.5;
+      <span style="color:#a020f0;">return</span> result;
+   }
+}
+
+<span style="color:#a020f0;">public</span> <span style="color:#a020f0;">class</span> <span style="color:#228b22;">NewReleasePrice</span> <span style="color:#a020f0;">implements</span> <span style="color:#228b22;">Price</span> {
+   <span style="color:#a020f0;">public</span> <span style="color:#a020f0;">double</span> charge(<span style="color:#a020f0;">int</span> daysRented) {
+      <span style="color:#a020f0;">return</span> daysRented * 3;
+   }
+}
+
+<span style="color:#a020f0;">public</span> <span style="color:#a020f0;">class</span> <span style="color:#228b22;">ChildrensPrice</span> <span style="color:#a020f0;">implements</span> <span style="color:#228b22;">Price</span> {
+   <span style="color:#a020f0;">public</span> <span style="color:#a020f0;">double</span> charge(<span style="color:#a020f0;">int</span> daysRented) {
+      <span style="color:#a020f0;">double</span> result = 1.5;
+      <span style="color:#a020f0;">if</span> (daysRented &gt; 3)
+         result += (daysRented - 3) * 1.5;
+      <span style="color:#a020f0;">return</span> result;
+   }
+}</pre>
+
+
+<p>This requires us to create some sort of factory method to decide which Price to create based on the Movie type (such as newPrice in the example).  Usually this occurs in a static method with a switch statement on type.  In a large program where Price is used multiple times, this is an advantage because we only have to change the one switch statement.  But what if we could get rid of that switch statement also?
+<br/><br/>
+If you are using Spring, you can take advantage of the replace-method tag.  You can pass it a class implementing MethodReplacer to replace a method in the class.  That method could be an abstract factory method.  Let&#8217;s modify our Movie class so that newPrice is an abstract method:</p>
+
+
+<pre><span style="color:#000000;">// </span><span style="color:#b22222;">From book: 'Refactoring' by Martin Fowler
+</span><span style="color:#a020f0;">public</span> <span style="color:#a020f0;">abstract</span> <span style="color:#a020f0;">class</span> <span style="color:#228b22;">Movie</span> {
+
+   <span style="color:#a020f0;">public</span> <span style="color:#a020f0;">static</span> <span style="color:#a020f0;">final</span> <span style="color:#a020f0;">int</span> <span style="color:#228b22;">CHILDRENS</span> = 2;
+   <span style="color:#a020f0;">public</span> <span style="color:#a020f0;">static</span> <span style="color:#a020f0;">final</span> <span style="color:#a020f0;">int</span> <span style="color:#228b22;">NEW_RELEASE</span> = 1;
+   <span style="color:#a020f0;">public</span> <span style="color:#a020f0;">static</span> <span style="color:#a020f0;">final</span> <span style="color:#a020f0;">int</span> <span style="color:#228b22;">REGULAR</span> = 0;
+
+   <span style="color:#a020f0;">public</span> <span style="color:#a020f0;">abstract</span> <span style="color:#228b22;">Price</span> newPrice(<span style="color:#a020f0;">int</span> priceCode);
+
+   <span style="color:#a020f0;">double</span> charge(<span style="color:#a020f0;">int</span> daysRented) {
+      <span style="color:#a020f0;">return</span> newPrice(getPriceCode()).charge(daysRented);
+   }
+
+}</pre>
+
+
+<p>Now we create a handy method replacer utility class that joins a prefix with the first argument to create a bean name and looks up the bean in the context:</p>
+
+
+<pre><span style="color:#a020f0;">public</span> <span style="color:#a020f0;">class</span> <span style="color:#228b22;">BeanFactoryMethodReplacer</span> <span style="color:#a020f0;">implements</span> <span style="color:#228b22;">MethodReplacer</span>, <span style="color:#228b22;">ApplicationContextAware</span> {
+
+   <span style="color:#a020f0;">private</span> <span style="color:#228b22;">ApplicationContext</span> context;
+
+   <span style="color:#a020f0;">private</span> <span style="color:#228b22;">String</span> prefix;
+
+   <span style="color:#a020f0;">public</span> <span style="color:#a020f0;">void</span> setApplicationContext(<span style="color:#228b22;">ApplicationContext</span> context) throws <span style="color:#228b22;">BeansException</span> {
+      <span style="color:#a020f0;">this</span>.context = context;
+   }
+
+   <span style="color:#a020f0;">public</span> <span style="color:#a020f0;">void</span> setPrefix(<span style="color:#228b22;">String</span> prefix) {
+      <span style="color:#a020f0;">this</span>.prefix = prefix;
+   }
+
+   <span style="color:#a020f0;">public</span> <span style="color:#228b22;">Object</span> reimplement(<span style="color:#228b22;">Object</span> obj, <span style="color:#228b22;">Method</span> method, <span style="color:#228b22;">Object</span>[] args) throws <span style="color:#228b22;">Throwable</span> {
+      <span style="color:#228b22;">String</span> bean = (prefix != null) ? prefix : <span style="color:#bc8f8f;">""</span>;
+      bean += args[0];
+      <span style="color:#a020f0;">return</span> context.getBean(bean);
+   }
+
+}</pre>
+
+
+<p>Finally, we register the method replacer, the movie with the newPrice method replaced and beans for each Price.  We use &#8220;price&#8221; as a prefix.  The name of each price bean should be &#8220;price&#8221; + the number code for it&#8217;s type:</p>
+
+
+<pre>&lt;<span style="color:#0000ff;">bean</span> <span style="color:#b8860b;">id</span>=<span style="color:#bc8f8f;">"movie"</span> <span style="color:#b8860b;">class</span>=<span style="color:#bc8f8f;">"Movie"</span>&gt;
+   &lt;<span style="color:#0000ff;">replaced-method</span> <span style="color:#b8860b;">name</span>=<span style="color:#bc8f8f;">"newPrice"</span> <span style="color:#b8860b;">replacer</span>=<span style="color:#bc8f8f;">"factoryMethodReplacer"</span>&gt;
+      &lt;<span style="color:#0000ff;">arg-type</span>&gt;int&lt;/<span style="color:#0000ff;">arg-type</span>&gt;
+   &lt;/<span style="color:#0000ff;">replaced-method</span>&gt;
+&lt;/<span style="color:#0000ff;">bean</span>&gt;
+
+&lt;<span style="color:#0000ff;">bean</span> <span style="color:#b8860b;">id</span>=<span style="color:#bc8f8f;">"factoryMethodReplacer"</span> <span style="color:#b8860b;">class</span>=<span style="color:#bc8f8f;">"BeanFactoryMethodReplacer"</span>&gt;
+   &lt;<span style="color:#0000ff;">property</span> <span style="color:#b8860b;">name</span>=<span style="color:#bc8f8f;">"prefix"</span> <span style="color:#b8860b;">value</span>=<span style="color:#bc8f8f;">"price"</span>/&gt;
+&lt;/<span style="color:#0000ff;">bean</span>&gt;
+
+&lt;<span style="color:#0000ff;">bean</span> <span style="color:#b8860b;">id</span>=<span style="color:#bc8f8f;">"price0"</span> <span style="color:#b8860b;">class</span>=<span style="color:#bc8f8f;">"RegularPrice"</span>/&gt;
+
+&lt;<span style="color:#0000ff;">bean</span> <span style="color:#b8860b;">id</span>=<span style="color:#bc8f8f;">"price1"</span> <span style="color:#b8860b;">class</span>=<span style="color:#bc8f8f;">"NewReleasePrice"</span>/&gt;
+
+&lt;<span style="color:#0000ff;">bean</span> <span style="color:#b8860b;">id</span>=<span style="color:#bc8f8f;">"price2"</span> <span style="color:#b8860b;">class</span>=<span style="color:#bc8f8f;">"ChildrensPrice"</span>/&gt;</pre>
+
+
+<p>
+Spring has now become our factory method.  As new price codes are added, we can just register the Price class as a bean without having to manually change a factory method.</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Custom Scheduling in Spring]]></title>
+    <link href="http://jurberg.github.com/blog/2011/11/05/custom-scheduling-spring/"/>
+    <updated>2011-11-05T19:00:00-05:00</updated>
+    <id>http://jurberg.github.com/blog/2011/11/05/custom-scheduling-spring</id>
+    <content type="html"><![CDATA[<p>Spring 3.0 has <a href="http://blog.springsource.com/2010/01/05/task-scheduling-simplifications-in-spring-3-0/">simplified task scheduling</a>.  As part if this, they have deprecated the MethodInvokingTimerTaskFactoryBean and ScheduledTimerTask.  Instead you create a scheduler that implements the TaskScheduler interface and uses a Trigger to specify when a task is scheduled to run.  The XML and annotations allow you to specify fixedDelay,  fixedRate or cron string.  These are fixed at run time.  This works great for triggers that are fixed at run time, but does not allow you any way to modify these at run time.  The TaskScheduler interface provides methods to schedule a task with a trigger, so this gives us an opportunity to pass in a custom trigger that can have it&#8217;s trigger interval changed at run time.  There are a number of ways to configure this.  Here is a simple way I came up with that uses a single bean to schedule the task and change the fixedDelay at run time.  This extends the example provided on the Spring blog noted earlier.</p>
+
+<br/><br/>
+
+
+<p>First we need a class that takes the scheduler, task and starting delay.  For simplicity, it will also implement the Timer interface.</p>
+
+<pre><span style="color:#a020f0;">public</span> <span style="color:#a020f0;">class</span> <span style="color:#228b22;">DynamicSchedule</span> <span style="color:#a020f0;">implements</span> <span style="color:#228b22;">Trigger</span> {
+
+<span style="color:#a020f0;">   private</span> <span style="color:#228b22;">TaskScheduler</span> scheduler;
+   <span style="color:#a020f0;">private</span> <span style="color:#228b22;">Runnable</span> task;
+   <span style="color:#a020f0;">private</span> <span style="color:#228b22;">ScheduledFuture</span>&lt;?&gt; future;
+   <span style="color:#a020f0;">private</span> <span style="color:#a020f0;">int</span> delay;
+
+   <span style="color:#a020f0;">public</span> <span style="color:#228b22;">DynamicSchedule</span>(<span style="color:#228b22;">TaskScheduler</span> scheduler, <span style="color:#228b22;">Runnable</span> task, <span style="color:#a020f0;">int</span> delay) {
+      <span style="color:#a020f0;">this</span>.scheduler = scheduler;
+      <span style="color:#a020f0;">this</span>.task = task;
+      reset(delay);
+   }
+
+   <span style="color:#a020f0;">public</span> <span style="color:#a020f0;">void</span> reset(<span style="color:#a020f0;">int</span> delay) {
+      <span style="color:#a020f0;">if</span> (future != null) {
+         <span style="color:#228b22;">System</span>.out.println(<span style="color:#bc8f8f;">"Cancelling task..."</span>);
+         future.cancel(<span style="color:#b8860b;">true</span>);
+      }
+      <span style="color:#a020f0;">this</span>.delay = delay;
+      <span style="color:#228b22;">System</span>.out.println(<span style="color:#bc8f8f;">"Starting task..."</span>);
+      future = scheduler.schedule(task, <span style="color:#a020f0;">this</span>);
+   }
+
+<span style="color:#b8860b;">   @Override</span>
+   <span style="color:#a020f0;">public</span> <span style="color:#228b22;">Date</span> nextExecutionTime(<span style="color:#228b22;">TriggerContext</span> triggerContext) {
+      <span style="color:#228b22;">Date</span> lastTime = triggerContext.lastActualExecutionTime();
+      <span style="color:#228b22;">Date</span> nextExecutionTime = (lastTime == null)
+         ? <span style="color:#a020f0;">new</span> <span style="color:#228b22;">Date</span>()
+         : <span style="color:#a020f0;">new</span> <span style="color:#228b22;">Date</span>(lastTime.getTime() + delay);
+         System.out.println("DynamicSchedule -- delay: " + delay +
+              ", lastActualExecutionTime: " + lastTime +
+              "; nextExecutionTime: " + nextExecutionTime);
+      return nextExecutionTime;
+   }
+
+}</pre>
+
+
+<p>Note the reset method which stops the scheduled task, changes the delay and then restarts the task.  If you are changing the delay to a shorter delay, you want to restart with the new delay so it happens immediately.  Alternately, you can skip canceling the task and the new delay is picked up on the next execution.
+<br/><br/>
+The rest of the code is the same, except for the SchedulerProcessor which has the @Scheduled annotation removed from the process method:<p><pre><span style="color:#b8860b;">@Component</span><span style="color:#a020f0;">
+public</span> <span style="color:#a020f0;">class</span> <span style="color:#228b22;">ScheduledProcessor</span> {
+
+<span style="color:#a020f0;">   private</span> <span style="color:#a020f0;">final</span> <span style="color:#228b22;">AtomicInteger</span> counter = <span style="color:#a020f0;">new</span> <span style="color:#228b22;">AtomicInteger</span>();
+
+<span style="color:#b8860b;">   @Autowired
+   </span><span style="color:#a020f0;">private</span> <span style="color:#228b22;">Worker</span> worker;
+
+<span style="color:#a020f0;">   public</span> <span style="color:#a020f0;">void</span> process() {<span style="color:#228b22;">
+      System</span>.out.println(<span style="color:#bc8f8f;">"processing next 10 at "</span> + <span style="color:#a020f0;">new</span> <span style="color:#228b22;">Date</span>());
+      <span style="color:#a020f0;">for</span> (<span style="color:#a020f0;">int</span> i = 0; i &lt; 10; i++) {
+         worker.work(counter.incrementAndGet());
+      }
+   }
+
+}</pre><p>In the XML configuration, we add a name to the scheduler and create the DynamicSchedule. We pass it the scheduler, the process method (wrapped in a MethodInvokingRunnable) and the default delay:</p><pre>   &lt;<span style="color:#000000;">context</span>:<span style="color:#0000ff;">component-scan</span> <span style="color:#b8860b;">base-package</span>=<span style="color:#bc8f8f;">"com/test"</span> /&gt;
+
+   &lt;<span style="color:#000000;">task</span>:<span style="color:#0000ff;">annotation-driven</span> /&gt;
+
+   &lt;<span style="color:#000000;">task</span>:<span style="color:#0000ff;">scheduler</span> <span style="color:#b8860b;">id</span>=<span style="color:#bc8f8f;">"scheduler"</span> /&gt;
+
+   &lt;<span style="color:#0000ff;">bean</span> <span style="color:#b8860b;">id</span>=<span style="color:#bc8f8f;">"dynamicSchedule"</span> <span style="color:#b8860b;">class</span>=<span style="color:#bc8f8f;">"com.test.DynamicSchedule"</span>&gt;
+      &lt;<span style="color:#0000ff;">constructor-arg</span> <span style="color:#b8860b;">ref</span>=<span style="color:#bc8f8f;">"scheduler"</span> /&gt;
+      &lt;<span style="color:#0000ff;">constructor-arg</span>&gt;
+         &lt;<span style="color:#0000ff;">bean</span> <span style="color:#b8860b;">class</span>=<span style="color:#bc8f8f;">"org.springframework.scheduling.support.MethodInvokingRunnable"</span>&gt;
+            &lt;<span style="color:#0000ff;">property</span> <span style="color:#b8860b;">name</span>=<span style="color:#bc8f8f;">"targetObject"</span> <span style="color:#b8860b;">ref</span>=<span style="color:#bc8f8f;">"scheduledProcessor"</span> /&gt;
+            &lt;<span style="color:#0000ff;">property</span> <span style="color:#b8860b;">name</span>=<span style="color:#bc8f8f;">"targetMethod"</span> <span style="color:#b8860b;">value</span>=<span style="color:#bc8f8f;">"process"</span> /&gt;
+         &lt;/<span style="color:#0000ff;">bean</span>&gt;
+      &lt;/<span style="color:#0000ff;">constructor-arg</span>&gt;
+      &lt;<span style="color:#0000ff;">constructor-arg</span> <span style="color:#b8860b;">value</span>=<span style="color:#bc8f8f;">"3000"</span> /&gt;
+   &lt;/<span style="color:#0000ff;">bean</span>&gt;</pre><p>Now we can add a separate process that changes the delay to a random delay to test it out:</p><pre><span style="color:#b8860b;">@Component</span>
+<span style="color:#a020f0;">public</span> <span style="color:#a020f0;">class</span> <span style="color:#228b22;">ScheduleChanger</span> {
+
+<span style="color:#b8860b;">   @Autowired</span>
+<span style="color:#a020f0;">   private</span> <span style="color:#228b22;">DynamicSchedule</span> dynamicSchedule;
+
+<span style="color:#b8860b;">   @Scheduled</span>(fixedDelay=30000)
+<span style="color:#a020f0;">   public</span> <span style="color:#a020f0;">void</span> change() {
+<span style="color:#228b22;">      Random</span> rnd = <span style="color:#a020f0;">new</span> <span style="color:#228b22;">Random</span>();
+      <span style="color:#a020f0;">int</span> nextTimeout = rnd.nextInt(30000);
+<span style="color:#228b22;">      System</span>.out.println(<span style="color:#bc8f8f;">"Changing poll time to: "</span> + nextTimeout);
+      dynamicSchedule.reset(nextTimeout);
+   }
+
+}</pre><p>When you run this and view the output, you will see where the dynamic schedule trigger is fired and where the schedule gets changed.</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[An introduction to Node.js]]></title>
+    <link href="http://jurberg.github.com/blog/2011/08/11/introduction-to-node/"/>
+    <updated>2011-08-11T19:00:00-05:00</updated>
+    <id>http://jurberg.github.com/blog/2011/08/11/introduction-to-node</id>
+    <content type="html"><![CDATA[<p>Node.js is an evented I/O server built on Google&#8217;s V8 JavaScript engine. Node provides a simple way to build highly scalable server applications. This article will provide an introduction to Node along with installation details and a first server. <a href="http://www.objectpartners.com/2011/08/23/an-introduction-to-node-js/">more&#8230;</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Scaling with Single Threading]]></title>
+    <link href="http://jurberg.github.com/blog/2011/08/09/scaling-with-single-threading/"/>
+    <updated>2011-08-09T19:00:00-05:00</updated>
+    <id>http://jurberg.github.com/blog/2011/08/09/scaling-with-single-threading</id>
+    <content type="html"><![CDATA[<p>The free lunch is over. To speed up applications we are told we must write multithreaded programs and avoid mutable state. Functional programming can help with it&#8217;s immutable state. There&#8217;s also Erlang with the Actor model or Clojure with it&#8217;s software transactional memory. One other option to consider is single threading your code. Following are a few examples where single threading was used to scale applications.</p>
+
+<p><a href="http://www.objectpartners.com/2011/08/09/scaling-with-single-threading/">more&#8230;</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Implementing REST Authentication]]></title>
+    <link href="http://jurberg.github.com/blog/2011/06/16/implementing-rest-authentication/"/>
+    <updated>2011-06-16T19:00:00-05:00</updated>
+    <id>http://jurberg.github.com/blog/2011/06/16/implementing-rest-authentication</id>
+    <content type="html"><![CDATA[<p>While there is not much written about REST authentication, there does seem to be a common theme among the few articles written about it that REST services should be authenticated by signing the query parameters using a private key and making the calls over HTTPS.  This posting will provide an example of the signing of query parameters using a simple Spring server. We&#8217;ll provide a small twist by putting the authentication information in headers.</p>
+
+<p><a href="http://www.objectpartners.com/2011/06/16/implementing-rest-authentication/">more&#8230;</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Hosting a Maven internal repository on a file share]]></title>
+    <link href="http://jurberg.github.com/blog/2011/02/17/hosting-maven-repo-file-share/"/>
+    <updated>2011-02-17T19:00:00-06:00</updated>
+    <id>http://jurberg.github.com/blog/2011/02/17/hosting-maven-repo-file-share</id>
+    <content type="html"><![CDATA[<p>I spent some time today setting up an internal repository for my Maven build.  I wanted to host just the artifacts that are used by my projects and not allow the project build to go outside of that repository.  I first setup my repositories like this:</p>
+
+
+<pre>
+&lt;<span style="color:#0000ff">repositories</span>a&gt;
+  &lt;<span style="color:#0000ff">repository</span>&gt;
+    &lt;<span style="color:#0000ff">id</span>&gt;central&lt;/<span style="color:#0000ff">id</span>&gt;
+    &lt;<span style="color:#0000ff">name</span>&gt;My Company's Internal Repository&lt;/<span style="color:#0000ff">name</span>&gt;
+    &lt;<span style="color:#0000ff">url</span>&gt;file:///server/Maven/repo/&lt;/<span style="color:#0000ff">url</span>&gt;
+  &lt;/<span style="color:#0000ff">repository</span>&gt;
+&lt;/<span style="color:#0000ff">repositories</span>&gt;
+</pre>
+
+
+<p>The idea behind this setup is that I overrode the &#8220;central&#8221; repository and pointed it to my internal repository.  This way Maven would not try to go out to repo1.maven.org if it did not find something.</p>
+
+
+<p>And it did not work.  After much research and trying many things, it turns out my URL needs to look like this:</p>
+
+
+<pre>
+&lt;<span style="color:#0000ff">url</span>&gt;file://\\server\Maven\repo\&lt;/<span style="color:#0000ff">url</span>&gt;
+</pre>
+
+
+<p>Hope this helps someone in the future trying to setup a repository on a share.</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Using a HostnameVerifier with Spring Web Services]]></title>
+    <link href="http://jurberg.github.com/blog/2010/12/17/spring-host-name-verifier/"/>
+    <updated>2010-12-17T19:00:00-06:00</updated>
+    <id>http://jurberg.github.com/blog/2010/12/17/spring-host-name-verifier</id>
+    <content type="html"><![CDATA[<p>I was working with a web service from a site that uses SSL with a certificate that was self-signed.  When attempting to make the calls, I received the error:</p>
+
+
+<pre>
+    javax.net.ssl.SSLHandshakeException: java.security.cert.CertificateException: No name matching {web address} found
+</pre>
+
+
+<p>The workaround for this issue is to provide a HostnameVerifer that skips the host name verification process.  There is an example of how to do this <a href="http://www.jroller.com/hasant/entry/no_subject_alternative_names_matching">here.</a></p>
+
+
+<p>I ran into this issue after I had a nice clean codebase using Spring&#8217;s WebServiceTemplate and RestTemplate.  It took some digging, but I was able to find the spots where I had to install the verifier.  We start with a NullHostnameVerifier that returns true for everything:</p>
+
+
+<pre>
+<span style="color:#a020f0">public</span> <span style="color:#a020f0">class</span> <span style="color:#228b22">NullHostnameVerifier</span> <span style="color:#a020f0">implements</span> <span style="color:#228b22">HostnameVerifier</span> {
+   <span style="color:#a020f0">public</span> <span style="color:#a020f0">boolean</span> verify(<span style="color:#228b22">String</span> hostname, <span style="color:#228b22">SSLSession</span> session) {
+      <span style="color:#a020f0">return</span> <span style="color:#b8860b">true</span>;
+   }
+}
+</pre>
+
+
+<p>The <b>org.springframework.ws.client.core.WebServiceTempate</b> extends <b>org.springframework.ws.client.support.WebServiceAccesor</b> which uses a <b>org.springframework.ws.client.support.WebServiceMessageSender</b>.  The WebServiceMessage sender for HTTPS is <b>org.springframework.ws.transport.http.HttpsUrlConnectionMessageSender</b> which is found in the spring-ws-support-1.5.9.jar. We need to create one of these and set the HostnameVerifier into it and pass it along to the WebServicesTemplate:</p>
+
+
+<pre>
+<span style="color:#a020f0">public</span> <span style="color:#a020f0">void</span> setWebServicesTempalate(<span style="color:#228b22">WebServicesTemplate</span> template) {
+   <span style="color:#228b22">HostnameVerifier</span> verifier = <span style="color:#a020f0">new</span> <span style="color:#228b22">NullHostnameVerifier</span>();
+   <span style="color:#228b22">HttpsUrlConnectionMessageSender</span> sender = <span style="color:#a020f0">new</span> <span style="color:#228b22">HttpsUrlConnectionMessageSender</span>();
+   sender.setHostnameVerifier(verifier);
+   template.setMessageSender(sender);
+   <span style="color:#a020f0">this</span>.template = template;
+}
+</pre>
+
+
+<p>The <b>org.springframework.web.client.RestTemplate</b> is setup differently.  It uses a <b>org.springframework.http.client.ClientHttpRequestFactory</b> to handle the connections.  Stepping thru the code, I found the RestTemplate using <b>org.springframework.http.client.SimpleClientHttpRequestFactory</b> which has a protected prepareConnection(&#8230;) method I could override and catch the HttpsURLConnection which I could set the verifier in.  First we need  our own ClientHttpRequestFactory:</p>
+
+
+<pre> 
+<span style="color:#a020f0">public</span> <span style="color:#a020f0">class</span> <span style="color:#228b22">MySimpleClientHttpRequestFactory</span> <span style="color:#a020f0">extends</span> <span style="color:#228b22">SimpleClientHttpRequestFactory</span> {
+
+   <span style="color:#a020f0">private</span> <span style="color:#a020f0">final</span> <span style="color:#228b22">HostnameVerifier</span> verifier;
+
+   <span style="color:#a020f0">public</span> <span style="color:#228b22">MySimpleClientHttpRequestFactory</span>(<span style="color:#228b22">HostnameVerifier</span> verifier) {
+      <span style="color:#a020f0">this</span>.verifier = verifier;
+   }
+
+   <span style="color:#b8860b">@Override</span>
+   <span style="color:#a020f0">protected</span> <span style="color:#a020f0">void</span> prepareConnection(<span style="color:#228b22">HttpURLConnection</span> connection, <span style="color:#228b22">String</span> httpMethod) throws <span style="color:#228b22">IOException</span> {
+      <span style="color:#a020f0">if</span> (connection <span style="color:#a020f0">instanceof</span> <span style="color:#228b22">HttpsURLConnection</span>) {
+         ((<span style="color:#228b22">HttpsURLConnection</span>) connection).setHostnameVerifier(verifier);
+      }
+      <span style="color:#a020f0">super</span>.prepareConnection(connection, httpMethod);
+   }
+
+}
+</pre>
+
+
+<p>Now we can use that as the request factory in our RestTemplate:</p>
+
+
+<pre>
+<span style="color:#a020f0">public</span> <span style="color:#a020f0">void</span> setRestTemplate(<span style="color:#228b22">RestTemplate</span> template) {
+   <span style="color:#228b22">HostnameVerifier</span> verifier = <span style="color:#a020f0">new</span> <span style="color:#228b22">NullHostnameVerifier</span>();
+   <span style="color:#228b22">MySimpleClientHttpRequestFactory</span> factory = <span style="color:#a020f0">new</span> <span style="color:#228b22">MySimpleClientHttpRequestFactory</span>(verifier);
+   template.setRequestFactory(factory);
+   <span style="color:#a020f0">this</span>.template = template;
+}
+</pre>
+
+
+<p>Once the NullHostnameVerifer is in place in the WebServiceTemplate and the RestTemplate, we will no longer see the error</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Transmitting Unicode data between C++ and Java]]></title>
+    <link href="http://jurberg.github.com/blog/2009/10/09/transmiting-java-cpp/"/>
+    <updated>2009-10-09T19:00:00-05:00</updated>
+    <id>http://jurberg.github.com/blog/2009/10/09/transmiting-java-cpp</id>
+    <content type="html"><![CDATA[<p>We ran into an issue this week were we had to figure out how to transmit Unicode data between a C++ program and a Java program using TCP.  We have a working program that is sending ASCII just fine.  We expected the C++ Unicode work would be difficult and the Java work would be easy.  It turns out the C++ side was not as difficult as we thought.  The Java side turned out to be easy, but it took some time to figure out how to make it work.  Here&#8217;s a quick explanation of what we found:</p>
+
+<h3>C++</h3>
+
+
+<p>Most of our C++ code is using the standard library (i.e. std::string) and boost::asio for the networking.  After a bit if research, I created a tstring.hpp file using code I found <a href="http://www.rioki.org/2008/02/18/stdtstring/">here</a> and <a href="http://www.codeproject.com/KB/stl/upgradingstlappstounicode.aspx">here</a>.  I changed the networking code to use the new std::tstring instead of std::string and was able to deal with Unicode data.  Here&#8217;s an example of the asio code to read data sent from Java.  Java sends a header with &#8220;file0000000000&#8221; where the 10 digits contain the data length, followed by the data itself.  Notice the buffer size is the size * sizeof(TCHAR) to account for the fact that wide char are twice the size of normal char.</p>
+
+
+<pre><font color="#a020f0">class</font> <font color="#228b22">session</font> : <font color="#a020f0">public</font> <font color="#228b22">boost</font>::enable_shared_from_this&lt;session&gt;
+{
+<font color="#5f9ea0">public</font>:
+  <font color="#228b22">void</font> <font color="#0000ff">read_header</font>()
+  {
+    buffer_.resize(14);
+    boost::asio::async_read(
+      socket_,
+      boost::asio::buffer(buffer_, buffer_.size() * <font color="#a020f0">sizeof</font>(TCHAR)),
+      boost::bind(
+    &amp;session::handle_read_header, 
+    shared_from_this(),
+    boost::asio::placeholders::error,
+    boost::asio::placeholders::bytes_transferred));
+  }
+
+  <font color="#228b22">void</font> <font color="#0000ff">handle_read_header</font>(<font color="#a020f0">const</font> boost::system::error_code&amp; error, <font color="#228b22">size_t</font> <font color="#b8860b">bytes_transferred</font>)
+  {
+    <font color="#a020f0">if</font> (error) <font color="#a020f0">return</font>;
+
+    std::tstring data(buffer_.begin(), buffer_.end());
+    <font color="#228b22">short</font> <font color="#b8860b">length</font> = boost::lexical_cast&lt;<font color="#228b22">short</font>&gt;(data.substr(4));
+
+    buffer_.resize(length);
+    boost::asio::async_read(
+      socket_,
+      boost::asio::buffer(buffer_, buffer_.size() * <font color="#a020f0">sizeof</font>(TCHAR)),
+      boost::bind(
+    &amp;session::handle_read_data, 
+    shared_from_this(),
+    boost::asio::placeholders::error,
+    boost::asio::placeholders::bytes_transferred));
+  }
+
+  <font color="#228b22">void</font> <font color="#0000ff">handle_read_data</font>(<font color="#a020f0">const</font> boost::system::error_code&amp; error, <font color="#228b22">size_t</font> <font color="#b8860b">bytes_transferred</font>)
+  {
+    <font color="#a020f0">if</font> (error &amp;&amp; error.value() != 2) <font color="#a020f0">return</font>;
+    std::tstring data(buffer_.begin(), buffer_.end());
+    <font color="#b22222">// process data
+</font>    read_header();
+  }
+
+<font color="#5f9ea0">private</font>:
+  tcp::socket socket_;
+  std::<font color="#228b22">vector</font>&lt;<font color="#228b22">TCHAR</font>&gt; <font color="#b8860b">buffer_</font>;
+  <font color="#228b22">int</font> <font color="#b8860b">count_</font>;
+
+};
+</pre>
+
+
+<h3>Java</h3>
+
+
+<p>For an example, we created a simple Java program that would load in a Unicode file, append a header and send it to the C++ code above.  What took a great deal of time was figuring out how to get the data in the correct format.  It turns out the way the C++ program was looking for data was in UTF-16LE format.  We took our data string and called getBytes(&#8220;UTF-16LE&#8221;) to get the data in the correct format to send.</p>
+
+
+<pre><font color="#228b22">String</font> <font color="#b8860b">data</font> = getFileContents();
+<font color="#228b22">Formatter</font> <font color="#b8860b">f</font> = <font color="#a020f0">new</font> <font color="#228b22">Formatter</font>();
+<font color="#228b22">String</font> <font color="#b8860b">header</font> = f.format(<font color="#bc8f8f">&quot;file%010d&quot;</font>, data.length() * 2).toString(); 
+data = header + data;
+<font color="#228b22">byte</font>[] <font color="#b8860b">buffer</font> = data.getBytes(<font color="#bc8f8f">&quot;UTF-16LE&quot;</font>);
+<font color="#228b22">Socket</font> <font color="#b8860b">socket</font> = <font color="#a020f0">new</font> <font color="#228b22">Socket</font>(address, port);
+<font color="#228b22">BufferedOutputStream</font> <font color="#b8860b">bis</font> = <font color="#a020f0">new</font> <font color="#228b22">BufferedOutputStream</font>(socket.getOutputStream());
+<font color="#a020f0">try</font> {
+   bis.write(buffer);
+   bis.flush();
+} <font color="#a020f0">finally</font> {
+   bis.close();
+}
+</pre>
+
+
+<p>In the end, this turns out to be easy to do.  It just takes a bit of time to figure out the settings.  We had to spend time searching for bits and pieces of info to put this together.  If you happen to know any good resources to help others with this, feel free to add a comment.</p>
+
+]]></content>
+  </entry>
+  
+</feed>
