@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Transmitting Unicode data between C++ and Java - The UrBlog</title>
+  <title>The UrBlog</title>
   <meta name="author" content="John Urberg">
 
   
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://jurberg.github.com/blog/2009/10/09/transmiting-java-cpp/">
+  <link rel="canonical" href="http://jurberg.github.com/blog/page/3/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -67,12 +67,15 @@
 </nav>
   <div id="main">
     <div id="content">
-      <div>
-<article class="hentry" role="article">
+      <div class="blog-index">
   
+  
+  
+    <article>
+      
   <header>
     
-      <h1 class="entry-title">Transmitting Unicode Data Between C++ and Java</h1>
+      <h1 class="entry-title"><a href="/blog/2009/10/09/transmiting-java-cpp/">Transmitting Unicode Data Between C++ and Java</a></h1>
     
     
       <p class="meta">
@@ -95,7 +98,7 @@
   </header>
 
 
-<div class="entry-content"><p>We ran into an issue this week were we had to figure out how to transmit Unicode data between a C++ program and a Java program using TCP.  We have a working program that is sending ASCII just fine.  We expected the C++ Unicode work would be difficult and the Java work would be easy.  It turns out the C++ side was not as difficult as we thought.  The Java side turned out to be easy, but it took some time to figure out how to make it work.  Here&#8217;s a quick explanation of what we found:</p>
+  <div class="entry-content"><p>We ran into an issue this week were we had to figure out how to transmit Unicode data between a C++ program and a Java program using TCP.  We have a working program that is sending ASCII just fine.  We expected the C++ Unicode work would be difficult and the Java work would be easy.  It turns out the C++ side was not as difficult as we thought.  The Java side turned out to be easy, but it took some time to figure out how to make it work.  Here&#8217;s a quick explanation of what we found:</p>
 
 <h3>C++</h3>
 
@@ -179,80 +182,25 @@ data = header + data;
 <p>In the end, this turns out to be easy to do.  It just takes a bit of time to figure out the settings.  We had to spend time searching for bits and pieces of info to put this together.  If you happen to know any good resources to help others with this, feel free to add a comment.</p>
 
 </div>
-
-
-  <footer>
-     <script type="text/javascript"><!--
-      google_ad_client = "ca-pub-6995989828356521";
-      /* UrBlog Post */
-      google_ad_slot = "9938118229";
-      google_ad_width = 468;
-      google_ad_height = 60;
-      //-->
-    </script>
-    <script type="text/javascript" src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
-    </script>
-    <p class="meta">
-      
   
-
-<span class="byline author vcard">Posted by <span class="fn">John Urberg</span></span>
-
-      
-
-
-
-
-
-
-
-
   
 
 
-<time datetime="2009-10-09T19:00:00-05:00" pubdate data-updated="true">Oct 9<span>th</span>, 2009</time>
-      
-
-<span class="categories">
+    </article>
   
-    <a class='category' href='/blog/categories/c-/'>C++</a>, <a class='category' href='/blog/categories/java/'>Java</a>
-  
-</span>
-
-
-    </p>
+  <div class="pagination">
     
-      <div class="sharing">
-  
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://jurberg.github.com/blog/2009/10/09/transmiting-java-cpp/" data-via="jurberg" data-counturl="http://jurberg.github.com/blog/2009/10/09/transmiting-java-cpp/" >Tweet</a>
-  
-  
-  
-</div>
-
+    <a href="/blog/archives">Blog Archives</a>
     
-    <p class="meta">
-      
-      
-        <a class="basic-alignment right" href="/blog/2010/12/17/spring-host-name-verifier/" title="Next Post: Using a HostnameVerifier with Spring Web Services">Using a HostnameVerifier with Spring Web Services &raquo;</a>
-      
-    </p>
-  </footer>
-</article>
-
-  <section>
-    <h1>Comments</h1>
-    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a class="next" href="/blog/page/2/">Newer &rarr;</a>
+    
+  </div>
 </div>
-  </section>
-
-</div>
-
 <aside class="sidebar">
   
     <section>
   <h1>About Me</h1>
-  <p>I am a software professional with 2 decades of experience in the software field.  I've been in roles in all aspects of software development.  My current position is in consulting building web sites with Grails, JavaScript and JEE. Check me out on <a href="http://www.linkedin.com/pub/john-urberg/4/203/80a">Linkedin</a></p>
+  <p>I am a software professional with 2 decades of experience in the software field.  I&#8217;ve been in roles in all aspects of software development.  My current position is in consulting building web sites with Grails, JavaScript and JEE. Check me out on <a href="http://www.linkedin.com/pub/john-urberg/4/203/80a">Linkedin</a></p>
 </section>
 <section>
   <h1>Recent Posts</h1>
@@ -271,7 +219,7 @@ data = header + data;
       </li>
     
       <li class="post">
-        <a href="/blog/2013/04/24/grails-components/">Creating Grails UI 'Components'</a>
+        <a href="/blog/2013/04/24/grails-components/">Creating Grails UI &#8216;Components&#8217;</a>
       </li>
     
       <li class="post">
@@ -284,7 +232,7 @@ data = header + data;
 <section>
   <h1>GitHub Repos</h1>
   <ul id="gh_repos">
-    <li class="loading">Status updating...</li>
+    <li class="loading">Status updating&#8230;</li>
   </ul>
   
   <a href="https://github.com/jurberg">@jurberg</a> on GitHub
@@ -314,7 +262,7 @@ data = header + data;
 <section>
   <h1>Latest Tweets</h1>
   <ul id="tweets">
-    <li class="loading">Status updating...</li>
+    <li class="loading">Status updating&#8230;</li>
   </ul>
   <script type="text/javascript">
     $.domReady(function(){
@@ -346,7 +294,6 @@ data = header + data;
   
 </aside>
 
-
     </div>
   </div>
   <footer role="contentinfo"><p>
@@ -361,10 +308,7 @@ data = header + data;
       var disqus_shortname = 'urblog';
       
         
-        // var disqus_developer = 1;
-        var disqus_identifier = 'http://jurberg.github.com/blog/2009/10/09/transmiting-java-cpp/';
-        var disqus_url = 'http://jurberg.github.com/blog/2009/10/09/transmiting-java-cpp/';
-        var disqus_script = 'embed.js';
+        var disqus_script = 'count.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

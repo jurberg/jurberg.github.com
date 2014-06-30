@@ -1,0 +1,706 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>AngularJS and jQuery Dialogs - The UrBlog</title>
+  <meta name="author" content="John Urberg">
+
+  
+  <meta name="description" content="I&#8217;m using jQuery dialogs in an AngularJS application. I&#8217;ve struggled to find
+a way to use them that follows angular &#8216;best practices &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://jurberg.github.com/blog/2014/06/29/angularjs-jquery-dialog/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="The UrBlog" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<style>
+  .line-data {
+    width: 100%;
+  }
+</style>
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">The UrBlog</a></h1>
+  
+    <h2>John's Ramblings about Software Development</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:jurberg.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">AngularJS and jQuery Dialogs</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-06-29T21:00:00-05:00" pubdate data-updated="true">Jun 29<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>I&#8217;m using jQuery dialogs in an AngularJS application. I&#8217;ve struggled to find
+a way to use them that follows angular &#8216;best practices&#8217;. My first attempt used a 
+directive for the DOM manipulation and a controller for binding to the scope.  I was 
+uncomfortable with this approach because I was splitting the code between two
+different artifacts.  I also ended up adding the open dialog method to the $rootScope
+which is the same as making it global.</p>
+
+
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">app</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">&#39;DialogCtrl&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$scope</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">$scope</span><span class="p">.</span><span class="nx">message</span> <span class="o">=</span> <span class="s1">&#39;Hello Dialog!&#39;</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">this</span><span class="p">.</span><span class="nx">onSave</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">alert</span><span class="p">(</span><span class="s1">&#39;saved!&#39;</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">};</span>
+</span><span class='line'><span class="p">})</span>
+</span><span class='line'><span class="nx">app</span><span class="p">.</span><span class="nx">directive</span><span class="p">(</span><span class="s1">&#39;myDialog&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">return</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">controller</span><span class="o">:</span> <span class="s1">&#39;DialogCtrl&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">link</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">scope</span><span class="p">,</span><span class="nx">elem</span><span class="p">,</span><span class="nx">attrs</span><span class="p">,</span><span class="nx">ctrl</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nx">elem</span><span class="p">.</span><span class="nx">dialog</span><span class="p">({</span>
+</span><span class='line'>        <span class="nx">autoOpen</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+</span><span class='line'>        <span class="nx">buttons</span><span class="o">:</span> <span class="p">{</span>
+</span><span class='line'>           <span class="s1">&#39;Save&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>              <span class="nx">ctrl</span><span class="p">.</span><span class="nx">onSave</span><span class="p">();</span>
+</span><span class='line'>              <span class="nx">elem</span><span class="p">.</span><span class="nx">dialog</span><span class="p">(</span><span class="s1">&#39;close&#39;</span><span class="p">);</span>
+</span><span class='line'>            <span class="p">}</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>      <span class="p">});</span>
+</span><span class='line'>      <span class="nx">scope</span><span class="p">.</span><span class="nx">$root</span><span class="p">.</span><span class="nx">openTestDialog</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>        <span class="nx">elem</span><span class="p">.</span><span class="nx">dialog</span><span class="p">(</span><span class="s1">&#39;open&#39;</span><span class="p">);</span>
+</span><span class='line'>      <span class="p">};</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>  <span class="p">};</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<p>The other method I tried was using a single controller.  This was also not best
+practice since I was manipulating DOM in a controller.  I still had to put the
+open method on $rootScope.</p>
+
+
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">app</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">&#39;TestDialog&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$scope</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">self</span> <span class="o">=</span> <span class="k">this</span><span class="p">,</span>
+</span><span class='line'>      <span class="nx">$dialog</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#test-dialog&#39;</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nx">$scope</span><span class="p">.</span><span class="nx">message</span> <span class="o">=</span> <span class="s2">&quot;Hello!!!&quot;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">this</span><span class="p">.</span><span class="nx">onSave</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">alert</span><span class="p">(</span><span class="s1">&#39;saved!&#39;</span><span class="p">);</span>
+</span><span class='line'>    <span class="nx">$dialog</span><span class="p">.</span><span class="nx">dialog</span><span class="p">(</span><span class="s1">&#39;close&#39;</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nx">$dialog</span><span class="p">.</span><span class="nx">dialog</span><span class="p">({</span>
+</span><span class='line'>    <span class="nx">autoOpen</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">buttons</span><span class="o">:</span> <span class="p">{</span>
+</span><span class='line'>      <span class="s1">&#39;Save&#39;</span><span class="o">:</span> <span class="nx">self</span><span class="p">.</span><span class="nx">onSave</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>  <span class="p">});</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nx">$scope</span><span class="p">.</span><span class="nx">$root</span><span class="p">.</span><span class="nx">openTestDialog</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">$scope</span><span class="p">.</span><span class="nx">message</span> <span class="o">=</span> <span class="s2">&quot;boom&quot;</span><span class="p">;</span>
+</span><span class='line'>    <span class="nx">$dialog</span><span class="p">.</span><span class="nx">dialog</span><span class="p">(</span><span class="s1">&#39;open&#39;</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<p>Others have suggested using a service, but I would be accessing the DOM in the
+service and what would I do about scope?</p>
+
+
+<p>Then I thought, what if I created a generic directive that would allow me to
+set the dialog options in the markup?  Furthermore, what if I could register the
+the dialog in a service so I could inject it into a controller and open the dialog
+using that controller?  It turns out it&#8217;s possible with a little angular black magic.
+Meet the jqdialog directive.</p>
+
+
+<p>Step one: create directive that provides the jQuery dialog options as scope variables.  I capture 
+the options directly off the $.ui.dialog and then add them to the scope using &#8216;&&#8217; bindings.  This
+allows any values to be entered without having to convert from strings with the downside of having to
+place strings in quotes inside the attribute.  Then in the link function, I can loop thru the options,
+and if they have values on the scope, I put them in the options array which is passed to the dialog
+function.</p>
+
+
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">app</span><span class="p">.</span><span class="nx">directive</span><span class="p">(</span><span class="s1">&#39;jqdialog&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;$injector&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$injector</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">options</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">$</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">dialog</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">options</span><span class="p">);</span>
+</span><span class='line'>  <span class="k">return</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">scope</span><span class="o">:</span> <span class="nx">options</span><span class="p">.</span><span class="nx">reduce</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">acc</span><span class="p">,</span> <span class="nx">val</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nx">acc</span><span class="p">[</span><span class="nx">val</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&amp;&quot;</span><span class="p">;</span> <span class="k">return</span> <span class="nx">acc</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">},</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nx">onOpen</span><span class="o">:</span> <span class="s2">&quot;&amp;&quot;</span><span class="p">,</span>
+</span><span class='line'>      <span class="nx">onClose</span><span class="o">:</span> <span class="s2">&quot;&amp;&quot;</span><span class="p">,</span>
+</span><span class='line'>      <span class="nx">buttonClasses</span><span class="o">:</span> <span class="s2">&quot;&amp;&quot;</span>
+</span><span class='line'>    <span class="p">}),</span>
+</span><span class='line'>    <span class="o">&lt;</span><span class="p">...</span><span class="o">&gt;</span>
+</span><span class='line'>    <span class="nx">compile</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">elem</span><span class="p">,</span> <span class="nx">attrs</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="o">&lt;</span><span class="p">...</span><span class="o">&gt;</span>
+</span><span class='line'>      <span class="k">return</span> <span class="kd">function</span><span class="p">(</span><span class="nx">scope</span><span class="p">,</span> <span class="nx">elem</span><span class="p">,</span> <span class="nx">attrs</span><span class="p">,</span> <span class="nx">ctrl</span><span class="p">,</span> <span class="nx">transclude</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="kd">var</span> <span class="nx">opts</span> <span class="o">=</span> <span class="nx">options</span><span class="p">.</span><span class="nx">reduce</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">acc</span><span class="p">,</span> <span class="nx">val</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>              <span class="kd">var</span> <span class="nx">value</span> <span class="o">=</span> <span class="nx">scope</span><span class="p">[</span><span class="nx">val</span><span class="p">]</span> <span class="o">?</span> <span class="nx">scope</span><span class="p">[</span><span class="nx">val</span><span class="p">]()</span> <span class="o">:</span> <span class="kc">undefined</span><span class="p">;</span>
+</span><span class='line'>              <span class="k">if</span> <span class="p">(</span><span class="nx">value</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>                <span class="nx">acc</span><span class="p">[</span><span class="nx">val</span><span class="p">]</span> <span class="o">=</span> <span class="nx">value</span><span class="p">;</span>
+</span><span class='line'>              <span class="p">}</span>
+</span><span class='line'>              <span class="k">return</span> <span class="nx">acc</span><span class="p">;</span>
+</span><span class='line'>            <span class="p">},</span> <span class="p">{}),</span>
+</span><span class='line'>            <span class="nx">dialog</span> <span class="o">=</span> <span class="nx">elem</span><span class="p">.</span><span class="nx">dialog</span><span class="p">(</span><span class="nx">opts</span><span class="p">);</span>
+</span><span class='line'>            <span class="o">&lt;</span><span class="p">...</span><span class="o">&gt;</span>
+</span><span class='line'>      <span class="p">};</span>
+</span><span class='line'>    <span class="p">};</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<p>Step two: require a dialogName attribute and use that to create a service for the dialog with
+open and close methods.  We&#8217;ll need to create the service in the compile function so it will
+be available when dependencies are injected.  Then we&#8217;ll add the methods in the link function 
+when the scope is available.  Finally, we must call the transclude method using the $parent scope
+instead of ng-transclude so we get the correct scope for contents in the dialog.</p>
+
+
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">app</span><span class="p">.</span><span class="nx">directive</span><span class="p">(</span><span class="s1">&#39;jqdialog&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;$injector&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$injector</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="o">&lt;</span><span class="p">...</span><span class="o">&gt;</span>
+</span><span class='line'>  <span class="k">return</span> <span class="p">{</span>
+</span><span class='line'>    <span class="o">&lt;</span><span class="p">...</span><span class="o">&gt;</span>
+</span><span class='line'>    <span class="nx">compile</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">elem</span><span class="p">,</span> <span class="nx">attrs</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nx">app</span><span class="p">.</span><span class="nx">provide</span><span class="p">.</span><span class="nx">service</span><span class="p">(</span><span class="nx">attrs</span><span class="p">.</span><span class="nx">dialogName</span> <span class="o">+</span> <span class="s1">&#39;DialogService&#39;</span><span class="p">,</span>
+</span><span class='line'>                <span class="p">[</span><span class="s1">&#39;$q&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$q</span><span class="p">)</span> <span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="nx">q</span> <span class="o">=</span> <span class="nx">$q</span><span class="p">;</span> <span class="p">}]);</span>
+</span><span class='line'>      <span class="k">return</span> <span class="kd">function</span><span class="p">(</span><span class="nx">scope</span><span class="p">,</span> <span class="nx">elem</span><span class="p">,</span> <span class="nx">attrs</span><span class="p">,</span> <span class="nx">ctrl</span><span class="p">,</span> <span class="nx">transclude</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="kd">var</span> <span class="nx">service</span> <span class="o">=</span> <span class="nx">$injector</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">attrs</span><span class="p">.</span><span class="nx">dialogName</span> <span class="o">+</span> <span class="s1">&#39;DialogService&#39;</span><span class="p">);</span>
+</span><span class='line'>        <span class="o">&lt;</span><span class="p">...</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="nx">service</span><span class="p">.</span><span class="nx">openDialog</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">options</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>          <span class="kd">var</span> <span class="nx">onOpen</span> <span class="o">=</span> <span class="nx">scope</span><span class="p">.</span><span class="nx">onOpen</span><span class="p">();</span>
+</span><span class='line'>          <span class="k">this</span><span class="p">.</span><span class="nx">dfd</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">q</span><span class="p">.</span><span class="nx">defer</span><span class="p">();</span>
+</span><span class='line'>          <span class="k">if</span> <span class="p">(</span><span class="nx">onOpen</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>            <span class="nx">onOpen</span><span class="p">(</span><span class="nx">options</span><span class="p">);</span>
+</span><span class='line'>          <span class="p">}</span>
+</span><span class='line'>          <span class="nx">dialog</span><span class="p">.</span><span class="nx">dialog</span><span class="p">(</span><span class="s1">&#39;open&#39;</span><span class="p">);</span>
+</span><span class='line'>          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">dfd</span><span class="p">.</span><span class="nx">promise</span><span class="p">;</span>
+</span><span class='line'>        <span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="nx">service</span><span class="p">.</span><span class="nx">closeDialog</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>          <span class="kd">var</span> <span class="nx">onClose</span> <span class="o">=</span> <span class="nx">scope</span><span class="p">.</span><span class="nx">onClose</span><span class="p">();</span>
+</span><span class='line'>          <span class="k">if</span> <span class="p">(</span><span class="nx">onClose</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>            <span class="nx">onClose</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+</span><span class='line'>          <span class="p">}</span>
+</span><span class='line'>          <span class="nx">dialog</span><span class="p">.</span><span class="nx">dialog</span><span class="p">(</span><span class="s1">&#39;close&#39;</span><span class="p">);</span>
+</span><span class='line'>          <span class="k">this</span><span class="p">.</span><span class="nx">dfd</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+</span><span class='line'>        <span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="nx">transclude</span><span class="p">(</span><span class="nx">scope</span><span class="p">.</span><span class="nx">$parent</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">clone</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>          <span class="nx">elem</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="nx">clone</span><span class="p">);</span>
+</span><span class='line'>        <span class="p">});</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="p">};</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>  <span class="p">};</span>
+</span><span class='line'><span class="p">}]);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<p>The full version is available on 
+<a href="https://github.com/jurberg/angular.jquery/blob/master/src/jqdialog/jqdialog.js">github</a>.  Here is an example 
+of the tag usage.</p>
+
+
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;div</span> <span class="na">ng-app=</span><span class="s">&quot;app&quot;</span> <span class="na">ng-controller=</span><span class="s">&quot;DemoCtrl&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;button</span> <span class="na">ng-click=</span><span class="s">&quot;testDialog();&quot;</span><span class="nt">&gt;</span>Open Dialog<span class="nt">&lt;/button&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;jqdialog</span> <span class="na">dialog-name=</span><span class="s">&quot;Test&quot;</span> <span class="na">title=</span><span class="s">&quot;&#39;Test Dialog&#39;&quot;</span>
+</span><span class='line'>            <span class="na">auto-open=</span><span class="s">&quot;false&quot;</span> <span class="na">width=</span><span class="s">&quot;400&quot;</span> <span class="na">height=</span><span class="s">&quot;300&quot;</span>
+</span><span class='line'>            <span class="na">on-open=</span><span class="s">&quot;onOpen&quot;</span> <span class="na">buttons=</span><span class="s">&quot;{&#39;OK&#39;: onOk, &#39;Cancel&#39;: onCancel}&quot;</span>
+</span><span class='line'>            <span class="na">ng-controller=</span><span class="s">&quot;DialogCtrl&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;h3&gt;</span>This is a test dialog<span class="nt">&lt;/h3&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;label</span> <span class="na">for=</span><span class="s">&quot;fullName&quot;</span><span class="nt">&gt;</span>Full Name:<span class="nt">&lt;/label&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;input</span> <span class="na">id=</span><span class="s">&quot;fullName&quot;</span> <span class="na">ng-model=</span><span class="s">&quot;fullName&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/jqdialog&gt;</span>
+</span><span class='line'><span class="nt">&lt;/div&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">app</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">&#39;DemoCtrl&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;$scope&#39;</span><span class="p">,</span> <span class="s1">&#39;TestDialogService&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$scope</span><span class="p">,</span> <span class="nx">TestDialogService</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">$scope</span><span class="p">.</span><span class="nx">testDialog</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">TestDialogService</span><span class="p">.</span><span class="nx">openDialog</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="k">if</span> <span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">ok</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="nx">alert</span><span class="p">(</span><span class="s1">&#39;You entered &#39;</span> <span class="o">+</span> <span class="nx">result</span><span class="p">.</span><span class="nx">name</span><span class="p">);</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>    <span class="p">});</span>
+</span><span class='line'>  <span class="p">};</span>
+</span><span class='line'><span class="p">}]);</span>
+</span><span class='line'><span class="nx">app</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">&#39;DialogCtrl&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;$scope&#39;</span><span class="p">,</span> <span class="s1">&#39;TestDialogService&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$scope</span><span class="p">,</span> <span class="nx">TestDialogService</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">$scope</span><span class="p">.</span><span class="nx">fullName</span> <span class="o">=</span> <span class="s2">&quot;Test&quot;</span><span class="p">;</span>
+</span><span class='line'>  <span class="nx">$scope</span><span class="p">.</span><span class="nx">onOpen</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">$scope</span><span class="p">.</span><span class="nx">fullName</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">};</span>
+</span><span class='line'>  <span class="nx">$scope</span><span class="p">.</span><span class="nx">onOk</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">TestDialogService</span><span class="p">.</span><span class="nx">closeDialog</span><span class="p">({</span><span class="nx">ok</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span> <span class="nx">name</span><span class="o">:</span> <span class="nx">$scope</span><span class="p">.</span><span class="nx">fullName</span><span class="p">});</span>
+</span><span class='line'>  <span class="p">};</span>
+</span><span class='line'>  <span class="nx">$scope</span><span class="p">.</span><span class="nx">onCancel</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">TestDialogService</span><span class="p">.</span><span class="nx">closeDialog</span><span class="p">({</span><span class="nx">ok</span><span class="o">:</span> <span class="kc">false</span><span class="p">});</span>
+</span><span class='line'>  <span class="p">};</span>
+</span><span class='line'><span class="p">}]);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<p>I&#8217;ve started an <a href="https://github.com/jurberg/angular.jquery">angular.jquery</a> project on github to hold 
+this and other jQuery directives.  If you have any directives, feel free to contribute</p>
+
+</div>
+
+
+  <footer>
+     <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-6995989828356521";
+      /* UrBlog Post */
+      google_ad_slot = "9938118229";
+      google_ad_width = 468;
+      google_ad_height = 60;
+      //-->
+    </script>
+    <script type="text/javascript" src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+    </script>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">John Urberg</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-06-29T21:00:00-05:00" pubdate data-updated="true">Jun 29<span>th</span>, 2014</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/angularjs/'>AngularJS</a>, <a class='category' href='/blog/categories/jquery/'>jQuery</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://jurberg.github.com/blog/2014/06/29/angularjs-jquery-dialog/" data-via="jurberg" data-counturl="http://jurberg.github.com/blog/2014/06/29/angularjs-jquery-dialog/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/06/22/thoughts-on-angular-dependency-injection/" title="Previous Post: Complexity and Angular DI">&laquo; Complexity and Angular DI</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>About Me</h1>
+  <p>I am a software professional with 2 decades of experience in the software field.  I've been in roles in all aspects of software development.  My current position is in consulting building web sites with Grails, JavaScript and JEE. Check me out on <a href="http://www.linkedin.com/pub/john-urberg/4/203/80a">Linkedin</a></p>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/06/29/angularjs-jquery-dialog/">AngularJS and jQuery Dialogs</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/06/22/thoughts-on-angular-dependency-injection/">Complexity and Angular DI</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/03/03/onetimedata-test/">Unit Testing with the OneTimeData Plugin</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/04/24/grails-components/">Creating Grails UI 'Components'</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/04/10/express-requirejs-controllers/">Roll Your Own Controllers with Express and Require.JS</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/jurberg">@jurberg</a> on GitHub
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'jurberg',
+            count: 3,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("jurberg", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/jurberg" class="twitter-follow-button" data-show-count="false">Follow @jurberg</a>
+  
+</section>
+
+
+
+
+<section>
+<script type="text/javascript"><!--
+  google_ad_client = "ca-pub-6995989828356521";
+  /* UrBlog Adds */
+  google_ad_slot = "8461385020";
+  google_ad_width = 160;
+  google_ad_height = 600;
+  //-->
+</script>
+<script type="text/javascript" src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - John Urberg -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'urblog';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://jurberg.github.com/blog/2014/06/29/angularjs-jquery-dialog/';
+        var disqus_url = 'http://jurberg.github.com/blog/2014/06/29/angularjs-jquery-dialog/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-37974328-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+
+</body>
+</html>
