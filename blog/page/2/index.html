@@ -9,7 +9,7 @@
   <meta name="author" content="John Urberg">
 
   
-  <meta name="description" content="When integrating systems, you often need to convert data from one format to another. For example, you may receive data from a web service in XML and &hellip;">
+  <meta name="description" content="I think Groovy&#8217;s MarkupBuilder is great and I use it often. Sometimes though, I need to generate a complex XML document that conforms to an XSD &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -69,6 +69,57 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/11/27/grails-script-to-generate-JAXB-classes/">Grails Script to Generate JAXB Classes</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-11-27T19:00:00-06:00" pubdate data-updated="true">Nov 27<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I think Groovy&#8217;s <a href="http://groovy.codehaus.org/api/groovy/xml/MarkupBuilder.html">MarkupBuilder</a> is great and I use it often.  Sometimes though, I need to generate a complex XML document that conforms to an XSD.  MarkupBuilder often leads to markup and business logic being mixed together much like HTML and Java code gets mixed in complex JSP pages. In cases like this, I like to use JAXB instead.  I can generate classes from the XSD, load up an object model and let JAXB generate the markup.</p>
+
+
+<p>It&#8217;s fairly easy to create a script to handle generating the JAXB classes for you.  JAXB comes with a handy Ant task that takes your XSD and generates classes. The trick is passing the build classpath to the task.  There is a &#8220;grailsSettings&#8221; variable available in scripts that contains <a href="https://github.com/grails/grails-core/blob/master/grails-bootstrap/src/main/groovy/grails/util/BuildSettings.groovy">BuildSettings</a>.  We can get the list of build dependencies files from this class to generate the classpath.  Here is a simple example that takes the Microsoft <a href="http://msdn.microsoft.com/en-us/library/ms256485.aspx">books.xsd</a> in the etc/schema directory and generates the code to the src/java directory:</p>
+
+
+<script src="https://gist.github.com/4158702.js"> </script>
+
+
+<p>UPDATE: Sometimes having the JAXB jars on your path can cause problems with your application.  In those cases, you call the generation class directly:</p>
+
+
+<script src="https://gist.github.com/4186366.js"> </script>
+
+
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -714,117 +765,6 @@ public</span> <span style="color:#a020f0;">class</span> <span style="color:#228b
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/12/17/spring-host-name-verifier/">Using a HostnameVerifier With Spring Web Services</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-12-17T19:00:00-06:00" pubdate data-updated="true">Dec 17<span>th</span>, 2010</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I was working with a web service from a site that uses SSL with a certificate that was self-signed.  When attempting to make the calls, I received the error:</p>
-
-
-<pre>
-    javax.net.ssl.SSLHandshakeException: java.security.cert.CertificateException: No name matching {web address} found
-</pre>
-
-
-<p>The workaround for this issue is to provide a HostnameVerifer that skips the host name verification process.  There is an example of how to do this <a href="http://www.jroller.com/hasant/entry/no_subject_alternative_names_matching">here.</a></p>
-
-
-<p>I ran into this issue after I had a nice clean codebase using Spring&#8217;s WebServiceTemplate and RestTemplate.  It took some digging, but I was able to find the spots where I had to install the verifier.  We start with a NullHostnameVerifier that returns true for everything:</p>
-
-
-<pre>
-<span style="color:#a020f0">public</span> <span style="color:#a020f0">class</span> <span style="color:#228b22">NullHostnameVerifier</span> <span style="color:#a020f0">implements</span> <span style="color:#228b22">HostnameVerifier</span> {
-   <span style="color:#a020f0">public</span> <span style="color:#a020f0">boolean</span> verify(<span style="color:#228b22">String</span> hostname, <span style="color:#228b22">SSLSession</span> session) {
-      <span style="color:#a020f0">return</span> <span style="color:#b8860b">true</span>;
-   }
-}
-</pre>
-
-
-<p>The <b>org.springframework.ws.client.core.WebServiceTempate</b> extends <b>org.springframework.ws.client.support.WebServiceAccesor</b> which uses a <b>org.springframework.ws.client.support.WebServiceMessageSender</b>.  The WebServiceMessage sender for HTTPS is <b>org.springframework.ws.transport.http.HttpsUrlConnectionMessageSender</b> which is found in the spring-ws-support-1.5.9.jar. We need to create one of these and set the HostnameVerifier into it and pass it along to the WebServicesTemplate:</p>
-
-
-<pre>
-<span style="color:#a020f0">public</span> <span style="color:#a020f0">void</span> setWebServicesTempalate(<span style="color:#228b22">WebServicesTemplate</span> template) {
-   <span style="color:#228b22">HostnameVerifier</span> verifier = <span style="color:#a020f0">new</span> <span style="color:#228b22">NullHostnameVerifier</span>();
-   <span style="color:#228b22">HttpsUrlConnectionMessageSender</span> sender = <span style="color:#a020f0">new</span> <span style="color:#228b22">HttpsUrlConnectionMessageSender</span>();
-   sender.setHostnameVerifier(verifier);
-   template.setMessageSender(sender);
-   <span style="color:#a020f0">this</span>.template = template;
-}
-</pre>
-
-
-<p>The <b>org.springframework.web.client.RestTemplate</b> is setup differently.  It uses a <b>org.springframework.http.client.ClientHttpRequestFactory</b> to handle the connections.  Stepping thru the code, I found the RestTemplate using <b>org.springframework.http.client.SimpleClientHttpRequestFactory</b> which has a protected prepareConnection(&#8230;) method I could override and catch the HttpsURLConnection which I could set the verifier in.  First we need  our own ClientHttpRequestFactory:</p>
-
-
-<pre> 
-<span style="color:#a020f0">public</span> <span style="color:#a020f0">class</span> <span style="color:#228b22">MySimpleClientHttpRequestFactory</span> <span style="color:#a020f0">extends</span> <span style="color:#228b22">SimpleClientHttpRequestFactory</span> {
-
-   <span style="color:#a020f0">private</span> <span style="color:#a020f0">final</span> <span style="color:#228b22">HostnameVerifier</span> verifier;
-
-   <span style="color:#a020f0">public</span> <span style="color:#228b22">MySimpleClientHttpRequestFactory</span>(<span style="color:#228b22">HostnameVerifier</span> verifier) {
-      <span style="color:#a020f0">this</span>.verifier = verifier;
-   }
-
-   <span style="color:#b8860b">@Override</span>
-   <span style="color:#a020f0">protected</span> <span style="color:#a020f0">void</span> prepareConnection(<span style="color:#228b22">HttpURLConnection</span> connection, <span style="color:#228b22">String</span> httpMethod) throws <span style="color:#228b22">IOException</span> {
-      <span style="color:#a020f0">if</span> (connection <span style="color:#a020f0">instanceof</span> <span style="color:#228b22">HttpsURLConnection</span>) {
-         ((<span style="color:#228b22">HttpsURLConnection</span>) connection).setHostnameVerifier(verifier);
-      }
-      <span style="color:#a020f0">super</span>.prepareConnection(connection, httpMethod);
-   }
-
-}
-</pre>
-
-
-<p>Now we can use that as the request factory in our RestTemplate:</p>
-
-
-<pre>
-<span style="color:#a020f0">public</span> <span style="color:#a020f0">void</span> setRestTemplate(<span style="color:#228b22">RestTemplate</span> template) {
-   <span style="color:#228b22">HostnameVerifier</span> verifier = <span style="color:#a020f0">new</span> <span style="color:#228b22">NullHostnameVerifier</span>();
-   <span style="color:#228b22">MySimpleClientHttpRequestFactory</span> factory = <span style="color:#a020f0">new</span> <span style="color:#228b22">MySimpleClientHttpRequestFactory</span>(verifier);
-   template.setRequestFactory(factory);
-   <span style="color:#a020f0">this</span>.template = template;
-}
-</pre>
-
-
-<p>Once the NullHostnameVerifer is in place in the WebServiceTemplate and the RestTemplate, we will no longer see the error</p>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -846,6 +786,10 @@ public</span> <span style="color:#a020f0;">class</span> <span style="color:#228b
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/07/12/javascript-prototype/">Prototypal JavaScript</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/06/29/angularjs-jquery-dialog/">AngularJS and jQuery Dialogs</a>
       </li>
     
@@ -859,10 +803,6 @@ public</span> <span style="color:#a020f0;">class</span> <span style="color:#228b
     
       <li class="post">
         <a href="/blog/2013/04/24/grails-components/">Creating Grails UI &#8216;Components&#8217;</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/04/10/express-requirejs-controllers/">Roll Your Own Controllers with Express and Require.JS</a>
       </li>
     
   </ul>

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: JavaScript | The UrBlog]]></title>
   <link href="http://jurberg.github.com/blog/categories/javascript/atom.xml" rel="self"/>
   <link href="http://jurberg.github.com/"/>
-  <updated>2014-06-29T20:41:48-05:00</updated>
+  <updated>2014-07-12T21:56:26-05:00</updated>
   <id>http://jurberg.github.com/</id>
   <author>
     <name><![CDATA[John Urberg]]></name>
@@ -12,6 +12,215 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Prototypal JavaScript]]></title>
+    <link href="http://jurberg.github.com/blog/2014/07/12/javascript-prototype/"/>
+    <updated>2014-07-12T21:00:00-05:00</updated>
+    <id>http://jurberg.github.com/blog/2014/07/12/javascript-prototype</id>
+    <content type="html"><![CDATA[<h2>Intro</h2>
+
+<p>I was watching the <a href="https://frontendmasters.com/courses/advanced-javascript/">Advanced JavaScript course on Frontend Masters</a>
+and Kyle brought up his concept of “OLOO” (objects-linked-to-other-object).  It reminded me of a blog post by Keith Peters
+a few years back on <a href="http://www.adobe.com/devnet/html5/articles/javascript-object-creation.html">Learning to live without "new"</a>
+where he explains using prototypal inheritance instead of constructor functions.  Both are examples pure prototypal coding.</p>
+
+<h2>The Standard Way</h2>
+
+<p>The way we were taught to create objects in JavaScript is to create a constructor function and add methods to the
+function's prototype object.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">Animal</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">name</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="nx">Animal</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">getName</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span>
+</span><span class='line'><span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>To create a sublcass, we create a new constructor function and set it's prototype to the parent prototype. To call the
+parent constructor, we need to call it passing in this as the context object.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">Dog</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">Animal</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">name</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="nx">Dog</span><span class="p">.</span><span class="nx">prototype</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="nx">Animal</span><span class="p">.</span><span class="nx">prototype</span><span class="p">);</span>
+</span><span class='line'><span class="nx">Dog</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">speak</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">return</span> <span class="s2">&quot;woof&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="p">};</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="kd">var</span> <span class="nx">dog</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Dog</span><span class="p">(</span><span class="s2">&quot;Scamp&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">dog</span><span class="p">.</span><span class="nx">getName</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39; says &#39;</span> <span class="o">+</span> <span class="nx">dog</span><span class="p">.</span><span class="nx">speak</span><span class="p">());</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h2>The Prototypal Way</h2>
+
+<p>If you've had any exposure to prototypal languages, the above example will look strange.  I've tried out the
+<a href="http://iolanguage.org/">IO language</a> which is a prototype based language.  In a prototypal language, you create a
+prototype by cloning Object and adding methods and properties to it.  You can then clone that prototype to create
+instances to use or you can clone it to create a prototype that you can extend.  This is how the above example would look in IO:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='io'><span class='line'><span class="n">Animal</span> <span class="o">:=</span> <span class="nb">Object</span> <span class="k">clone</span>
+</span><span class='line'><span class="n">Animal</span> <span class="n">getName</span> <span class="o">:=</span> <span class="k">method</span><span class="o">(</span><span class="n">name</span><span class="o">)&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">Dog</span> <span class="o">:=</span> <span class="n">Animal</span> <span class="k">clone</span>
+</span><span class='line'><span class="n">Dog</span> <span class="n">speak</span> <span class="o">:=</span> <span class="k">method</span><span class="o">(</span><span class="s">&quot;woof&quot;</span><span class="o">)&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">dog</span> <span class="o">:=</span> <span class="n">Dog</span> <span class="k">clone</span>
+</span><span class='line'><span class="n">dog</span> <span class="n">name</span> <span class="o">:=</span> <span class="s">&quot;Scamp&quot;</span>
+</span><span class='line'><span class="n">writeln</span><span class="o">(</span><span class="n">dog</span> <span class="n">getName</span><span class="o">(),</span> <span class="s">&quot; says &quot;</span><span class="o">,</span> <span class="n">dog</span> <span class="n">speak</span><span class="o">())</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h2>The Good News</h2>
+
+<p>We can code this way in JavaScript!  The Object.create function is similar to IO's clone.  Here's
+a pure prototypal implementation in JavaScript.  Other than syntax, it's the same as the IO version.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">Animal</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="nb">Object</span><span class="p">);</span>
+</span><span class='line'><span class="nx">Animal</span><span class="p">.</span><span class="nx">getName</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span>
+</span><span class='line'><span class="p">};</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="nx">Dog</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="nx">Animal</span><span class="p">);</span>
+</span><span class='line'><span class="nx">Dog</span><span class="p">.</span><span class="nx">speak</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">return</span> <span class="s2">&quot;woof&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="p">};</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="kd">var</span> <span class="nx">dog</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="nx">Dog</span><span class="p">);</span>
+</span><span class='line'><span class="nx">dog</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="s2">&quot;Scamp&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">dog</span><span class="p">.</span><span class="nx">getName</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39; says &#39;</span> <span class="o">+</span> <span class="nx">dog</span><span class="p">.</span><span class="nx">speak</span><span class="p">());</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h2>The Bad News</h2>
+
+<p>JavaScript engines have optimizations when you use constructor functions.  Testing the two
+different options on <a href="http://jsperf.com/proto-vs-ctor/3">JSPerf</a> shows the prototypal implementation to be up to 90
+times slower than using constuctors.</p>
+
+<p><img src="/images/proto-vs-ctor.png" alt="Perf Graph" /></p>
+
+<p>Also, if you are using frameworks such as <a href="https://angularjs.org/">Angular</a>, you have to use constructor functions when
+you are creating controllers and services.</p>
+
+<h2>Enter Classes</h2>
+
+<p>With ES6 we have a new class syntax.  This syntax is just sugar for the standard constructor way to produce objects.
+It looks like we are creating classes like one would in Java or C#, but it's still creating prototype objects under
+the covers.  This will be confusing for people coming from class based languages as they will expect it to have the
+same properties as a class in their language when it's really creating prototypes.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kr">class</span> <span class="nx">Animal</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">constructor</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">name</span><span class="p">;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span>  <span class="p">}</span>
+</span><span class='line'>  <span class="nx">getName</span><span class="p">()</span> <span class="p">{</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="kr">class</span> <span class="nx">Dog</span> <span class="kr">extends</span> <span class="nx">Animal</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">constructor</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="kr">super</span><span class="p">(</span><span class="nx">name</span><span class="p">);</span>
+</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span>  <span class="p">}</span>
+</span><span class='line'>  <span class="nx">speak</span><span class="p">()</span> <span class="p">{</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="k">return</span> <span class="s2">&quot;woof&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="kd">var</span> <span class="nx">dog</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Dog</span><span class="p">(</span><span class="s2">&quot;Scamp&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">dog</span><span class="p">.</span><span class="nx">getName</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39; says &#39;</span> <span class="o">+</span> <span class="nx">dog</span><span class="p">.</span><span class="nx">speak</span><span class="p">());</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h2>Conclusion</h2>
+
+<p>If I had a choice, I would always write using a pure prototypal style.  It's more expressive, dynamic and fun.
+Because of the way the way the virtual machines optimize for constructor functions and the way frameworks use them,
+production code I write will still use constructor functions.  Once ES6 becomes common, I expect I'll be using
+the class syntax instead as it's easier than using constructor functions.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Creating Grails UI 'Components']]></title>
@@ -114,17 +323,6 @@
     <updated>2011-08-11T19:00:00-05:00</updated>
     <id>http://jurberg.github.com/blog/2011/08/11/introduction-to-node</id>
     <content type="html"><![CDATA[<p>Node.js is an evented I/O server built on Google's V8 JavaScript engine. Node provides a simple way to build highly scalable server applications. This article will provide an introduction to Node along with installation details and a first server. <a href="http://www.objectpartners.com/2011/08/23/an-introduction-to-node-js/">more...</a></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Scaling with Single Threading]]></title>
-    <link href="http://jurberg.github.com/blog/2011/08/09/scaling-with-single-threading/"/>
-    <updated>2011-08-09T19:00:00-05:00</updated>
-    <id>http://jurberg.github.com/blog/2011/08/09/scaling-with-single-threading</id>
-    <content type="html"><![CDATA[<p>The free lunch is over. To speed up applications we are told we must write multithreaded programs and avoid mutable state. Functional programming can help with it's immutable state. There's also Erlang with the Actor model or Clojure with it's software transactional memory. One other option to consider is single threading your code. Following are a few examples where single threading was used to scale applications.</p>
-
-<p><a href="http://www.objectpartners.com/2011/08/09/scaling-with-single-threading/">more...</a></p>
 ]]></content>
   </entry>
   

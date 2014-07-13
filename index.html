@@ -9,8 +9,8 @@
   <meta name="author" content="John Urberg">
 
   
-  <meta name="description" content="I&#8217;m using jQuery dialogs in an AngularJS application. I&#8217;ve struggled to find
-a way to use them that follows angular &#8216;best practices &hellip;">
+  <meta name="description" content="Intro I was watching the Advanced JavaScript course on Frontend Masters
+and Kyle brought up his concept of “OLOO” (objects-linked-to-other-object). &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -70,6 +70,223 @@ a way to use them that follows angular &#8216;best practices &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/07/12/javascript-prototype/">Prototypal JavaScript</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-07-12T21:00:00-05:00" pubdate data-updated="true">Jul 12<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>Intro</h2>
+
+<p>I was watching the <a href="https://frontendmasters.com/courses/advanced-javascript/">Advanced JavaScript course on Frontend Masters</a>
+and Kyle brought up his concept of “OLOO” (objects-linked-to-other-object).  It reminded me of a blog post by Keith Peters
+a few years back on <a href="http://www.adobe.com/devnet/html5/articles/javascript-object-creation.html">Learning to live without &#8220;new&#8221;</a>
+where he explains using prototypal inheritance instead of constructor functions.  Both are examples pure prototypal coding.</p>
+
+<h2>The Standard Way</h2>
+
+<p>The way we were taught to create objects in JavaScript is to create a constructor function and add methods to the
+function&#8217;s prototype object.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">Animal</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">name</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="nx">Animal</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">getName</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span>
+</span><span class='line'><span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>To create a sublcass, we create a new constructor function and set it&#8217;s prototype to the parent prototype. To call the
+parent constructor, we need to call it passing in this as the context object.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">Dog</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">Animal</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">name</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="nx">Dog</span><span class="p">.</span><span class="nx">prototype</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="nx">Animal</span><span class="p">.</span><span class="nx">prototype</span><span class="p">);</span>
+</span><span class='line'><span class="nx">Dog</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">speak</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">return</span> <span class="s2">&quot;woof&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">var</span> <span class="nx">dog</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Dog</span><span class="p">(</span><span class="s2">&quot;Scamp&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">dog</span><span class="p">.</span><span class="nx">getName</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39; says &#39;</span> <span class="o">+</span> <span class="nx">dog</span><span class="p">.</span><span class="nx">speak</span><span class="p">());</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>The Prototypal Way</h2>
+
+<p>If you&#8217;ve had any exposure to prototypal languages, the above example will look strange.  I&#8217;ve tried out the
+<a href="http://iolanguage.org/">IO language</a> which is a prototype based language.  In a prototypal language, you create a
+prototype by cloning Object and adding methods and properties to it.  You can then clone that prototype to create
+instances to use or you can clone it to create a prototype that you can extend.  This is how the above example would look in IO:</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='io'><span class='line'><span class="n">Animal</span> <span class="o">:=</span> <span class="nb">Object</span> <span class="k">clone</span>
+</span><span class='line'><span class="n">Animal</span> <span class="n">getName</span> <span class="o">:=</span> <span class="k">method</span><span class="o">(</span><span class="n">name</span><span class="o">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">Dog</span> <span class="o">:=</span> <span class="n">Animal</span> <span class="k">clone</span>
+</span><span class='line'><span class="n">Dog</span> <span class="n">speak</span> <span class="o">:=</span> <span class="k">method</span><span class="o">(</span><span class="s">&quot;woof&quot;</span><span class="o">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">dog</span> <span class="o">:=</span> <span class="n">Dog</span> <span class="k">clone</span>
+</span><span class='line'><span class="n">dog</span> <span class="n">name</span> <span class="o">:=</span> <span class="s">&quot;Scamp&quot;</span>
+</span><span class='line'><span class="n">writeln</span><span class="o">(</span><span class="n">dog</span> <span class="n">getName</span><span class="o">(),</span> <span class="s">&quot; says &quot;</span><span class="o">,</span> <span class="n">dog</span> <span class="n">speak</span><span class="o">())</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>The Good News</h2>
+
+<p>We can code this way in JavaScript!  The Object.create function is similar to IO&#8217;s clone.  Here&#8217;s
+a pure prototypal implementation in JavaScript.  Other than syntax, it&#8217;s the same as the IO version.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">Animal</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="nb">Object</span><span class="p">);</span>
+</span><span class='line'><span class="nx">Animal</span><span class="p">.</span><span class="nx">getName</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">Dog</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="nx">Animal</span><span class="p">);</span>
+</span><span class='line'><span class="nx">Dog</span><span class="p">.</span><span class="nx">speak</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">return</span> <span class="s2">&quot;woof&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">var</span> <span class="nx">dog</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="nx">Dog</span><span class="p">);</span>
+</span><span class='line'><span class="nx">dog</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="s2">&quot;Scamp&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">dog</span><span class="p">.</span><span class="nx">getName</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39; says &#39;</span> <span class="o">+</span> <span class="nx">dog</span><span class="p">.</span><span class="nx">speak</span><span class="p">());</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>The Bad News</h2>
+
+<p>JavaScript engines have optimizations when you use constructor functions.  Testing the two
+different options on <a href="http://jsperf.com/proto-vs-ctor/3">JSPerf</a> shows the prototypal implementation to be up to 90
+times slower than using constuctors.</p>
+
+<p><img src="/images/proto-vs-ctor.png" alt="Perf Graph" /></p>
+
+<p>Also, if you are using frameworks such as <a href="https://angularjs.org/">Angular</a>, you have to use constructor functions when
+you are creating controllers and services.</p>
+
+<h2>Enter Classes</h2>
+
+<p>With ES6 we have a new class syntax.  This syntax is just sugar for the standard constructor way to produce objects.
+It looks like we are creating classes like one would in Java or C#, but it&#8217;s still creating prototype objects under
+the covers.  This will be confusing for people coming from class based languages as they will expect it to have the
+same properties as a class in their language when it&#8217;s really creating prototypes.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kr">class</span> <span class="nx">Animal</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">constructor</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">name</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="nx">getName</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kr">class</span> <span class="nx">Dog</span> <span class="kr">extends</span> <span class="nx">Animal</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">constructor</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="kr">super</span><span class="p">(</span><span class="nx">name</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="nx">speak</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="s2">&quot;woof&quot;</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">var</span> <span class="nx">dog</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Dog</span><span class="p">(</span><span class="s2">&quot;Scamp&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">dog</span><span class="p">.</span><span class="nx">getName</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39; says &#39;</span> <span class="o">+</span> <span class="nx">dog</span><span class="p">.</span><span class="nx">speak</span><span class="p">());</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Conclusion</h2>
+
+<p>If I had a choice, I would always write using a pure prototypal style.  It&#8217;s more expressive, dynamic and fun.
+Because of the way the way the virtual machines optimize for constructor functions and the way frameworks use them,
+production code I write will still use constructor functions.  Once ES6 becomes common, I expect I&#8217;ll be using
+the class syntax instead as it&#8217;s easier than using constructor functions.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1189,57 +1406,6 @@ use no globals other than the define and require methods of AMD.</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/11/27/grails-script-to-generate-JAXB-classes/">Grails Script to Generate JAXB Classes</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-11-27T19:00:00-06:00" pubdate data-updated="true">Nov 27<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I think Groovy&#8217;s <a href="http://groovy.codehaus.org/api/groovy/xml/MarkupBuilder.html">MarkupBuilder</a> is great and I use it often.  Sometimes though, I need to generate a complex XML document that conforms to an XSD.  MarkupBuilder often leads to markup and business logic being mixed together much like HTML and Java code gets mixed in complex JSP pages. In cases like this, I like to use JAXB instead.  I can generate classes from the XSD, load up an object model and let JAXB generate the markup.</p>
-
-
-<p>It&#8217;s fairly easy to create a script to handle generating the JAXB classes for you.  JAXB comes with a handy Ant task that takes your XSD and generates classes. The trick is passing the build classpath to the task.  There is a &#8220;grailsSettings&#8221; variable available in scripts that contains <a href="https://github.com/grails/grails-core/blob/master/grails-bootstrap/src/main/groovy/grails/util/BuildSettings.groovy">BuildSettings</a>.  We can get the list of build dependencies files from this class to generate the classpath.  Here is a simple example that takes the Microsoft <a href="http://msdn.microsoft.com/en-us/library/ms256485.aspx">books.xsd</a> in the etc/schema directory and generates the code to the src/java directory:</p>
-
-
-<script src="https://gist.github.com/4158702.js"> </script>
-
-
-<p>UPDATE: Sometimes having the JAXB jars on your path can cause problems with your application.  In those cases, you call the generation class directly:</p>
-
-
-<script src="https://gist.github.com/4186366.js"> </script>
-
-
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1259,6 +1425,10 @@ use no globals other than the define and require methods of AMD.</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/07/12/javascript-prototype/">Prototypal JavaScript</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/06/29/angularjs-jquery-dialog/">AngularJS and jQuery Dialogs</a>
       </li>
     
@@ -1272,10 +1442,6 @@ use no globals other than the define and require methods of AMD.</p>
     
       <li class="post">
         <a href="/blog/2013/04/24/grails-components/">Creating Grails UI &#8216;Components&#8217;</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/04/10/express-requirejs-controllers/">Roll Your Own Controllers with Express and Require.JS</a>
       </li>
     
   </ul>
