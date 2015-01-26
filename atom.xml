@@ -4,7 +4,7 @@
   <title><![CDATA[The UrBlog]]></title>
   <link href="http://jurberg.github.com/atom.xml" rel="self"/>
   <link href="http://jurberg.github.com/"/>
-  <updated>2014-07-12T21:56:26-05:00</updated>
+  <updated>2015-01-25T19:15:07-06:00</updated>
   <id>http://jurberg.github.com/</id>
   <author>
     <name><![CDATA[John Urberg]]></name>
@@ -12,6 +12,178 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Angular Routers in Large Projects]]></title>
+    <link href="http://jurberg.github.com/blog/2015/01/25/angular-router/"/>
+    <updated>2015-01-25T21:00:00-06:00</updated>
+    <id>http://jurberg.github.com/blog/2015/01/25/angular-router</id>
+    <content type="html"><![CDATA[<h2>Intro</h2>
+
+<p>If you read the <a href="https://docs.angularjs.org/tutorial/step_07">Angular Tutorial section on the router</a> you will find what amounts to a large switch statement.  Here&#8217;s the example code from the tutoral:</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">phonecatApp</span><span class="p">.</span><span class="nx">config</span><span class="p">([</span><span class="s1">&#39;$routeProvider&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$routeProvider</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">$routeProvider</span><span class="p">.</span>
+</span><span class='line'>    <span class="nx">when</span><span class="p">(</span><span class="s1">&#39;/phones&#39;</span><span class="p">,</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nx">templateUrl</span><span class="o">:</span> <span class="s1">&#39;partials/phone-list.html&#39;</span><span class="p">,</span>
+</span><span class='line'>      <span class="nx">controller</span><span class="o">:</span> <span class="s1">&#39;PhoneListCtrl&#39;</span>
+</span><span class='line'>    <span class="p">}).</span>
+</span><span class='line'>    <span class="nx">when</span><span class="p">(</span><span class="s1">&#39;/phones/:phoneId&#39;</span><span class="p">,</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nx">templateUrl</span><span class="o">:</span> <span class="s1">&#39;partials/phone-detail.html&#39;</span><span class="p">,</span>
+</span><span class='line'>      <span class="nx">controller</span><span class="o">:</span> <span class="s1">&#39;PhoneDetailCtrl&#39;</span>
+</span><span class='line'>    <span class="p">}).</span>
+</span><span class='line'>    <span class="nx">otherwise</span><span class="p">({</span>
+</span><span class='line'>      <span class="nx">redirectTo</span><span class="o">:</span> <span class="s1">&#39;/phones&#39;</span>
+</span><span class='line'>    <span class="p">});</span>
+</span><span class='line'><span class="p">}]);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>A diligent programmer might build a service around this to provide methods to switch routes or to provide constants for the routes.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">app</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">PHONE_ROUTE</span>  <span class="o">=</span> <span class="s1">&#39;/phones&#39;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nx">app</span><span class="p">.</span><span class="nx">config</span><span class="p">([</span><span class="s1">&#39;$routeProvider&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$routeProvider</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="c1">// config routes (see previous example)</span>
+</span><span class='line'>  <span class="p">}]);</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nx">app</span><span class="p">.</span><span class="nx">service</span><span class="p">(</span><span class="s1">&#39;RouteService&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;$location&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$location</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">this</span><span class="p">.</span><span class="nx">goToPhoneList</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nx">$location</span><span class="p">.</span><span class="nx">path</span><span class="p">(</span><span class="nx">PHONE_ROUTE</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">};</span>
+</span><span class='line'>    <span class="k">this</span><span class="p">.</span><span class="nx">goToPhoneDetails</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">phoneId</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nx">$location</span><span class="p">.</span><span class="nx">path</span><span class="p">(</span><span class="nx">PHONE_ROUTE</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="nx">phoneId</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">};</span>
+</span><span class='line'>  <span class="p">}]);</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">}(</span><span class="nx">phonecatApp</span><span class="p">));</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This is not a big deal for a small project with a couple of routes.  As your application grows, you&#8217;ll find this file needs to be updated everytime a route is added.  These methods to navigate to a route will start to contain logic that should be in a controller.  Image what this file would look like with 30 routes?</p>
+
+<p>Let&#8217;s apply some Object oriented design to our problem.  One way to manage our dependencies is to use the <a href="http://en.wikipedia.org/wiki/Open/closed_principle">Open Closed Principle</a>; we want to make our RouterService open for extension but closed for modification.  The $routeProvider gives us some help here.  We don&#8217;t need to add all our routes in one block of code.  Since routes tend to match up to controllers, why not add it in the code file with it&#8217;s controller?</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">app</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">PHONE_LIST_ROUTE</span> <span class="o">=</span> <span class="s1">&#39;/phones&#39;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nx">app</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">&#39;PhoneListCtrl&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>    <span class="c1">// controller code here</span>
+</span><span class='line'>  <span class="p">});</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nx">app</span><span class="p">.</span><span class="nx">config</span><span class="p">([</span><span class="s1">&#39;$routeProvider&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$routeProvider</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">$routeProvider</span><span class="p">.</span>
+</span><span class='line'>      <span class="nx">when</span><span class="p">(</span><span class="nx">PHONE_LIST_ROUTE</span><span class="p">,</span> <span class="p">{</span>
+</span><span class='line'>        <span class="nx">templateUrl</span><span class="o">:</span> <span class="s1">&#39;partials/phone-list.html&#39;</span><span class="p">,</span>
+</span><span class='line'>        <span class="nx">controller</span><span class="o">:</span> <span class="s1">&#39;PhoneListCtrl&#39;</span>
+</span><span class='line'>      <span class="p">}).</span>
+</span><span class='line'>      <span class="nx">otherwise</span><span class="p">({</span>
+</span><span class='line'>        <span class="nx">redirectTo</span><span class="o">:</span> <span class="nx">PHONE_LIST_ROUTE</span>
+</span><span class='line'>      <span class="p">});</span>
+</span><span class='line'>  <span class="p">}]);</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">}(</span><span class="nx">phonecatApp</span><span class="p">))</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>We still have the issue of those methods on the RouterService itself. We should move those to the file with the controller.  This keeps the logic concerning what happens when you try to route to a controller together with the controller.  We can take advantage of that fact that JavaScript is a dynamic language by defining a simple service and adding methods on the fly.</p>
+
+<p>First start with a simple service.  Notice it is just an empty object.  We&#8217;ll extend it as we go.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">app</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">app</span><span class="p">.</span><span class="nx">value</span><span class="p">(</span><span class="s1">&#39;RouterService&#39;</span><span class="p">,</span> <span class="p">{});</span>
+</span><span class='line'><span class="p">}(</span><span class="nx">phonecatApp</span><span class="p">))</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now after we&#8217;ve setup our controller and $routeProvider, we can add the goto method.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">app</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1">// controller def</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1">// route config</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nx">app</span><span class="p">.</span><span class="nx">run</span><span class="p">([</span><span class="s1">&#39;RouterService&#39;</span><span class="p">,</span> <span class="s1">&#39;$location&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">RouterService</span><span class="p">,</span> <span class="nx">$location</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">Router</span><span class="p">.</span><span class="nx">goToPhoneList</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="nx">$location</span><span class="p">.</span><span class="nx">path</span><span class="p">(</span><span class="nx">PHONE_LIST_ROUTE</span><span class="p">);</span> <span class="p">};</span>
+</span><span class='line'>  <span class="p">}]);</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">}(</span><span class="nx">phonecatApp</span><span class="p">));</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Using this pattern, I can now add or change code for routes in a single file.  The route details, the controller and a go to method are all together.  More importantly, multiple developers can now work on a large application with dozens of routes without constantly having conflicts on that RouterService.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Prototypal JavaScript]]></title>
@@ -1465,41 +1637,6 @@ public</span> <span style="color:#a020f0;">class</span> <span style="color:#228b
     <content type="html"><![CDATA[<p>While there is not much written about REST authentication, there does seem to be a common theme among the few articles written about it that REST services should be authenticated by signing the query parameters using a private key and making the calls over HTTPS.  This posting will provide an example of the signing of query parameters using a simple Spring server. We&#8217;ll provide a small twist by putting the authentication information in headers.</p>
 
 <p><a href="http://www.objectpartners.com/2011/06/16/implementing-rest-authentication/">more&#8230;</a></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Hosting a Maven internal repository on a file share]]></title>
-    <link href="http://jurberg.github.com/blog/2011/02/17/hosting-maven-repo-file-share/"/>
-    <updated>2011-02-17T19:00:00-06:00</updated>
-    <id>http://jurberg.github.com/blog/2011/02/17/hosting-maven-repo-file-share</id>
-    <content type="html"><![CDATA[<p>I spent some time today setting up an internal repository for my Maven build.  I wanted to host just the artifacts that are used by my projects and not allow the project build to go outside of that repository.  I first setup my repositories like this:</p>
-
-
-<pre>
-&lt;<span style="color:#0000ff">repositories</span>a&gt;
-  &lt;<span style="color:#0000ff">repository</span>&gt;
-    &lt;<span style="color:#0000ff">id</span>&gt;central&lt;/<span style="color:#0000ff">id</span>&gt;
-    &lt;<span style="color:#0000ff">name</span>&gt;My Company's Internal Repository&lt;/<span style="color:#0000ff">name</span>&gt;
-    &lt;<span style="color:#0000ff">url</span>&gt;file:///server/Maven/repo/&lt;/<span style="color:#0000ff">url</span>&gt;
-  &lt;/<span style="color:#0000ff">repository</span>&gt;
-&lt;/<span style="color:#0000ff">repositories</span>&gt;
-</pre>
-
-
-<p>The idea behind this setup is that I overrode the &#8220;central&#8221; repository and pointed it to my internal repository.  This way Maven would not try to go out to repo1.maven.org if it did not find something.</p>
-
-
-<p>And it did not work.  After much research and trying many things, it turns out my URL needs to look like this:</p>
-
-
-<pre>
-&lt;<span style="color:#0000ff">url</span>&gt;file://\\server\Maven\repo\&lt;/<span style="color:#0000ff">url</span>&gt;
-</pre>
-
-
-<p>Hope this helps someone in the future trying to setup a repository on a share.</p>
-
 ]]></content>
   </entry>
   

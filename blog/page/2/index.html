@@ -9,7 +9,7 @@
   <meta name="author" content="John Urberg">
 
   
-  <meta name="description" content="I think Groovy&#8217;s MarkupBuilder is great and I use it often. Sometimes though, I need to generate a complex XML document that conforms to an XSD &hellip;">
+  <meta name="description" content="Welcome to my new blog hosted on Github! I&#8217;ve moved a number of the posts from my old blog. If you want to see all my old posts, the old blog &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -69,6 +69,42 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/01/14/welcome-to-the-urblog-reborn/">Welcome to the UrBlog Reborn</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-01-14T21:21:00-06:00" pubdate data-updated="true">Jan 14<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Welcome to my new blog hosted on Github!  I&#8217;ve moved a number of the posts from my old blog.  If you want to see all my old posts, the old blog is <a href="http://www.jroller.com/jurberg/">here</a>.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -703,68 +739,6 @@ public</span> <span style="color:#a020f0;">class</span> <span style="color:#228b
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/02/17/hosting-maven-repo-file-share/">Hosting a Maven Internal Repository on a File Share</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-02-17T19:00:00-06:00" pubdate data-updated="true">Feb 17<span>th</span>, 2011</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I spent some time today setting up an internal repository for my Maven build.  I wanted to host just the artifacts that are used by my projects and not allow the project build to go outside of that repository.  I first setup my repositories like this:</p>
-
-
-<pre>
-&lt;<span style="color:#0000ff">repositories</span>a&gt;
-  &lt;<span style="color:#0000ff">repository</span>&gt;
-    &lt;<span style="color:#0000ff">id</span>&gt;central&lt;/<span style="color:#0000ff">id</span>&gt;
-    &lt;<span style="color:#0000ff">name</span>&gt;My Company's Internal Repository&lt;/<span style="color:#0000ff">name</span>&gt;
-    &lt;<span style="color:#0000ff">url</span>&gt;file:///server/Maven/repo/&lt;/<span style="color:#0000ff">url</span>&gt;
-  &lt;/<span style="color:#0000ff">repository</span>&gt;
-&lt;/<span style="color:#0000ff">repositories</span>&gt;
-</pre>
-
-
-<p>The idea behind this setup is that I overrode the &#8220;central&#8221; repository and pointed it to my internal repository.  This way Maven would not try to go out to repo1.maven.org if it did not find something.</p>
-
-
-<p>And it did not work.  After much research and trying many things, it turns out my URL needs to look like this:</p>
-
-
-<pre>
-&lt;<span style="color:#0000ff">url</span>&gt;file://\\server\Maven\repo\&lt;/<span style="color:#0000ff">url</span>&gt;
-</pre>
-
-
-<p>Hope this helps someone in the future trying to setup a repository on a share.</p>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -786,6 +760,10 @@ public</span> <span style="color:#a020f0;">class</span> <span style="color:#228b
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/01/25/angular-router/">Angular Routers in Large Projects</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/07/12/javascript-prototype/">Prototypal JavaScript</a>
       </li>
     
@@ -799,10 +777,6 @@ public</span> <span style="color:#a020f0;">class</span> <span style="color:#228b
     
       <li class="post">
         <a href="/blog/2014/03/03/onetimedata-test/">Unit Testing with the OneTimeData Plugin</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/04/24/grails-components/">Creating Grails UI &#8216;Components&#8217;</a>
       </li>
     
   </ul>
@@ -876,7 +850,7 @@ public</span> <span style="color:#a020f0;">class</span> <span style="color:#228b
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2014 - John Urberg -
+  Copyright &copy; 2015 - John Urberg -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 
