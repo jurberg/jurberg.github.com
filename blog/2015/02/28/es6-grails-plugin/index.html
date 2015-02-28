@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Unit Testing with the OneTimeData Plugin - The UrBlog</title>
+  <title>Using ECMAScript 6 in Grails - The UrBlog</title>
   <meta name="author" content="John Urberg">
 
   
-  <meta name="description" content="The OneTimeData plugin is handy when flash doesn&#8217;t work for you. I recently had to use it in an application that required an extra redirect &hellip;">
+  <meta name="description" content="I&#8217;ve been writing a lot of JavaScript lately. I like to apply the same engineering principles to my JavaScript code that I apply to any other &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://jurberg.github.com/blog/2014/03/03/onetimedata-test/">
+  <link rel="canonical" href="http://jurberg.github.com/blog/2015/02/28/es6-grails-plugin/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -72,7 +72,7 @@
   
   <header>
     
-      <h1 class="entry-title">Unit Testing With the OneTimeData Plugin</h1>
+      <h1 class="entry-title">Using ECMAScript 6 in Grails</h1>
     
     
       <p class="meta">
@@ -88,27 +88,53 @@
   
 
 
-<time datetime="2014-03-03T21:00:00-06:00" pubdate data-updated="true">Mar 3<span>rd</span>, 2014</time>
+<time datetime="2015-02-28T21:00:00-06:00" pubdate data-updated="true">Feb 28<span>th</span>, 2015</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>The <a href="http://grails.org/plugin/one-time-data">OneTimeData</a> plugin is handy when flash doesn&#8217;t work for you. I recently had to use it in an application that required an extra redirect between controller actions.  The OneTimeData plugin does not come with any unit testing assistance, so I created a simple mixin that adds the OneTimeData methods to a controller under test and backs them with a mock map on the spec to make it easy to access what the controller passed. The following class creates the mixin.</p>
+<div class="entry-content"><p>I&#8217;ve been writing a lot of JavaScript lately.  I like to apply the same engineering principles to my JavaScript code that I apply to any other language so I break my code up into separate clases and modules, each in their own file.  If I&#8217;m writing code using <a href="http://nodejs.org/">Node</a>, I use <a href="http://browserify.org/">browserify</a> or <a href="http://requirejs.org/">RequireJS</a> to help manage this.  On <a href="https://grails.org/">Grails</a> projects I used the resource plugin in the past.  Lately I&#8217;ve started using the asset-pipeline plugin.</p>
+
+<p>I also use JavaScript constructor functions often, especially when using <a href="https://angularjs.org/">AngularJS</a>.  While it&#8217;s a bit clunky to code prototypes this way, browser VMs optimize for that pattern and Angular uses it often.</p>
+
+<p>I&#8217;ve been interested in using ECMAScript 6.  I like how it simplifies creating prototypes (i.e. the class keyword) and the built in module support.  I found a tool called <a href="https://babeljs.io/">Babel</a> that translates ES6 to readable ES5 code that runs in the browser.  It&#8217;s easy to plugin into browserify in a Node project.  I wanted to start using it in Grails so I created a new asset-pipeline plugin called <a href="https://grails.org/plugin/es6to5-asset-pipeline">es6to5-asset-pipeline</a>. (It&#8217;s called es6to5 because when I started it, babel was called 6to5).</p>
+
+<p>Usage is simple:</p>
+
+<ol>
+  <li>Include the asset-pipeline and es6to5-asset-pipeline plugins in your project</li>
+  <li>Name your JavaScript files with the extension .es6</li>
+</ol>
 
 
-<script src="https://gist.github.com/jurberg/9338727.js"></script>
+<p>The plugin will run each file thru babel, wrap the results in an IIFE and convert the CommonJS style requires and exports into something that will work in the browser.</p>
+
+<p>One of the goals I was able to accomplish was reading the ES6 import lines to figure out what files to require before processing the current file.  The asset-pipeline needs the following at the top of your JavaScript file to tell it what files this file depends on:</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="c1">//= require app/controller/homeCtrl.js</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
-<p>Using it requires two steps: 1) Add the mixin using the @TestMixn annotation and 2) call mockOneTimeData passing in the spec and the controller.</p>
+<p>I was able to get my plugin to process the import statements; so instead of this ES6 code:</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="c1">//= require app/controller/homeCtrl.es6</span>
+</span><span class='line'><span class="kr">import</span> <span class="nx">HomeCtrl</span> <span class="nx">from</span> <span class="o">/</span><span class="nx">app</span><span class="o">/</span><span class="nx">controller</span><span class="o">/</span><span class="nx">HomeCtrl</span><span class="p">.</span><span class="nx">es6</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
-<script src="https://gist.github.com/jurberg/9338807.js"></script>
+<p>You can leave out the require and avoid the duplication:</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kr">import</span> <span class="nx">HomeCtrl</span> <span class="nx">from</span> <span class="o">/</span><span class="nx">app</span><span class="o">/</span><span class="nx">controller</span><span class="o">/</span><span class="nx">HomeCtrl</span><span class="p">.</span><span class="nx">es6</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
-<p>If anyone knows of a way to capture the spec and controller inside the mixin, please comment. Thanks!</p>
-
+<p>There is more documentation available on <a href="https://github.com/jurberg/es6to5-asset-pipeline/blob/master/README.md">github</a>.  Please give it a try and let me know what you think.  So far I&#8217;ve only used it on a few small personal projects so I&#8217;d love to get some folks testing it out.</p>
 </div>
 
 
@@ -141,12 +167,12 @@
   
 
 
-<time datetime="2014-03-03T21:00:00-06:00" pubdate data-updated="true">Mar 3<span>rd</span>, 2014</time>
+<time datetime="2015-02-28T21:00:00-06:00" pubdate data-updated="true">Feb 28<span>th</span>, 2015</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/grails/'>Grails</a>
+    <a class='category' href='/blog/categories/grails/'>Grails</a>, <a class='category' href='/blog/categories/javascript/'>JavaScript</a>
   
 </span>
 
@@ -155,7 +181,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://jurberg.github.com/blog/2014/03/03/onetimedata-test/" data-via="jurberg" data-counturl="http://jurberg.github.com/blog/2014/03/03/onetimedata-test/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://jurberg.github.com/blog/2015/02/28/es6-grails-plugin/" data-via="jurberg" data-counturl="http://jurberg.github.com/blog/2015/02/28/es6-grails-plugin/" >Tweet</a>
   
   
   
@@ -164,10 +190,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013/04/24/grails-components/" title="Previous Post: Creating Grails UI 'Components'">&laquo; Creating Grails UI 'Components'</a>
+        <a class="basic-alignment left" href="/blog/2015/01/25/angular-router/" title="Previous Post: Angular Routers in Large Projects">&laquo; Angular Routers in Large Projects</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2014/06/22/thoughts-on-angular-dependency-injection/" title="Next Post: Complexity and Angular DI">Complexity and Angular DI &raquo;</a>
       
     </p>
   </footer>
@@ -295,8 +319,8 @@
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://jurberg.github.com/blog/2014/03/03/onetimedata-test/';
-        var disqus_url = 'http://jurberg.github.com/blog/2014/03/03/onetimedata-test/';
+        var disqus_identifier = 'http://jurberg.github.com/blog/2015/02/28/es6-grails-plugin/';
+        var disqus_url = 'http://jurberg.github.com/blog/2015/02/28/es6-grails-plugin/';
         var disqus_script = 'embed.js';
       
     (function () {

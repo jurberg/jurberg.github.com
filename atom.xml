@@ -4,7 +4,7 @@
   <title><![CDATA[The UrBlog]]></title>
   <link href="http://jurberg.github.com/atom.xml" rel="self"/>
   <link href="http://jurberg.github.com/"/>
-  <updated>2015-01-25T19:15:07-06:00</updated>
+  <updated>2015-02-28T13:57:12-06:00</updated>
   <id>http://jurberg.github.com/</id>
   <author>
     <name><![CDATA[John Urberg]]></name>
@@ -12,6 +12,54 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Using ECMAScript 6 in Grails]]></title>
+    <link href="http://jurberg.github.com/blog/2015/02/28/es6-grails-plugin/"/>
+    <updated>2015-02-28T21:00:00-06:00</updated>
+    <id>http://jurberg.github.com/blog/2015/02/28/es6-grails-plugin</id>
+    <content type="html"><![CDATA[<p>I&#8217;ve been writing a lot of JavaScript lately.  I like to apply the same engineering principles to my JavaScript code that I apply to any other language so I break my code up into separate clases and modules, each in their own file.  If I&#8217;m writing code using <a href="http://nodejs.org/">Node</a>, I use <a href="http://browserify.org/">browserify</a> or <a href="http://requirejs.org/">RequireJS</a> to help manage this.  On <a href="https://grails.org/">Grails</a> projects I used the resource plugin in the past.  Lately I&#8217;ve started using the asset-pipeline plugin.</p>
+
+<p>I also use JavaScript constructor functions often, especially when using <a href="https://angularjs.org/">AngularJS</a>.  While it&#8217;s a bit clunky to code prototypes this way, browser VMs optimize for that pattern and Angular uses it often.</p>
+
+<p>I&#8217;ve been interested in using ECMAScript 6.  I like how it simplifies creating prototypes (i.e. the class keyword) and the built in module support.  I found a tool called <a href="https://babeljs.io/">Babel</a> that translates ES6 to readable ES5 code that runs in the browser.  It&#8217;s easy to plugin into browserify in a Node project.  I wanted to start using it in Grails so I created a new asset-pipeline plugin called <a href="https://grails.org/plugin/es6to5-asset-pipeline">es6to5-asset-pipeline</a>. (It&#8217;s called es6to5 because when I started it, babel was called 6to5).</p>
+
+<p>Usage is simple:</p>
+
+<ol>
+  <li>Include the asset-pipeline and es6to5-asset-pipeline plugins in your project</li>
+  <li>Name your JavaScript files with the extension .es6</li>
+</ol>
+
+
+<p>The plugin will run each file thru babel, wrap the results in an IIFE and convert the CommonJS style requires and exports into something that will work in the browser.</p>
+
+<p>One of the goals I was able to accomplish was reading the ES6 import lines to figure out what files to require before processing the current file.  The asset-pipeline needs the following at the top of your JavaScript file to tell it what files this file depends on:</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="c1">//= require app/controller/homeCtrl.js</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I was able to get my plugin to process the import statements; so instead of this ES6 code:</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="c1">//= require app/controller/homeCtrl.es6</span>
+</span><span class='line'><span class="kr">import</span> <span class="nx">HomeCtrl</span> <span class="nx">from</span> <span class="o">/</span><span class="nx">app</span><span class="o">/</span><span class="nx">controller</span><span class="o">/</span><span class="nx">HomeCtrl</span><span class="p">.</span><span class="nx">es6</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You can leave out the require and avoid the duplication:</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kr">import</span> <span class="nx">HomeCtrl</span> <span class="nx">from</span> <span class="o">/</span><span class="nx">app</span><span class="o">/</span><span class="nx">controller</span><span class="o">/</span><span class="nx">HomeCtrl</span><span class="p">.</span><span class="nx">es6</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>There is more documentation available on <a href="https://github.com/jurberg/es6to5-asset-pipeline/blob/master/README.md">github</a>.  Please give it a try and let me know what you think.  So far I&#8217;ve only used it on a few small personal projects so I&#8217;d love to get some folks testing it out.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Angular Routers in Large Projects]]></title>
@@ -1626,17 +1674,6 @@ public</span> <span style="color:#a020f0;">class</span> <span style="color:#228b
     <content type="html"><![CDATA[<p>The free lunch is over. To speed up applications we are told we must write multithreaded programs and avoid mutable state. Functional programming can help with it&#8217;s immutable state. There&#8217;s also Erlang with the Actor model or Clojure with it&#8217;s software transactional memory. One other option to consider is single threading your code. Following are a few examples where single threading was used to scale applications.</p>
 
 <p><a href="http://www.objectpartners.com/2011/08/09/scaling-with-single-threading/">more&#8230;</a></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Implementing REST Authentication]]></title>
-    <link href="http://jurberg.github.com/blog/2011/06/16/implementing-rest-authentication/"/>
-    <updated>2011-06-16T19:00:00-05:00</updated>
-    <id>http://jurberg.github.com/blog/2011/06/16/implementing-rest-authentication</id>
-    <content type="html"><![CDATA[<p>While there is not much written about REST authentication, there does seem to be a common theme among the few articles written about it that REST services should be authenticated by signing the query parameters using a private key and making the calls over HTTPS.  This posting will provide an example of the signing of query parameters using a simple Spring server. We&#8217;ll provide a small twist by putting the authentication information in headers.</p>
-
-<p><a href="http://www.objectpartners.com/2011/06/16/implementing-rest-authentication/">more&#8230;</a></p>
 ]]></content>
   </entry>
   

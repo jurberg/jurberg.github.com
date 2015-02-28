@@ -4,7 +4,7 @@
   <title><![CDATA[Category: JavaScript | The UrBlog]]></title>
   <link href="http://jurberg.github.com/blog/categories/javascript/atom.xml" rel="self"/>
   <link href="http://jurberg.github.com/"/>
-  <updated>2015-01-25T19:15:07-06:00</updated>
+  <updated>2015-02-28T13:57:12-06:00</updated>
   <id>http://jurberg.github.com/</id>
   <author>
     <name><![CDATA[John Urberg]]></name>
@@ -12,6 +12,51 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Using ECMAScript 6 in Grails]]></title>
+    <link href="http://jurberg.github.com/blog/2015/02/28/es6-grails-plugin/"/>
+    <updated>2015-02-28T21:00:00-06:00</updated>
+    <id>http://jurberg.github.com/blog/2015/02/28/es6-grails-plugin</id>
+    <content type="html"><![CDATA[<p>I've been writing a lot of JavaScript lately.  I like to apply the same engineering principles to my JavaScript code that I apply to any other language so I break my code up into separate clases and modules, each in their own file.  If I'm writing code using <a href="http://nodejs.org/">Node</a>, I use <a href="http://browserify.org/">browserify</a> or <a href="http://requirejs.org/">RequireJS</a> to help manage this.  On <a href="https://grails.org/">Grails</a> projects I used the resource plugin in the past.  Lately I've started using the asset-pipeline plugin.</p>
+
+<p>I also use JavaScript constructor functions often, especially when using <a href="https://angularjs.org/">AngularJS</a>.  While it's a bit clunky to code prototypes this way, browser VMs optimize for that pattern and Angular uses it often.</p>
+
+<p>I've been interested in using ECMAScript 6.  I like how it simplifies creating prototypes (i.e. the class keyword) and the built in module support.  I found a tool called <a href="https://babeljs.io/">Babel</a> that translates ES6 to readable ES5 code that runs in the browser.  It's easy to plugin into browserify in a Node project.  I wanted to start using it in Grails so I created a new asset-pipeline plugin called <a href="https://grails.org/plugin/es6to5-asset-pipeline">es6to5-asset-pipeline</a>. (It's called es6to5 because when I started it, babel was called 6to5).</p>
+
+<p>Usage is simple:</p>
+
+<ol>
+  <li>Include the asset-pipeline and es6to5-asset-pipeline plugins in your project</li>
+  <li>Name your JavaScript files with the extension .es6</li>
+</ol>
+
+
+<p>The plugin will run each file thru babel, wrap the results in an IIFE and convert the CommonJS style requires and exports into something that will work in the browser.</p>
+
+<p>One of the goals I was able to accomplish was reading the ES6 import lines to figure out what files to require before processing the current file.  The asset-pipeline needs the following at the top of your JavaScript file to tell it what files this file depends on:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="c1">//= require app/controller/homeCtrl.js</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>I was able to get my plugin to process the import statements; so instead of this ES6 code:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="c1">//= require app/controller/homeCtrl.es6</span>
+</span><span class='line'><span class="kr">import</span> <span class="nx">HomeCtrl</span> <span class="nx">from</span> <span class="o">/</span><span class="nx">app</span><span class="o">/</span><span class="nx">controller</span><span class="o">/</span><span class="nx">HomeCtrl</span><span class="p">.</span><span class="nx">es6</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>You can leave out the require and avoid the duplication:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kr">import</span> <span class="nx">HomeCtrl</span> <span class="nx">from</span> <span class="o">/</span><span class="nx">app</span><span class="o">/</span><span class="nx">controller</span><span class="o">/</span><span class="nx">HomeCtrl</span><span class="p">.</span><span class="nx">es6</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>There is more documentation available on <a href="https://github.com/jurberg/es6to5-asset-pipeline/blob/master/README.md">github</a>.  Please give it a try and let me know what you think.  So far I've only used it on a few small personal projects so I'd love to get some folks testing it out.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Angular Routers in Large Projects]]></title>
@@ -491,31 +536,6 @@ the class syntax instead as it's easier than using constructor functions.</p>
 <script src="https://gist.github.com/jurberg/5360024.js"></script>
 
 <p>With just Express, Require.JS and a few lines of JavaScript, I now have convention over configuration controllers</p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[A simple JavaScript module library]]></title>
-    <link href="http://jurberg.github.com/blog/2013/02/26/simple-define-js/"/>
-    <updated>2013-02-26T21:00:00-06:00</updated>
-    <id>http://jurberg.github.com/blog/2013/02/26/simple-define-js</id>
-    <content type="html"><![CDATA[<p>When developing JavaScript, I like to break my code into modules and define what modules the depend on.  <a href="http://requirejs.org/">Require.JS</a> is a great tool for this, but it also means bringing in module loading.  I'm on a project using <a href="http://grails.org/">Grails</a> that has a moderate amount of JavaScript.  Grails provides a resource plugin that handles bundling of resources.  I would still like to use the Require.JS style of defining modules and their dependencies while still loading scripts the normal way so Grails is happy.</p>
-
-
-<p>I ended up creating <a href="https://github.com/jurberg/define.js">define.js</a>.  This libary provides a simple 'define' and 'require' method.  The 'define' uses the global object to hold the modules so they are also available in html handlers.  Using the global object as the module list also allows us to treat third party libraries such as jQuery as dependencies.</p>
-
-
-<p>The following example creates a module that depends on the domain.person module, jQuery and the window object.  Since we are using the global to store modules, we can treat jQuery and window just like any other dependency we have defined.</p>
-
-
-<script src="https://gist.github.com/jurberg/5044824.js"></script>
-
-
-<p>Using the global object to hold modules also allows us to access them in html</p>
-
-
-<script src="https://gist.github.com/jurberg/5044843.js"></script>
 
 ]]></content>
   </entry>

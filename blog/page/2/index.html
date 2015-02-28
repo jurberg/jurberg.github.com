@@ -9,7 +9,7 @@
   <meta name="author" content="John Urberg">
 
   
-  <meta name="description" content="Welcome to my new blog hosted on Github! I&#8217;ve moved a number of the posts from my old blog. If you want to see all my old posts, the old blog &hellip;">
+  <meta name="description" content="With the recent Spring vulnerability, we thought it would be a good idea to disable EL in our Grails application. To do this, we need to add a &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -69,6 +69,45 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/01/23/add-a-context-param-to-grails/">Add a Context-param to Grails</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-01-23T22:06:00-06:00" pubdate data-updated="true">Jan 23<span>rd</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>With the recent <a href="https://www.aspectsecurity.com/uploads/downloads/2012/12/Remote-Code-with-Expression-Language-Injection.pdf">Spring vulnerability</a>, we thought it would be a good idea to disable EL in our Grails application.  To do this, we need to add a context-param to the beginning of the generated web.xml file.  Rather than using install-templates, I used the eventWebXmlEnd event to insert it.  XMLSlurper would have been nice, but it does not have a simple way to insert a node at the beginning.  So instead I used the XmlParser and came up with the following.</p>
+
+<script src="https://gist.github.com/4617534.js"></script>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -701,44 +740,6 @@ public</span> <span style="color:#a020f0;">class</span> <span style="color:#228b
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/06/16/implementing-rest-authentication/">Implementing REST Authentication</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-06-16T19:00:00-05:00" pubdate data-updated="true">Jun 16<span>th</span>, 2011</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>While there is not much written about REST authentication, there does seem to be a common theme among the few articles written about it that REST services should be authenticated by signing the query parameters using a private key and making the calls over HTTPS.  This posting will provide an example of the signing of query parameters using a simple Spring server. We&#8217;ll provide a small twist by putting the authentication information in headers.</p>
-
-<p><a href="http://www.objectpartners.com/2011/06/16/implementing-rest-authentication/">more&#8230;</a></p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -760,6 +761,10 @@ public</span> <span style="color:#a020f0;">class</span> <span style="color:#228b
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/02/28/es6-grails-plugin/">Using ECMAScript 6 in Grails</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/01/25/angular-router/">Angular Routers in Large Projects</a>
       </li>
     
@@ -773,10 +778,6 @@ public</span> <span style="color:#a020f0;">class</span> <span style="color:#228b
     
       <li class="post">
         <a href="/blog/2014/06/22/thoughts-on-angular-dependency-injection/">Complexity and Angular DI</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/03/03/onetimedata-test/">Unit Testing with the OneTimeData Plugin</a>
       </li>
     
   </ul>

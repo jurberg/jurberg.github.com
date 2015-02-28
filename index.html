@@ -9,7 +9,7 @@
   <meta name="author" content="John Urberg">
 
   
-  <meta name="description" content="Intro If you read the Angular Tutorial section on the router you will find what amounts to a large switch statement. Here&#8217;s the example code &hellip;">
+  <meta name="description" content="I&#8217;ve been writing a lot of JavaScript lately. I like to apply the same engineering principles to my JavaScript code that I apply to any other &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -69,6 +69,81 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/02/28/es6-grails-plugin/">Using ECMAScript 6 in Grails</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-02-28T21:00:00-06:00" pubdate data-updated="true">Feb 28<span>th</span>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&#8217;ve been writing a lot of JavaScript lately.  I like to apply the same engineering principles to my JavaScript code that I apply to any other language so I break my code up into separate clases and modules, each in their own file.  If I&#8217;m writing code using <a href="http://nodejs.org/">Node</a>, I use <a href="http://browserify.org/">browserify</a> or <a href="http://requirejs.org/">RequireJS</a> to help manage this.  On <a href="https://grails.org/">Grails</a> projects I used the resource plugin in the past.  Lately I&#8217;ve started using the asset-pipeline plugin.</p>
+
+<p>I also use JavaScript constructor functions often, especially when using <a href="https://angularjs.org/">AngularJS</a>.  While it&#8217;s a bit clunky to code prototypes this way, browser VMs optimize for that pattern and Angular uses it often.</p>
+
+<p>I&#8217;ve been interested in using ECMAScript 6.  I like how it simplifies creating prototypes (i.e. the class keyword) and the built in module support.  I found a tool called <a href="https://babeljs.io/">Babel</a> that translates ES6 to readable ES5 code that runs in the browser.  It&#8217;s easy to plugin into browserify in a Node project.  I wanted to start using it in Grails so I created a new asset-pipeline plugin called <a href="https://grails.org/plugin/es6to5-asset-pipeline">es6to5-asset-pipeline</a>. (It&#8217;s called es6to5 because when I started it, babel was called 6to5).</p>
+
+<p>Usage is simple:</p>
+
+<ol>
+  <li>Include the asset-pipeline and es6to5-asset-pipeline plugins in your project</li>
+  <li>Name your JavaScript files with the extension .es6</li>
+</ol>
+
+
+<p>The plugin will run each file thru babel, wrap the results in an IIFE and convert the CommonJS style requires and exports into something that will work in the browser.</p>
+
+<p>One of the goals I was able to accomplish was reading the ES6 import lines to figure out what files to require before processing the current file.  The asset-pipeline needs the following at the top of your JavaScript file to tell it what files this file depends on:</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="c1">//= require app/controller/homeCtrl.js</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I was able to get my plugin to process the import statements; so instead of this ES6 code:</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="c1">//= require app/controller/homeCtrl.es6</span>
+</span><span class='line'><span class="kr">import</span> <span class="nx">HomeCtrl</span> <span class="nx">from</span> <span class="o">/</span><span class="nx">app</span><span class="o">/</span><span class="nx">controller</span><span class="o">/</span><span class="nx">HomeCtrl</span><span class="p">.</span><span class="nx">es6</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You can leave out the require and avoid the duplication:</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kr">import</span> <span class="nx">HomeCtrl</span> <span class="nx">from</span> <span class="o">/</span><span class="nx">app</span><span class="o">/</span><span class="nx">controller</span><span class="o">/</span><span class="nx">HomeCtrl</span><span class="p">.</span><span class="nx">es6</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>There is more documentation available on <a href="https://github.com/jurberg/es6to5-asset-pipeline/blob/master/README.md">github</a>.  Please give it a try and let me know what you think.  So far I&#8217;ve only used it on a few small personal projects so I&#8217;d love to get some folks testing it out.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1529,45 +1604,6 @@ use no globals other than the define and require methods of AMD.</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/01/23/add-a-context-param-to-grails/">Add a Context-param to Grails</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-01-23T22:06:00-06:00" pubdate data-updated="true">Jan 23<span>rd</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>With the recent <a href="https://www.aspectsecurity.com/uploads/downloads/2012/12/Remote-Code-with-Expression-Language-Injection.pdf">Spring vulnerability</a>, we thought it would be a good idea to disable EL in our Grails application.  To do this, we need to add a context-param to the beginning of the generated web.xml file.  Rather than using install-templates, I used the eventWebXmlEnd event to insert it.  XMLSlurper would have been nice, but it does not have a simple way to insert a node at the beginning.  So instead I used the XmlParser and came up with the following.</p>
-
-<script src="https://gist.github.com/4617534.js"></script>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1587,6 +1623,10 @@ use no globals other than the define and require methods of AMD.</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/02/28/es6-grails-plugin/">Using ECMAScript 6 in Grails</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/01/25/angular-router/">Angular Routers in Large Projects</a>
       </li>
     
@@ -1600,10 +1640,6 @@ use no globals other than the define and require methods of AMD.</p>
     
       <li class="post">
         <a href="/blog/2014/06/22/thoughts-on-angular-dependency-injection/">Complexity and Angular DI</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/03/03/onetimedata-test/">Unit Testing with the OneTimeData Plugin</a>
       </li>
     
   </ul>
