@@ -66,6 +66,56 @@
 
 </nav>
   <div id="main">
+     <!-- Google Tag Manager -->
+      <noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-W7BGQG"
+                        height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+      <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+              new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+              j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+              '//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+      })(window,document,'script','dataLayer','GTM-W7BGQG');</script>
+      <!-- End Google Tag Manager -->
+      <script type="text/javascript">
+      function pushTransaction() {
+          dataLayer.push({
+              'event': 'transactionComplete',
+              'ecommerce': {
+                  'purchase': {
+                      'actionField': {
+                          'id': 'T12345',                         // Transaction ID. Required for purchases and refunds.
+                          'affiliation': 'Online Store',
+                          'revenue': '35.43',                     // Total transaction value (incl. tax and shipping)
+                          'tax': '4.90',
+                          'shipping': '5.99',
+                          'coupon': 'SUMMER_SALE'
+                      },
+                      'products': [
+                          {                            // List of productFieldObjects.
+                              'name': 'Triblend Android T-Shirt',     // Name or ID is required.
+                              'id': '12345',
+                              'price': '15.25',
+                              'brand': 'Google',
+                              'category': 'Apparel',
+                              'variant': 'Gray',
+                              'quantity': 1,
+                              'coupon': ''                            // Optional fields may be omitted or set to empty string.
+                          },
+                          {
+                              'name': 'Donut Friday Scented T-Shirt',
+                              'id': '67890',
+                              'price': '33.75',
+                              'brand': 'Google',
+                              'category': 'Apparel',
+                              'variant': 'Black',
+                              'quantity': 1
+                          }
+                      ]
+                  }
+              }
+          });
+      }
+      </script>
+      <button onclick="pushTransaction()">Push</button>
     <div id="content">
       <div class="blog-index">
   
